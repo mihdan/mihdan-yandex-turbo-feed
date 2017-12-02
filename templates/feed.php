@@ -27,7 +27,7 @@ echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>
 					<header>
 						<?php if ( has_post_thumbnail() ) : ?>
 							<figure>
-								<?php the_post_thumbnail(); ?>
+								<?php the_post_thumbnail( 'large'); ?>
 							</figure>
 						<?php endif; ?>
 						<h1><?php the_title_rss(); ?></h1>

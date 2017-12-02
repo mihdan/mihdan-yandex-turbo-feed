@@ -196,6 +196,27 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			//add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 
 			//print_r(get_option( 'rewrite_rules' ));die;
+
+			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
+		}
+
+		/**
+		 * Удалить ненужные атрибуты при генерации картинок
+		 *
+		 * @param array $attr
+		 * @param WP_Post $attachment объект вложения
+		 * @param string|array $size размер
+		 *
+		 * @return array
+		 */
+		public function image_attributes( $attr, $attachment, $size ) {
+
+			if ( is_feed( $this->feedname ) ) {
+				unset( $attr['srcset'] );
+				unset( $attr['sizes'] );
+			}
+
+			return $attr;
 		}
 
 		/**
