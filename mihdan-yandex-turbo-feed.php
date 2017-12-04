@@ -191,8 +191,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Хукаем.
 		 */
 		private function hooks() {
-			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
-			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
 			add_action( 'init', array( $this, 'init' ) );
 			add_action( 'pre_get_posts', array( $this, 'alter_query' ) );
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
@@ -201,6 +199,9 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
+
+			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
+			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
 		}
 
 		/**
