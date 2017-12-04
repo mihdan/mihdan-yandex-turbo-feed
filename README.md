@@ -62,3 +62,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
   return 'tag';
 } );
 ```
+
+## Лицензия ##
+
+Данный WordPress-плагин с открытым исходным кодом под лицензией [MIT](https://opensource.org/licenses/MIT).
