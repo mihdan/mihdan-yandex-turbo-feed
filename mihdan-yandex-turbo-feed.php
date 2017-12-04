@@ -637,7 +637,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function on_activate() {
 			if ( current_user_can( 'activate_plugins' ) ) {
-				flush_rewrite_rules( false );
+				flush_rewrite_rules();
 			}
 		}
 
@@ -646,7 +646,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function on_deactivate() {
 			if ( current_user_can( 'activate_plugins' ) ) {
-				flush_rewrite_rules( false );
+				flush_rewrite_rules();
 			}
 		}
 	}
