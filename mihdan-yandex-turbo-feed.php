@@ -516,9 +516,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		public function init() {
 			// Добавить новый фид
 			add_feed( $this->feedname, array( $this, 'add_feed' ) );
-
-			// Пытаемся сбросить правила реврайтов, если нашего фида там нет
-			$this->flush_rewrite_rules();
 		}
 
 		/**
@@ -637,39 +634,8 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 		/**
 		 * Сбросить реврайты при активации плагина.
-		 *
-		 * Дичайший хак, но работает как надо
-		 *
-		 * @link https://wordpress.stackexchange.com/a/124710/105269
 		 */
-		public function flush_rewrite_rules() {
-
-			// Есть ли наше правило в реврайтах
-			$registered = false;
-
-			// Получим правила из базы
-			$rules = get_option( 'rewrite_rules' );
-
-			// Ищем общее правило для фидов
-			$feeds = array_keys( $rules, 'index.php?&feed=$matches[1]' );
-
-			foreach ( $feeds as $feed ) {
-				if ( false !== strpos( $feed, $this->feedname ) ) {
-					$registered = true;
-					break;
-				}
-			}
-
-			// Нашего правила нет в базе - обновим реврайты
-			if ( ! $registered ) {
-				flush_rewrite_rules( false );
-			}
-		}
-
-		/**
-		 * Сбросить реврайты при активации плагина.
-		 */
-		public function on_acivate() {
+		public function on_activate() {
 			if ( current_user_can( 'activate_plugins' ) ) {
 				flush_rewrite_rules( false );
 			}
@@ -678,7 +644,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		/**
 		 * Сбросить реврайты при деактивации плагина.
 		 */
-		public function on_deacivate() {
+		public function on_deactivate() {
 			if ( current_user_can( 'activate_plugins' ) ) {
 				flush_rewrite_rules( false );
 			}
