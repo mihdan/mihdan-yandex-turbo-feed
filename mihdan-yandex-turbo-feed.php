@@ -176,7 +176,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Фильтры для переопределения настроек внутри темы
 		 */
 		public function after_setup_theme() {
-			$this->posts_per_rss = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 50 );
+			$this->posts_per_rss = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 500 );
 			$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
 			$this->taxonomy = apply_filters( 'mihdan_yandex_turbo_feed_taxonomy', $this->taxonomy );
 			$this->feedname = apply_filters( 'mihdan_yandex_turbo_feed_feedname', $this->slug );
