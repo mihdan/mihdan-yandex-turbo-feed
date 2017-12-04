@@ -198,11 +198,9 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
 			//add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 			//add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
-			//add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
-
-			//print_r(get_option( 'rewrite_rules' ));die;
-
+			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
+			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 		}
 
 		/**
@@ -370,9 +368,10 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function content_feed( $content ) {
 
-			//ini_set( 'display_errors', true );
-
 			if ( is_feed( $this->feedname ) ) {
+				$content = $this->strip_tags( $content, $this->allowable_tags );
+			}
+			if ( 1 == 2 && is_feed( $this->feedname ) ) {
 
 				$this->enclosure = array();
 
@@ -514,10 +513,27 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Регистрация нашего фида
 		 */
 		public function init() {
+			// Добавить новый фид
 			add_feed( $this->feedname, array( $this, 'add_feed' ) );
 
 			// Пытаемся сбросить правила реврайтов, если нашего фида там нет
 			$this->flush_rewrite_rules();
+		}
+
+		/**
+		 * Hide RSS footer created by WordPress SEO from our RSS feed
+		 *
+		 * @param  boolean $include_footer Default inclusion value
+		 *
+		 * @return boolean                 Modified inclusion value
+		 */
+		public function hide_wpseo_rss_footer( $include_footer = true ) {
+
+			if ( is_feed( $this->feedname ) ) {
+				$include_footer = false;
+			}
+
+			return $include_footer;
 		}
 
 		/**
@@ -564,26 +580,11 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function clear_xml( $str ) {
 
-			$str = str_replace( '&hellip;', '...', $str );
-			$str = str_replace( '&nbsp;', ' ', $str );
-
-			$str = preg_replace( '|(<img.*?src=".*?ajax\-loader.*?".*?>)|si', '', $str );
-			$str = preg_replace( '|<img.*?src=".*?gear_icon\.png".*?>|si', '', $str );
-			$str = preg_replace( '|<img([^>]+)>|si', '<img$1>', $str );
-			$str = str_replace( 'data-src="', 'src="', $str );
-			$str = preg_replace( '/[\r\n]+/', "\n", $str );
-			$str = preg_replace( '/[ \t]+/', ' ', $str );
-
-			/**$str = preg_replace( '/(<img.*?>)/', '<figure>$1</figure>', $str );*/
-			$str = preg_replace( '/ style="[^"]+"/', '', $str );
-			$str = preg_replace( '/ srcset="[^"]+"/', '', $str );
-			$str = preg_replace( '/ sizes="[^"]+"/', '', $str );
-
-			$str = str_replace( PHP_EOL, '', $str );
-			$str = preg_replace( '/\s+/', ' ', $str );
-			$str = str_replace( '> <', '><', $str );
-			$str = preg_replace( '/<[^\/>]*><\/[^>]*>/', '', $str );
-
+			$str = str_replace( array(
+				'&', '>', '<', '"', '\'', '&nbsp;',
+			), array(
+				'&amp;', '&gt;', '&lt;', '&quot;', '&apos;', ' ',
+			), $str );
 
 			$str = force_balance_tags( $str );
 
@@ -688,4 +689,4 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 	}
 
 	mihdan_yandex_turbo_feed();
-}add_filter( 'wp_feed_cache_transient_lifetime', 'return_cache_time');
+}

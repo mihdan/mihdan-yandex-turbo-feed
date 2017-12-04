@@ -19,6 +19,7 @@ echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>
 		<?php while ( have_posts() ) : the_post(); ?>
 			<item turbo="true">
 				<link><?php the_permalink_rss(); ?></link>
+				<title><?php the_title_rss(); ?></title>
 				<author><?php the_author(); ?></author>
 				<category>Технологии</category>
 				<pubDate><?php echo get_post_time( 'r', true ); ?></pubDate>
@@ -32,30 +33,13 @@ echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>
 						<?php endif; ?>
 						<h1><?php the_title_rss(); ?></h1>
 					</header>
-					<!--h2>Заголовок страницы</h2>
-					<p>Текст с <b>выделением</b> и списком:</p>
-					<ul>
-						<li>пункт 1;</li>
-						<li>пункт 2.</li>
-					</ul>
-					<figure data-turbo-ad-id="first_ad_place"></figure>
-					<figure>
-						<video>
-							<source src="https://example.com/video.mp4"
-							        type="video/mp4" />
-						</video>
-						<img src="http://example.com/img-for-video.jpg" />
-						<figcaption>Подпись к видео</figcaption>
-					</figure>
-					<figure data-turbo-ad-id="second_ad_place"></figure-->
+					<?php if ( get_option( 'rss_use_excerpt' ) ) : ?>
+						<?php the_excerpt_rss(); ?>
+					<?php else : ?>
+						<?php the_content_feed(); ?>
+					<?php endif; ?>
 					]]>
 				</turbo:content>
-				<yandex:related>
-					<link
-						url="http://www.example.com/other-page.html"
-						img="http://www.example.com/image.jpg">Текст ссылки 3
-					</link>
-				</yandex:related>
 			</item>
 		<?php endwhile; ?>
 	</channel>
