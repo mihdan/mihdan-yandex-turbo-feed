@@ -28,9 +28,9 @@ add_filter( 'mihdan_yandex_turbo_feed_posts_per_rss', function( $posts_per_rss )
 } );
 ```
 
-### Слюг ленты ###
+### Ярлык ленты ###
 
-По умолчанию слюг для ленты выглядит как `mihdan-yandex-turbo-feed`, если вам не нравится такое название, можете его переименовать через фильтр:
+По умолчанию ярлык для ленты выглядит как `mihdan-yandex-turbo-feed`, если вам не нравится такое название, можете его переименовать через фильтр:
 
 ```
 add_filter( 'mihdan_yandex_turbo_feed_feedname', function( $slug ) {
