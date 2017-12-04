@@ -68,6 +68,11 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		private $allowable_tags = array(
 			'h1',
+			'h2',
+			'h3',
+			'h4',
+			'h5',
+			'h6',
 			'p',
 			'br',
 			'ul',
