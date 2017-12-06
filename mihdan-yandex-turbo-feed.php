@@ -198,8 +198,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'init', array( $this, 'init' ) );
 			add_action( 'pre_get_posts', array( $this, 'alter_query' ) );
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
-			//add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
-			//add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
+			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
@@ -251,6 +250,8 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			foreach ( $this->enclosure as $image ) {
 				echo $this->create_enclosure( $image['src'] );
 			}
+
+			$this->enclosure = array();
 		}
 
 		/**
