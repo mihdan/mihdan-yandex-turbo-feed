@@ -105,6 +105,11 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		private $enclosure = array();
 
 		/**
+		 * @var array Массив похожих постов
+		 */
+		private $related = array();
+
+		/**
 		 * Путь к плагину
 		 *
 		 * @var string
@@ -200,6 +205,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'pre_get_posts', array( $this, 'alter_query' ) );
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
+			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
@@ -253,6 +259,36 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			}
 
 			$this->enclosure = array();
+		}
+
+		/**
+		 * Генерит валидный тег <link />
+		 *
+		 * @param string $url ссылка на пост
+		 * @param string $src ссылка на кртинку
+		 * @param string $title текст ссылки
+		 *
+		 * @return string
+		 */
+		public function create_related( $url, $src, $title ) {
+			return sprintf( '<link url="%s" img="%s">%s</link>', esc_url( $url ), esc_url( $src ), esc_html( $title ) );
+		}
+
+		public function insert_related() {
+			$related = $this->get_related();
+
+			if ( $related->have_posts() ) {
+				echo '<yandex:related>';
+				while ( $related->have_posts() ) {
+					$related->the_post();
+					echo $this->create_related(
+						get_permalink(),
+						get_the_post_thumbnail_url(),
+						get_the_title()
+					);
+				}
+				echo '</yandex:related>';
+			}
 		}
 
 		/**
@@ -638,6 +674,63 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			if ( current_user_can( 'activate_plugins' ) ) {
 				flush_rewrite_rules();
 			}
+		}
+
+		public function get_categories( $args = [] ) {
+
+			$taxonomy = $this->taxonomy;
+
+			$default = [
+				'hide_empty' => false
+			];
+
+			$args = wp_parse_args( $args, $default );
+
+			if ( ! empty( $args['post_id'] ) ) {
+				$result = wp_get_object_terms( $args['post_id'], $taxonomy, $args );
+			} else {
+				$result = get_terms( $taxonomy, $args );
+			}
+
+			if ( is_wp_error( $result ) ) {
+				$result = false;
+			}
+
+			return $result;
+		}
+
+		public function get_related() {
+
+			$post = get_post();
+
+			$args = array(
+				'post_type' => 'post',
+				'posts_per_page' => 10,
+				'ignore_sticky_posts' => true,
+				'no_found_rows' => true,
+				'post__not_in' => array( $post->ID ),
+				'orderby' => 'rand',
+			);
+
+			// Получить посты из той же категории.
+			$categories = $this->get_categories( array(
+				'post_id' => $post->ID
+			));
+
+			if ( ! empty( $categories ) ) {
+				$category = array_shift( $categories );
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => 'category',
+						'field' => 'id',
+						'terms' => $category->term_id,
+					),
+				);
+			}
+
+			$query = new WP_Query( $args );
+
+			return $query;
 		}
 	}
 
