@@ -77,6 +77,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			'<br>',
 			'<ul>',
 			'<ol>',
+			'<li>',
 			'<b>',
 			'<strong>',
 			'<i>',
