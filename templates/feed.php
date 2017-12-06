@@ -34,7 +34,7 @@ echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>
 						<h1><?php the_title_rss(); ?></h1>
 					</header>
 					<?php if ( get_option( 'rss_use_excerpt' ) ) : ?>
-						<?php the_excerpt_rss(); ?>
+						<?php the_content_feed(); ?>
 					<?php else : ?>
 						<?php the_content_feed(); ?>
 					<?php endif; ?>
