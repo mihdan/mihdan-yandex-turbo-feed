@@ -271,7 +271,9 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * @return string
 		 */
 		public function create_related( $url, $src, $title ) {
-			return sprintf( '<link url="%s" img="%s">%s</link>', esc_url( $url ), esc_url( $src ), esc_html( $title ) );
+			if ( ! empty( $title ) && ! empty( $src ) ) {
+				return sprintf( '<link url="%s" img="%s">%s</link>', esc_url( $url ), esc_url( $src ), esc_html( $title ) );
+			}
 		}
 
 		public function insert_related() {
