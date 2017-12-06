@@ -40,6 +40,7 @@ echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>
 					<?php endif; ?>
 					]]>
 				</turbo:content>
+				<?php do_action( 'mihdan_yandex_turbo_feed_item', get_the_ID() ); ?>
 			</item>
 		<?php endwhile; ?>
 	</channel>

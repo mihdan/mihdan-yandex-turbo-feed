@@ -108,14 +108,14 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 *
 		 * @var string
 		 */
-		public static $dir_path;
+		public $dir_path;
 
 		/**
 		 * URL до плагина
 		 *
 		 * @var string
 		 */
-		public static $dir_uri;
+		public $dir_uri;
 
 		/**
 		 * Хранит экземпляр класса
@@ -167,9 +167,8 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Установка основных переменных плагина
 		 */
 		private function setup() {
-			self::$dir_path = apply_filters( 'mihdan_yandex_turbo_feed_dir_path', trailingslashit( plugin_dir_path( __FILE__ ) ) );
-			self::$dir_uri   = apply_filters( 'mihdan_yandex_turbo_feed_dir_uri', trailingslashit( plugin_dir_url( __FILE__ ) ) );
-			//echo self::$dir_path;die;
+			$this->dir_path = apply_filters( 'mihdan_yandex_turbo_feed_dir_path', trailingslashit( plugin_dir_path( __FILE__ ) ) );
+			$this->dir_uri   = apply_filters( 'mihdan_yandex_turbo_feed_dir_uri', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 		}
 
 		/**
@@ -207,6 +206,11 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
+
+			if ( is_admin() ) {
+				// Страница настроек в админке
+				require ( $this->dir_path . 'admin/settings.php' );
+			}
 		}
 
 		/**
@@ -246,35 +250,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		public function insert_enclosure() {
 			foreach ( $this->enclosure as $image ) {
 				echo $this->create_enclosure( $image['src'] );
-			}
-		}
-
-		/**
-		 * Хелпер для создания тега <category>
-		 *
-		 * @param string $category название категории
-		 *
-		 * @return string
-		 */
-		public function create_category( $category ) {
-			return sprintf( '<category>%s</category>', esc_html( $category ) );
-		}
-
-		/**
-		 * Вставка <category> в шаблон
-		 *
-		 * @param int $post_id идентификатор поста
-		 */
-		public function insert_category( $post_id ) {
-
-			$categories = wp_get_object_terms( $post_id, $this->taxonomy );
-
-			foreach ( $categories as $category ) {
-				$category_name = $this->get_category( $category->term_id );
-
-				if ( $category_name ) {
-					echo $this->create_category( $category_name );
-				}
 			}
 		}
 
@@ -376,6 +351,14 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			if ( is_feed( $this->feedname ) ) {
 				$content = $this->strip_tags( $content, $this->allowable_tags );
+
+				/**
+				 * Получить тумбочку поста
+				 */
+				if ( current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail() ) {
+					$this->get_futured_image( get_the_ID() );
+				}
+
 			}
 			if ( 1 == 2 && is_feed( $this->feedname ) ) {
 
@@ -553,7 +536,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		}
 
 		public function add_feed() {
-			require self::$dir_path . 'templates/feed.php';
+			require $this->dir_path . 'templates/feed.php';
 		}
 
 		/**
