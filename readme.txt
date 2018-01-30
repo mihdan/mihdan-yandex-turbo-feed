@@ -1,0 +1,50 @@
+=== Mihdan: Yandex Turbo Feed ===
+Author: mihdan
+Contributors: mihdan
+Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed
+Requires at least: 3.5.0
+Tested up to: 4.9.2
+Stable tag: 4.3.2
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site materials into Yandex.Turbo format.
+
+== Description ==
+Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site materials into Yandex.Turbo format.
+
+= Recommended Settings =
+The default settings that are used on a fresh install of the plugin are what we recommend.
+
+= Support =
+Need help with anything? Please create a [support topic](https://wordpress.org/support/plugin/mihdan-yandex-turbo-feed).
+
+= Feature Request =
+Want a feature added to this plugin? Create a [support topic](https://wordpress.org/support/plugin/mihdan-yandex-turbo-feed).
+We are always looking to add features to improve our plugin.
+
+= Note =
+Mihdan: No External Links **does not** make any changes to your database, it just processes the output. So you will not see these changes within the WYSIWYG editor.
+
+== Installation ==
+
+= From your WordPress dashboard =
+1. Visit 'Plugins > Add New'
+2. Search for 'Mihdan: Yandex Turbo Feed'
+3. Activate Mihdan: Yandex Turbo Feed from your Plugins page.
+4. [Optional] Configure Mihdan: Yandex Turbo Feed settings.
+
+= From WordPress.org =
+1. Download Mihdan: Yandex Turbo Feed.
+2. Upload the 'mihdan-yandex-turbo-feed' directory to your '/wp-content/plugins/' directory, using your favorite method (ftp, sftp, scp, etc...)
+3. Activate Mihdan: Yandex Turbo Feed from your Plugins page.
+4. [Optional] Configure Mihdan: Yandex Turbo Feed settings.
+
+== Changelog ==
+
+= 1.0.2 =
+Update readme.txt
+
+== System Requirements ==
+
+* WordPress 3.5+
+* PHP 5.3+
