@@ -4,7 +4,7 @@ Contributors: mihdan
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed
 Requires at least: 3.5.0
 Tested up to: 4.9.2
-Stable tag: 4.3.2
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site materials into Yandex.Turbo format.

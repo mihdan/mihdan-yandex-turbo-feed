@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -29,12 +29,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-//require_once __DIR__ . '/vendor/autoload.php';
-
-//use DiDom\Document;
-//use DiDom\Element;
-//use DiDom\Query;
 
 if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
@@ -167,6 +161,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			$this->setup();
 			$this->includes();
 			$this->hooks();
+			$this->admin_settings();
 		}
 
 		/**
@@ -174,19 +169,19 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		private function setup() {
 			$this->dir_path = apply_filters( 'mihdan_yandex_turbo_feed_dir_path', trailingslashit( plugin_dir_path( __FILE__ ) ) );
-			$this->dir_uri   = apply_filters( 'mihdan_yandex_turbo_feed_dir_uri', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+			$this->dir_uri  = apply_filters( 'mihdan_yandex_turbo_feed_dir_uri', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 		}
 
 		/**
 		 * Фильтры для переопределения настроек внутри темы
 		 */
 		public function after_setup_theme() {
-			$this->posts_per_rss = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 500 );
-			$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
-			$this->taxonomy = apply_filters( 'mihdan_yandex_turbo_feed_taxonomy', $this->taxonomy );
-			$this->feedname = apply_filters( 'mihdan_yandex_turbo_feed_feedname', $this->slug );
+			$this->posts_per_rss  = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 500 );
+			$this->categories     = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
+			$this->taxonomy       = apply_filters( 'mihdan_yandex_turbo_feed_taxonomy', $this->taxonomy );
+			$this->feedname       = apply_filters( 'mihdan_yandex_turbo_feed_feedname', $this->slug );
 			$this->allowable_tags = apply_filters( 'mihdan_yandex_turbo_feed_allowable_tags', $this->allowable_tags );
-			$this->copyright = apply_filters( 'mihdan_yandex_turbo_feed_copyright', parse_url( get_home_url(), PHP_URL_HOST ) );
+			$this->copyright      = apply_filters( 'mihdan_yandex_turbo_feed_copyright', parse_url( get_home_url(), PHP_URL_HOST ) );
 
 			// Подчеркивание нельзя использовать на старых серверах.
 			$this->feedname = str_replace( '_', '-', $this->feedname );
@@ -195,7 +190,28 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		/**
 		 * Подключаем зависимости
 		 */
-		private function includes() {}
+		private function includes() {
+			// Если класс для работы с натройками уже подключен в другом плагине.
+			if ( ! class_exists( 'WP_OSA' ) ) {
+				require_once( $this->dir_path . 'includes/class-wposa.php' );
+			}
+		}
+
+		/**
+		 * Страница настроек в админке
+		 */
+		private function admin_settings() {
+			// TODO: add settings
+			if ( is_admin() && ! 1 ) {
+				$wposa_obj = new WP_OSA();
+				$wposa_obj->add_section(
+					array(
+						'id'    => 'wposa_basic',
+						'title' => __( 'Turbo Pages', $this->slug ),
+					)
+				);
+			}
+		}
 
 		/**
 		 * Хукаем.
@@ -212,11 +228,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
-
-			if ( is_admin() ) {
-				// Страница настроек в админке
-				require ( $this->dir_path . 'admin/settings.php' );
-			}
 		}
 
 		/**
