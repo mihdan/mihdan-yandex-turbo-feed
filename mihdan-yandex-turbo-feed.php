@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -23,7 +23,7 @@
  * GitHub Plugin URI: https://github.com/mihdan/mihdan-yandex-turbo-feed/
  * GitHub Branch:     master
  * Requires WP:       4.6
- * Requires PHP:      5.3
+ * Requires PHP:      5.6
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
