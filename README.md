@@ -2,7 +2,7 @@
 WordPress-плагин, генерирующий фид для [Турбо-страниц](https://yandex.ru/adv/turbo) от компании Яндекс
 
 ## Автора ##
-"Писатель" - [Кобзарёв Михаил](https://wwww.kobzarev.com/)
+"Писатель" - [Кобзарёв Михаил](https://www.kobzarev.com/)
 
 ## Установка ##
 
@@ -57,6 +57,14 @@ add_filter( 'mihdan_yandex_turbo_feed_allowable_tags', function( $allowable_tags
 
 По умолчанию для вывода категорий используется таксономия `category`, которая переопределяется через фильтр:
 
+```
+add_filter( 'mihdan_yandex_turbo_feed_related_args', function( $args ) {
+    // Делаем что-то с запросом
+    return $args;
+} );
+```
+
+### Аргументы поиска похожих постов ###
 ```
 add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
   return 'tag';
