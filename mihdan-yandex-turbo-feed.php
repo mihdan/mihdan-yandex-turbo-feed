@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -340,7 +340,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			$url = get_the_post_thumbnail_url( $post_id, 'large' );
 
 			$this->enclosure[] = array(
-				'src' => $url,
+				'src'     => $url,
 				'caption' => esc_attr( get_the_title( $post_id ) ),
 			);
 
@@ -409,7 +409,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 				if ( current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail() ) {
 					$this->get_futured_image( get_the_ID() );
 				}
-
 			}
 			if ( 1 == 2 && is_feed( $this->feedname ) ) {
 
@@ -722,12 +721,11 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 				'ignore_sticky_posts' => true,
 				'no_found_rows' => true,
 				'post__not_in' => array( $post->ID ),
-				'orderby' => 'rand',
 			);
 
 			// Получить посты из той же категории.
 			$categories = $this->get_categories( array(
-				'post_id' => $post->ID
+				'post_id' => $post->ID,
 			));
 
 			if ( ! empty( $categories ) ) {
@@ -740,6 +738,9 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 					),
 				);
 			}
+
+			// Фильтруем аргументы запроса похожих постов.
+			$args = apply_filters( 'mihdan_yandex_turbo_feed_related_args', $args );
 
 			$query = new WP_Query( $args );
 
