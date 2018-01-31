@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -217,7 +217,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Хукаем.
 		 */
 		private function hooks() {
-			add_action( 'init', array( $this, 'init' ) );
+			add_action( 'init', array( $this, 'add_feed' ) );
 			add_action( 'pre_get_posts', array( $this, 'alter_query' ) );
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
@@ -551,9 +551,9 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		/**
 		 * Регистрация нашего фида
 		 */
-		public function init() {
+		public function add_feed() {
 			// Добавить новый фид
-			add_feed( $this->feedname, array( $this, 'add_feed' ) );
+			add_feed( $this->feedname, array( $this, 'require_feed_template' ) );
 		}
 
 		/**
@@ -585,7 +585,10 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			}
 		}
 
-		public function add_feed() {
+		/**
+		 * Подключаем шаблон фида
+		 */
+		public function require_feed_template() {
 			require $this->dir_path . 'templates/feed.php';
 		}
 
@@ -675,6 +678,11 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function on_activate() {
 			if ( current_user_can( 'activate_plugins' ) ) {
+
+				// Добавить фид
+				$this->add_feed();
+
+				// Сбросить правила реврайтов
 				flush_rewrite_rules();
 			}
 		}
