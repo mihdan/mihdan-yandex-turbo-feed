@@ -555,11 +555,23 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			global $wp_rewrite;
 
+			$registered = false;
+
 			// Добавить новый фид
 			add_feed( $this->feedname, array( $this, 'require_feed_template' ) );
 
+			// Получить правила из базы (опция `rewrite_rules`)
+			// и выбрать их те, что связаны с фидами
+			$feeds = array_keys( $wp_rewrite->wp_rewrite_rules(), 'index.php?&feed=$matches[1]' );
+
 			// Если нашего фила нет в списке реврайтов - сбросим правила
-			if ( ! in_array( $this->feedname, $wp_rewrite->feeds ) ) {
+			foreach ( $feeds as $feed ) {
+				if ( false !== strpos( $feed, $this->feedname ) ) {
+					$registered = true;
+					break;
+				}
+			}
+			if ( ! $registered ) {
 				flush_rewrite_rules( false );
 			}
 		}
