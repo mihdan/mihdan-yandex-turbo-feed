@@ -3,6 +3,7 @@ Author: mihdan
 Contributors: mihdan
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed
 Requires at least: 3.5.0
+Requires PHP: 5.6
 Tested up to: 4.9.2
 Stable tag: 1.0.3
 License: GPLv2 or later
