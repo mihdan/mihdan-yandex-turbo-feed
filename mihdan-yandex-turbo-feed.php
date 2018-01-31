@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -45,7 +45,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		/**
 		 * @var string $feedname слюг фида
 		 */
-		public $feedname;
+		public $feedname = 'mihdan_yandex_turbo_feed';
 
 		/**
 		 * @var string $copyright текст копирайта для фото
@@ -677,23 +677,19 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Сбросить реврайты при активации плагина.
 		 */
 		public function on_activate() {
-			if ( current_user_can( 'activate_plugins' ) ) {
 
-				// Добавить фид
-				$this->add_feed();
+			// Добавить фид
+			$this->add_feed();
 
-				// Сбросить правила реврайтов
-				flush_rewrite_rules();
-			}
+			// Сбросить правила реврайтов
+			flush_rewrite_rules();
 		}
 
 		/**
 		 * Сбросить реврайты при деактивации плагина.
 		 */
 		public function on_deactivate() {
-			if ( current_user_can( 'activate_plugins' ) ) {
-				flush_rewrite_rules();
-			}
+			flush_rewrite_rules();
 		}
 
 		public function get_categories( $args = [] ) {
@@ -701,7 +697,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			$taxonomy = $this->taxonomy;
 
 			$default = [
-				'hide_empty' => false
+				'hide_empty' => false,
 			];
 
 			$args = wp_parse_args( $args, $default );
@@ -724,11 +720,11 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			$post = get_post();
 
 			$args = array(
-				'post_type' => 'post',
-				'posts_per_page' => 10,
+				'post_type'           => 'post',
+				'posts_per_page'      => 10,
 				'ignore_sticky_posts' => true,
-				'no_found_rows' => true,
-				'post__not_in' => array( $post->ID ),
+				'no_found_rows'       => true,
+				'post__not_in'        => array( $post->ID ),
 			);
 
 			// Получить посты из той же категории.
@@ -737,12 +733,12 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			));
 
 			if ( ! empty( $categories ) ) {
-				$category = array_shift( $categories );
+				$category          = array_shift( $categories );
 				$args['tax_query'] = array(
 					array(
 						'taxonomy' => 'category',
-						'field' => 'id',
-						'terms' => $category->term_id,
+						'field'    => 'id',
+						'terms'    => $category->term_id,
 					),
 				);
 			}
