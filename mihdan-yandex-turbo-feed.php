@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.0.7
+ * Version: 1.0.8
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -32,10 +32,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
+	// Слюг плагина
+	define( 'MIHDAN_YANDEX_TURBO_FEED_SLUG', 'mihdan_yandex_turbo_feed' );
+
 	/**
 	 * Class Mihdan_Yandex_Turbo_Feed
 	 */
 	class Mihdan_Yandex_Turbo_Feed {
+
+		private $defaults = array();
 
 		/**
 		 * @var string слюг плагина
@@ -134,9 +139,14 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		/**
 		 * Таксономия для соотношений.
 		 *
-		 * @var string
+		 * @var array
 		 */
 		private $taxonomy = array( 'category' );
+
+		/**
+		 * @var array список постов для вывода
+		 */
+		private $post_type = array( 'post' );
 
 		/**
 		 * Вернуть единственный экземпляр класса
@@ -161,7 +171,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			$this->setup();
 			$this->includes();
 			$this->hooks();
-			$this->admin_settings();
 		}
 
 		/**
@@ -179,6 +188,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			$this->posts_per_rss  = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 500 );
 			$this->categories     = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
 			$this->taxonomy       = apply_filters( 'mihdan_yandex_turbo_feed_taxonomy', $this->taxonomy );
+			$this->post_type      = apply_filters( 'mihdan_yandex_turbo_feed_post_type', $this->post_type );
 			$this->feedname       = apply_filters( 'mihdan_yandex_turbo_feed_feedname', $this->slug );
 			$this->allowable_tags = apply_filters( 'mihdan_yandex_turbo_feed_allowable_tags', $this->allowable_tags );
 			$this->copyright      = apply_filters( 'mihdan_yandex_turbo_feed_copyright', parse_url( get_home_url(), PHP_URL_HOST ) );
@@ -192,25 +202,11 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		private function includes() {
 			// Если класс для работы с натройками уже подключен в другом плагине.
-			if ( ! class_exists( 'WP_OSA' ) ) {
+			if ( is_admin() && ! class_exists( 'WP_OSA' ) ) {
 				require_once( $this->dir_path . 'includes/class-wposa.php' );
 			}
-		}
 
-		/**
-		 * Страница настроек в админке
-		 */
-		private function admin_settings() {
-			// TODO: add settings
-			if ( is_admin() && ! 1 ) {
-				$wposa_obj = new WP_OSA();
-				$wposa_obj->add_section(
-					array(
-						'id'    => 'wposa_basic',
-						'title' => __( 'Turbo Pages', $this->slug ),
-					)
-				);
-			}
+			require_once( $this->dir_path . 'admin/settings.php' );
 		}
 
 		/**
@@ -602,6 +598,9 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 				// Ограничить посты 50-ю
 				$wp_query->set( 'posts_per_rss', $this->posts_per_rss );
+
+				// Впариваем нужные нам типы постов
+				$wp_query->set( 'post_type', $this->post_type );
 			}
 		}
 
