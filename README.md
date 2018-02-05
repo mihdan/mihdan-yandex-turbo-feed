@@ -80,3 +80,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 ## Лицензия ##
 
 Данный WordPress-плагин с открытым исходным кодом под лицензией [MIT](https://opensource.org/licenses/MIT).
+
+## Подробности ##
+
+Более подробную информацию о проекте вы можете найти у меня в [блоге](https://www.kobzarev.com/projects/yandex-turbo-feed/).
