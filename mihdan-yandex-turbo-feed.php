@@ -878,9 +878,16 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		}
 	}
 
+	/**
+	 * Инициализирем плагин
+	 *
+	 * @return Mihdan_Yandex_Turbo_Feed
+	 */
 	function mihdan_yandex_turbo_feed() {
 		return Mihdan_Yandex_Turbo_Feed::get_instance();
 	}
 
 	mihdan_yandex_turbo_feed();
 }
+
+// eof;
