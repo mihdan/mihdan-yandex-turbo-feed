@@ -148,7 +148,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 *
 		 * @var array
 		 */
-		private $taxonomy = array( 'category' );
+		private $taxonomy = array( 'category', 'post_tag' );
 
 		/**
 		 * @var array список постов для вывода
@@ -192,7 +192,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Фильтры для переопределения настроек внутри темы
 		 */
 		public function after_setup_theme() {
-			$this->posts_per_rss  = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 500 );
+			$this->posts_per_rss  = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 50 );
 			$this->categories     = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
 			$this->taxonomy       = apply_filters( 'mihdan_yandex_turbo_feed_taxonomy', $this->taxonomy );
 			$this->post_type      = apply_filters( 'mihdan_yandex_turbo_feed_post_type', $this->post_type );
@@ -235,12 +235,48 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_menu' ) );
+			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 
 			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
+		}
+
+		/**
+		 * Генерим тег категории
+		 *
+		 * @param string $category название категории
+		 *
+		 * @return string
+		 */
+		public function create_category( $category ) {
+			return sprintf( '<category><![CDATA[%s]]></category>', html_entity_decode( $category, ENT_COMPAT, 'UTF-8' ) );
+		}
+
+		/**
+		 * Вставляем категории поста в фид
+		 *
+		 * @param integer $post_id идентификатор поста
+		 */
+		public function insert_category( $post_id ) {
+
+			// Получить категории текущего поста
+			$categories = $this->get_categories( array(
+				'post_id' => $post_id,
+				'fields'  => 'names',
+			) );
+
+			// Сгенерить тег категории
+			if ( $categories ) {
+				// Выбрать уникальные термы, так как они
+				// могут совпадать в разных таксономиях
+				$categories = array_unique( $categories );
+				foreach ( $categories as $category ) {
+					echo $this->create_category( $category );
+				}
+			}
 		}
 
 		/**
@@ -318,6 +354,17 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		}
 
 		/**
+		 * Генерим тег <menu>
+		 *
+		 * @param string $menu строка с меню
+		 *
+		 * @return string
+		 */
+		public function create_menu( $menu ) {
+			return sprintf( '<menu>%s</menu>', $menu );
+		}
+
+		/**
 		 * Вставлем пользовательское меню
 		 * в каждый item фида
 		 */
@@ -338,7 +385,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 				$menu = strip_tags( $menu, '<a>' );
 
 				// Вывести меню
-				echo sprintf( '<menu>%s</menu>', $menu );
+				echo $this->create_menu( $menu );
 			}
 		}
 
@@ -711,7 +758,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * @return array
 		 */
 		public function get_taxonomy() {
-			return $this->taxonomy;
+			return (array) $this->taxonomy;
 		}
 
 		/**
@@ -789,20 +836,37 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 				'post__not_in'        => array( $post->ID ),
 			);
 
-			// Получить посты из той же категории.
-			$categories = $this->get_categories( array(
+			// Получить ID всех термов поста
+			// во всех его таксономиях
+			$ids = $this->get_categories( array(
 				'post_id' => $post->ID,
-			));
+				'fields'  => 'ids',
+			) );
 
-			if ( ! empty( $categories ) ) {
-				$category          = array_shift( $categories );
-				$args['tax_query'] = array(
-					array(
-						'taxonomy' => $this->get_taxonomy(),
-						'field'    => 'id',
-						'terms'    => $category->term_id,
-					),
-				);
+			if ( ! empty( $ids ) ) {
+
+				// Получить массив слагов таксономий
+				$taxonomies = $this->get_taxonomy();
+
+				// Если переданы таксономии
+				if ( $taxonomies ) {
+
+					// Если таксономий больше одной,
+					// ставим логику ИЛИ
+					if ( count( $taxonomies ) > 1 ) {
+						$args['tax_query']['relation'] = 'OR';
+					}
+
+					// Формируем запрос на поиск по термам
+					// для каждой таксономии
+					foreach ( $taxonomies as $taxonomy ) {
+						$args['tax_query'][] = array(
+							'taxonomy' => $taxonomy,
+							'field'    => 'id',
+							'terms'    => $ids,
+						);
+					}
+				}
 			}
 
 			// Фильтруем аргументы запроса похожих постов.

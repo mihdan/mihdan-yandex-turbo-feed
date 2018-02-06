@@ -21,7 +21,6 @@ echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>
 				<link><?php the_permalink_rss(); ?></link>
 				<title><?php the_title_rss(); ?></title>
 				<author><?php the_author(); ?></author>
-				<?php the_category_rss('rss2') ?>
 				<pubDate><?php echo get_post_time( 'r', true ); ?></pubDate>
 				<turbo:content>
 					<![CDATA[
