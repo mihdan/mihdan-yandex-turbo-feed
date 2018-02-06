@@ -666,7 +666,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Получить название такосномии для соотношений.
 		 * По-умолчанию, это category.
 		 *
-		 * @return string
+		 * @return array
 		 */
 		public function get_taxonomy() {
 			return $this->taxonomy;
@@ -740,7 +740,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			$post = get_post();
 
 			$args = array(
-				'post_type'           => 'post',
+				'post_type'           => $this->post_type,
 				'posts_per_page'      => 10,
 				'ignore_sticky_posts' => true,
 				'no_found_rows'       => true,
