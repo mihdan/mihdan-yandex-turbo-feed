@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.0.10
+ * Version: 1.0.11
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -756,7 +756,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 		public function get_categories( $args = [] ) {
 
-			$taxonomy = $this->taxonomy;
+			$taxonomy = $this->get_taxonomy();
 
 			$default = [
 				'hide_empty' => false,
@@ -798,7 +798,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 				$category          = array_shift( $categories );
 				$args['tax_query'] = array(
 					array(
-						'taxonomy' => 'category',
+						'taxonomy' => $this->get_taxonomy(),
 						'field'    => 'id',
 						'terms'    => $category->term_id,
 					),
