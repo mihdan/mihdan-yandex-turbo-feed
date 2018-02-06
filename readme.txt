@@ -5,7 +5,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 4.6
 Requires PHP: 5.6
 Tested up to: 4.9.2
-Stable tag: 1.0.11
+Stable tag: 1.0.11.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site materials into Yandex.Turbo format.
@@ -42,12 +42,16 @@ Mihdan: Yandex Turbo Feed **does not** make any changes to your database, it jus
 
 == Changelog ==
 
+= 1.0.11.1 =
+* Решение проблемы с readme.txt
+
 = 1.0.11 =
-* Добавлена поддержка меню <menu> в фид
-* Добавлена поддержка цитат <blockquote>
-* Добавлена поддержка таблиц <table>
-* Добавлена поддержка встраиваний <iframe>
+* Добавлена поддержка меню
+* Добавлена поддержка цитат
+* Добавлена поддержка таблиц
+* Добавлена поддержка встраиваний
 * Пофиксил работу с кастомными такономиями
+* Пофиксил поиск таксономий в похожих постах
 
 = 1.0.10 =
 * Некоторые фильтры не применялись из темы, если переопределен слаг плагина
@@ -72,10 +76,10 @@ Mihdan: Yandex Turbo Feed **does not** make any changes to your database, it jus
 * Remove random argument from related query
 
 = 1.0.3 =
-Deploy to wp.org
+* Deploy to wp.org
 
 = 1.0.2 =
-Update readme.txt
+* Update readme.txt
 
 == System Requirements ==
 
