@@ -432,47 +432,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		}
 
 		/**
-		 * Генерим валидный тег <figure>
-		 *
-		 * @param $src
-		 * @param $caption
-		 * @param $copyright
-		 *
-		 * @return Element
-		 */
-		public function create_valid_structure( $src, $caption, $copyright, $width, $height ) {
-
-			// Создаем тег <figure>
-			$figure = new Element( 'figure' );
-
-			// Создаем тег <img>
-			$img = new Element( 'img', null, array(
-				'src' => $src,
-				'width' => $width,
-				'height' => $height,
-			) );
-
-			// Создаем тег <figcaption>
-			$figcaption = new Element( 'figcaption', $caption );
-
-			// Создаем тег <span class="copyright">
-			$copyright = new Element( 'span', $copyright, array(
-				'class' => 'copyright',
-			) );
-
-			// Вкладываем тег <img> в <figure>
-			$figure->appendChild( $img );
-
-			// Вкладываем тег <span class="copyright"> в <figcaption>
-			$figcaption->appendChild( $copyright );
-
-			// Вкладываем тег <figcaption> в <figure>
-			$figure->appendChild( $figcaption );
-
-			return $figure;
-		}
-
-		/**
 		 * Форматируем контент <item>'а в соответствии со спекой
 		 *
 		 * Преобразуем HTML-контент в DOM-дерево,
@@ -495,140 +454,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 					$this->get_futured_image( get_the_ID() );
 				}
 			}
-			if ( 1 == 2 && is_feed( $this->feedname ) ) {
-
-				$this->enclosure = array();
-
-				$content = $this->strip_tags( $content, $this->allowable_tags );
-				$content = $this->clear_xml( $content );
-
-				$document = new Document();
-				//$document->format( true );
-
-				// Не добавлять теги <html>, <body>, <doctype>
-				$document->loadHtml( $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOBLANKS );
-
-				$copyright = $this->copyright;
-
-				/**
-				 * Получить тумбочку поста
-				 */
-				if ( current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail() ) {
-					$this->get_futured_image( get_the_ID() );
-				}
-
-				/**
-				 * Если включена поддержка тегов <figure> на уровне двигла,
-				 * то теги <figure>, <figcaption> уже есть и надо добавить
-				 * только span.copyright
-				 */
-				if ( current_theme_supports( 'html5', 'caption' ) ) {
-
-					$figures = $document->find( 'figure.wp-caption' );
-
-					foreach ( $figures as $figure ) {
-
-						/** @var Element $figure */
-						/** @var Element $image */
-
-						// Ищем картинку <img class="wp-image-*">
-						$image = $figure->first( 'img[class*="wp-image"]' );
-						$src = $image->attr( 'src' );
-						$size = $this->get_image_size( $src );
-
-						// Ищем подпись <figcaption class="wp-caption-text">
-						$figcaption = $image->nextSibling( 'figcaption.wp-caption-text' );
-						$caption = $figcaption->text();
-
-						$this->enclosure[] = array(
-							'src' => $src,
-							'caption' => $caption,
-						);
-
-						$figure->replace( $this->create_valid_structure( $src, $caption, $copyright, $size[0], $size[1] ) );
-					}
-				} else {
-					$figures = $document->find( 'div.wp-caption' );
-
-					foreach ( $figures as $figure ) {
-
-						/** @var Element $figure */
-						/** @var Element $image */
-
-						// Ищем картинку <img class="wp-image-*">
-						$image = $figure->first( 'img[class*="wp-image-"]' );
-						$src = $image->attr( 'src' );
-						$size = $this->get_image_size( $src );
-
-						// Ищем подпись <figcaption class="wp-caption-text">
-						$figcaption = $image->nextSibling( 'p.wp-caption-text' );
-						$caption = $figcaption->text();
-
-						$this->enclosure[] = array(
-							'src' => $src,
-							'caption' => $caption,
-						);
-
-						$figure->replace( $this->create_valid_structure( $src, $caption, $copyright, $size[0], $size[1] ) );
-					}
-				} // End if().
-
-				/**
-				 * Если нет ни HTML5 ни HTML4 нотации,
-				 * ищем простые теги <img>, ставим их ALT
-				 * в <figcaption>, и добавляем <span class="copyright">
-				 */
-				$images = $document->find( 'p > img[class*="wp-image-"]' );
-
-				if ( $images ) {
-					foreach ( $images as $image ) {
-						/** @var Element $image */
-						/** @var Element $paragraph */
-						$paragraph = $image->parent();
-						$src = $image->attr( 'src' );
-						$size = $this->get_image_size( $src );
-
-						$caption = $image->attr( 'alt' );
-
-						$this->enclosure[] = array(
-							'src' => $src,
-							'figcaption' => $caption,
-						);
-
-						// Заменяем тег <img> на сгенерированую конструкцию
-						$paragraph->replace( $this->create_valid_structure( $src, $caption, $copyright, $size[0], $size[1] ) );
-
-					}
-				}
-
-				/**
-				 * Если нет ни HTML5 ни HTML4 нотации,
-				 * ищем простые теги <img> внутри <div>
-				 */
-				$images = $document->find( 'div > img' );
-
-				if ( $images ) {
-					foreach ( $images as $image ) {
-						/** @var Element $image */
-						/** @var Element $paragraph */
-						$paragraph = $image->parent();
-						$src = $image->attr( 'src' );
-						$size = $this->get_image_size( $src );
-						$caption = $image->attr( 'alt' );
-
-						$this->enclosure[] = array(
-							'src' => $src,
-							'figcaption' => $caption,
-						);
-
-						// Заменяем тег <img> на сгенерированую конструкцию
-						$paragraph->replace( $this->create_valid_structure( $src, $caption, $copyright, $size[0], $size[1] ) );
-
-					}
-				}
-
-				$content = $document->format( true )->html();
-			} // End if().
 
 			return $content;
 		}
@@ -787,9 +612,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function on_activate() {
 
-			// Добавить фид
-			// $this->add_feed();
-
 			// Сбросить правила реврайтов
 			flush_rewrite_rules();
 		}
@@ -798,6 +620,8 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Сбросить реврайты при деактивации плагина.
 		 */
 		public function on_deactivate() {
+
+			// Сбросить правила реврайтов
 			flush_rewrite_rules();
 		}
 
