@@ -96,6 +96,13 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			'<figcaption>',
 			'<video>',
 			'<source>',
+			'<iframe>',
+			'<blockquote>',
+			'<table>',
+			'<tr>',
+			'<th>',
+			'<td>',
+			'<menu>',
 		);
 
 		/**
