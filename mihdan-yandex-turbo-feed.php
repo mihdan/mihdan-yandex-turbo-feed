@@ -205,6 +205,14 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		}
 
 		/**
+		 * Регистрируем новую область меню
+		 * для создания меню в админке
+		 */
+		public function register_nav_menu() {
+			register_nav_menu( $this->slug, 'Яндекс.Турбо' );
+		}
+
+		/**
 		 * Подключаем зависимости
 		 */
 		private function includes() {
@@ -223,8 +231,10 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'init', array( $this, 'add_feed' ) );
 			add_action( 'pre_get_posts', array( $this, 'alter_query' ) );
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
+			add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
+			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_menu' ) );
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
@@ -304,6 +314,31 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 					);
 				}
 				echo '</yandex:related>';
+			}
+		}
+
+		/**
+		 * Вставлем пользовательское меню
+		 * в каждый item фида
+		 */
+		public function insert_menu() {
+
+			// Если юзер сделал меню
+			if ( has_nav_menu( $this->slug ) ) {
+
+				// Получить меню
+				$menu = wp_nav_menu( array(
+					'theme_location' => $this->slug,
+					'container'      => false,
+					'echo'           => false,
+					'depth'          => 1,
+				) );
+
+				// Оставить в меню только ссылки
+				$menu = strip_tags( $menu, '<a>' );
+
+				// Вывести меню
+				echo sprintf( '<menu>%s</menu>', $menu );
 			}
 		}
 
