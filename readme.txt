@@ -1,13 +1,15 @@
 === Mihdan: Yandex Turbo Feed ===
 Author: mihdan
 Contributors: mihdan
+Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed
 Requires at least: 4.6
 Requires PHP: 5.6
 Tested up to: 4.9.2
-Stable tag: 1.0.13
+Stable tag: 1.0.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
 Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site materials into Yandex.Turbo format.
 
 == Description ==
@@ -41,6 +43,9 @@ Mihdan: Yandex Turbo Feed **does not** make any changes to your database, it jus
 4. [Optional] Configure Mihdan: Yandex Turbo Feed settings.
 
 == Changelog ==
+
+= 1.0.14 =
+* cdata для названий похожих постов
 
 = 1.0.13 =
 * Решение проблемы с readme.txt
