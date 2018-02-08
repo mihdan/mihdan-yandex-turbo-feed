@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 4.6
 Requires PHP: 5.6
 Tested up to: 4.9.2
-Stable tag: 1.0.14
+Stable tag: 1.0.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,7 +53,20 @@ add_filter( 'mihdan_yandex_turbo_feed_posts_per_rss', function( $posts_per_rss )
 } );
 ```
 
+=Как изменить ярлык ленты=
+
+По умолчанию ярлык для ленты выглядит как `mihdan-yandex-turbo-feed`, если вам не нравится такое название, можете его переименовать через фильтр:
+
+```
+add_filter( 'mihdan_yandex_turbo_feed_feedname', function( $slug ) {
+  return 'yandex-turbo';
+} );
+```
+
 == Changelog ==
+
+= 1.0.15 =
+* Обновил readme.txt
 
 = 1.0.14 =
 * cdata для названий похожих постов
