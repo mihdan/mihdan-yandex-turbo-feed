@@ -42,6 +42,15 @@ Mihdan: Yandex Turbo Feed **does not** make any changes to your database, it jus
 3. Activate Mihdan: Yandex Turbo Feed from your Plugins page.
 4. [Optional] Configure Mihdan: Yandex Turbo Feed settings.
 
+== Frequently Asked Questions ==
+==Как изменить количество постов в ленте==
+Согласно [спеке](https://yandex.ru/support/webmaster/turbo/feed.html) Яндекса, материалов в RSS-ленте для Турбо-страниц может быть до 500. Добавил фильтр на тот случай, если вы хотите выводить их меньше:
+```
+add_filter( 'mihdan_yandex_turbo_feed_posts_per_rss', function( $posts_per_rss ) {
+  return 500;
+} );
+```
+
 == Changelog ==
 
 = 1.0.14 =
