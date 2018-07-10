@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.0.15
+ * Version: 1.1.0
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -103,6 +103,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			'<th>',
 			'<td>',
 			'<menu>',
+			'<hr>',
 		);
 
 		/**
@@ -234,8 +235,9 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
-			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_menu' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
+			add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
+			add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
@@ -387,6 +389,27 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 				// Вывести меню
 				echo $this->create_menu( $menu );
 			}
+		}
+
+		/**
+		 * Вставляет блок с шерами
+		 */
+		public function insert_share() {
+
+			// Массив предустановленных социальных сетей
+			$networks = array(
+				'facebook',
+				'google',
+				'odnoklassniki',
+				'telegram',
+				'twitter',
+				'vkontakte',
+			);
+
+			// Возможность отфильтровать соцсети
+			$network = apply_filters( 'mihdan_yandex_turbo_feed_networks', $networks );
+
+			echo sprintf( '<div data-block="share" data-network="%s"></div>', implode( ',', $network ) );
 		}
 
 		/**

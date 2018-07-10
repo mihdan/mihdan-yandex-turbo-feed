@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 4.6
 Requires PHP: 5.6
 Tested up to: 4.9.2
-Stable tag: 1.0.15
+Stable tag: 1.0.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,11 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 ```
 
 == Changelog ==
+
+= 1.1.0 =
+* Добавил поддержку элемента `turbo:cms_plugin` для указания идентификатора плагина
+* Перенёс тег `<menu>` внутрь тега `<header>` в связи с изменением спеки
+* Добавлен блок с шерами
 
 = 1.0.15 =
 * Обновил readme.txt
