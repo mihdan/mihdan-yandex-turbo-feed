@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -238,6 +238,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
+			add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_comments' ) );
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
@@ -353,6 +354,60 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 				}
 				echo '</yandex:related>';
 			}
+		}
+
+		public function insert_comments() {
+
+			if ( comments_open() || have_comments() ) {
+
+				// Полуить массив комментариев
+				$comments = get_comments( array(
+					'post_id' => get_the_ID(),
+					'status'  => 'approve',
+					'type'    => 'comment',
+				) );
+
+				//comments_template();
+				$args = array(
+					'style'        => 'div',
+					'avatar_size'  => 64,
+					'per_page'     => 40, // яндекс обрабатывает не более 40 комментов
+					'callback'     => array( $this, 'comments_callback' ),
+					'end-callback' => array( $this, 'comments_end_callback' ),
+				);
+
+				printf( '<div data-block="comments" data-url="%s#comments">', get_permalink() );
+					wp_list_comments( $args, $comments );
+				echo '</div>';
+			}
+		}
+
+		public function comments_callback( $comment, $args, $depth ) {
+			?>
+			<div
+				data-block="comment"
+				data-author="<?php comment_author(); ?>"
+				data-avatar-url="<?php echo esc_url( get_avatar_url( $comment, 64 ) ); ?>"
+				data-subtitle="<?php echo get_comment_date(); ?> в <?php echo get_comment_time(); ?>"
+			>
+				<div data-block="content">
+					<?php comment_text(); ?>
+				</div>
+				<?php if ( $args['has_children'] ) : ?>
+					<div data-block="comments">
+				<?php endif; ?>
+			<?php
+
+			return;
+		}
+
+		public function comments_end_callback( $comment, $args, $depth ) {
+			?>
+			</div>
+			<?php if ( 1 === $depth ) : ?>
+				</div>
+			<?php endif; ?>
+			<?php
 		}
 
 		/**
@@ -671,6 +726,38 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			return $result;
 		}
 
+		/**
+		 * Получить комментарии к посту
+		 *
+		 * @return array|int
+		 */
+		public function get_comments() {
+
+			// Массив под комменты
+			$comments = array();
+
+			// Получить текущий пост
+			$post = get_post();
+
+			// Аргументы запроса комментариев
+			$args = array(
+				'post_id' => $post->ID,
+			);
+
+			// Фильтруем аргументы запроса комментариев
+			$args = apply_filters( 'mihdan_yandex_turbo_feed_comments_args', $args );
+
+			// Выполняем запрос по аргументам
+			$query = new WP_Comment_Query;
+
+			return $query->query( $args );
+		}
+
+		/**
+		 * Получить массив похожих постов
+		 *
+		 * @return WP_Query
+		 */
 		public function get_related() {
 
 			$post = get_post();
