@@ -360,14 +360,19 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			if ( comments_open() || have_comments() ) {
 
-				// Полуить массив комментариев
-				$comments = get_comments( array(
+				// Аргументы получения комментариев
+				$comments_args = array(
 					'post_id' => get_the_ID(),
 					'status'  => 'approve',
 					'type'    => 'comment',
-				) );
+				);
 
-				//comments_template();
+				// Фильтруем аргументы получения комментариев
+				$comments_args = apply_filters( 'mihdan_yandex_turbo_feed_comments_args', $comments_args );
+
+				// Получаем комментарии
+				$comments = get_comments( $comments_args );
+
 				$args = array(
 					'style'        => 'div',
 					'avatar_size'  => 64,
@@ -724,33 +729,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			}
 
 			return $result;
-		}
-
-		/**
-		 * Получить комментарии к посту
-		 *
-		 * @return array|int
-		 */
-		public function get_comments() {
-
-			// Массив под комменты
-			$comments = array();
-
-			// Получить текущий пост
-			$post = get_post();
-
-			// Аргументы запроса комментариев
-			$args = array(
-				'post_id' => $post->ID,
-			);
-
-			// Фильтруем аргументы запроса комментариев
-			$args = apply_filters( 'mihdan_yandex_turbo_feed_comments_args', $args );
-
-			// Выполняем запрос по аргументам
-			$query = new WP_Comment_Query;
-
-			return $query->query( $args );
 		}
 
 		/**
