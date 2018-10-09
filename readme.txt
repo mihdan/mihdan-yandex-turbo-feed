@@ -100,7 +100,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 
 == Changelog ==
 
-= 1.1.3 (2018-08-08) =
+= 1.1.3 (2018-10-09) =
 * Исправил косяки в readme, добавил хук `mihdan_yandex_turbo_feed_channel` в фид
 
 = 1.1.2 (2018-08-08) =
