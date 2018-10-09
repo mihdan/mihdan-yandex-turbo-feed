@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 4.6
 Requires PHP: 5.6
 Tested up to: 4.9.2
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,9 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.1.3 (2018-08-08) =
+* Исправил косяки в readme, добавил хук `mihdan_yandex_turbo_feed_channel` в фид
 
 = 1.1.2 (2018-08-08) =
 * Для Турбо лимит на 1000 item по-умолчанию
