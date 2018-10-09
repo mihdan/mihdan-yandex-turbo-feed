@@ -14,7 +14,7 @@ echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>
 		<language><?php echo substr( get_bloginfo_rss( 'language' ), 0, strpos( get_bloginfo_rss( 'language' ), '-' ) ); ?></language>
 		<turbo:cms_plugin>7391CC2B1408947EFD5084459F5BD0CA</turbo:cms_plugin>
 		<?php do_action( 'rss2_head' ); ?>
-        <?php do_action( 'mihdan_yandex_turbo_feed_channel' ); ?>
+		<?php do_action( 'mihdan_yandex_turbo_feed_channel' ); ?>
 		<?php while ( have_posts() ) : the_post(); ?>
 			<item turbo="true">
 				<link><?php the_permalink_rss(); ?></link>
