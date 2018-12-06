@@ -177,7 +177,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		private function __construct() {
 			$this->setup();
-			//$this->includes();
 			$this->hooks();
 		}
 
