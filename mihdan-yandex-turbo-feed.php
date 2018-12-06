@@ -14,7 +14,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.1.3
+ * Version: 1.1.4
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -196,10 +196,10 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			$this->posts_per_rss  = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 1000 );
 			$this->categories     = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
 			$this->taxonomy       = apply_filters( 'mihdan_yandex_turbo_feed_taxonomy', $this->taxonomy );
-			$this->post_type      = apply_filters( 'mihdan_yandex_turbo_feed_post_type', $this->post_type );
+			$this->post_type      = (array) apply_filters( 'mihdan_yandex_turbo_feed_post_type', $this->post_type );
 			$this->feedname       = apply_filters( 'mihdan_yandex_turbo_feed_feedname', $this->slug );
 			$this->allowable_tags = apply_filters( 'mihdan_yandex_turbo_feed_allowable_tags', $this->allowable_tags );
-			$this->copyright      = apply_filters( 'mihdan_yandex_turbo_feed_copyright', parse_url( get_home_url(), PHP_URL_HOST ) );
+			$this->copyright      = apply_filters( 'mihdan_yandex_turbo_feed_copyright', wp_parse_url( get_home_url(), PHP_URL_HOST ) );
 
 			// Подчеркивание нельзя использовать на старых серверах.
 			$this->feedname = str_replace( '_', '-', $this->feedname );
@@ -216,14 +216,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		/**
 		 * Подключаем зависимости
 		 */
-		private function includes() {
-			// Если класс для работы с натройками уже подключен в другом плагине.
-			if ( is_admin() && ! class_exists( 'WP_OSA' ) ) {
-				require_once( $this->dir_path . 'includes/class-wposa.php' );
-			}
-
-			require_once( $this->dir_path . 'admin/settings.php' );
-		}
+		private function includes() {}
 
 		/**
 		 * Хукаем.
@@ -239,12 +232,58 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_comments' ) );
+			add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
+			add_action( 'save_post', array( $this, 'save_meta_box' ) );
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 
 			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
+		}
+
+		/**
+		 * Добавляем метабок с настройками поста.
+		 */
+		public function add_meta_box() {
+
+			// На каких экранах админки показывать.
+			$screen = $this->post_type;
+
+			// Добавляем метабокс.
+			add_meta_box( $this->slug, 'Турбо-страницы', array( $this, 'render_meta_box' ), $screen, 'side', 'high' );
+		}
+
+		/**
+		 * Отрисовываем содержимое метабокса с настройками поста.
+		 */
+		public function render_meta_box() {
+			$exclude = (bool) get_post_meta( get_the_ID(), $this->slug . '_exclude', true );
+			?>
+			<label for="<?php echo esc_attr( $this->slug ); ?>_exclude" title="Включить/Исключить запись из ленты">
+				<input type="checkbox" value="1" name="<?php echo esc_attr( $this->slug ); ?>_exclude" id="<?php echo esc_attr( $this->slug ); ?>_exclude" <?php checked( $exclude, true ); ?>> Исключить из ленты
+			</label>
+			<?php
+		}
+
+		/**
+		 * Созраняем данные метабокса.
+		 *
+		 * @param int $post_id идентификатор записи.
+		 */
+		public function save_meta_box( $post_id ) {
+			if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) ) {
+				return;
+			}
+			if ( ! current_user_can( 'edit_post', $post_id ) ) {
+				return;
+			}
+
+			if ( isset( $_POST[ $this->slug . '_exclude' ] ) ) {
+				update_post_meta( $post_id, $this->slug . '_exclude', 1 );
+			} else {
+				delete_post_meta( $post_id, $this->slug . '_exclude' );
+			}
 		}
 
 		/**
@@ -599,6 +638,22 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 				// Впариваем нужные нам типы постов
 				$wp_query->set( 'post_type', $this->post_type );
+
+				// Получаем текущие мета запросы.
+				$meta_query = $wp_query->get( 'meta_query' );
+
+				if ( empty( $meta_query ) ) {
+					$meta_query = array();
+				}
+
+				// Добавляем исключения.
+				$meta_query[] = array(
+					'key'     => $this->slug . '_exclude',
+					'compare' => 'NOT EXISTS',
+				);
+
+				// Исключаем записи с галочкой в админке
+				$wp_query->set( 'meta_query', $meta_query );
 			}
 		}
 
