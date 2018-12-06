@@ -593,7 +593,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			// Получить правила из базы (опция `rewrite_rules`)
 			// и выбрать их те, что связаны с фидами
-			$feeds = array_keys( $wp_rewrite->wp_rewrite_rules(), 'index.php?&feed=$matches[1]' );
+			$feeds = array_keys( $wp_rewrite->wp_rewrite_rules(), 'index.php?&feed=$matches[1]', true );
 
 			// Если нашего фила нет в списке реврайтов - сбросим правила
 			foreach ( $feeds as $feed ) {
