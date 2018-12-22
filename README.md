@@ -1,6 +1,8 @@
 # Mihdan: Yandex Turbo Feed
 WordPress-плагин, генерирующий фид для [Турбо-страниц](https://yandex.ru/adv/turbo) от компании Яндекс
 
+![Mihdan: Yandex Turbo Feed](./screenshot-1.png)
+
 ## Автора ##
 "Писатель" - [Кобзарёв Михаил](https://www.kobzarev.com/)
 
