@@ -85,3 +85,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 ## Подробности ##
 
 Более подробную информацию о проекте вы можете найти у меня в [блоге](https://www.kobzarev.com/projects/yandex-turbo-feed/).
+
+## Donation Button
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BENCPARA8S224)
