@@ -113,8 +113,43 @@ Redux::setArgs( $opt_name, $args );
 Redux::setSection( $opt_name, array(
     'title'            => __( 'General', 'mihdan-yandex-turbo-feed' ),
     'id'               => 'general',
-   // 'desc'             => __( 'These are really basic fields!', 'redux-framework-demo' ),
-    'icon'             => 'el el-home',
+    'icon'             => 'el el-rss',
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Feed', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'general-feed',
+	'subsection'       => true,
+	'desc'             => __( 'Настройки ленты', 'mihdan-yandex-turbo-feed' ),
+	'fields'           => array(
+		array(
+			'id'       => 'feed_slug',
+			'type'     => 'text',
+			'title'    => __( 'Feed Slug', 'mihdan-yandex-turbo-feed' ),
+			'default'  => $opt_name,
+		),
+		array(
+			'id'       => 'feed_charset',
+			'type'     => 'select',
+			'title'    => __( 'Feed Charset', 'mihdan-yandex-turbo-feed' ),
+			'desc'     => __( 'Рекомендуемая кодировка UTF-8', 'mihdan-yandex-turbo-feed' ),
+			'default'  => 'UTF-8',
+			'options'  => array(
+				'UTF-8'        => 'UTF-8',
+				'KOI8-R'       => 'KOI8-R',
+				'Windows-1251' => 'Windows-1251',
+			),
+		),
+		array(
+			'id'       => 'feed_total_posts',
+			'type'     => 'spinner',
+			'title'    => __( 'Total Posts', 'mihdan-yandex-turbo-feed' ),
+			'default'  => 50,
+			'min'      => 10,
+			'max'      => 1000,
+			'step'     => 1,
+		),
+	),
 ) );
 
 Redux::setSection( $opt_name, array(
@@ -154,25 +189,155 @@ Redux::setSection( $opt_name, array(
 ) );
 
 Redux::setSection( $opt_name, array(
-	'title'            => __( 'Feed', 'mihdan-yandex-turbo-feed' ),
-	'id'               => 'general-feed',
+	'title'            => __( 'Elements', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements',
+	'icon'             => 'el el-th-list',
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Header', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-header',
 	'subsection'       => true,
-	'desc'             => __( 'Настройки ленты', 'mihdan-yandex-turbo-feed' ),
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Links', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-links',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Related Posts', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-related-posts',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Images', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-images',
+	'subsection'       => true,
 	'fields'           => array(
 		array(
-			'id'       => 'feed_slug',
-			'type'     => 'text',
-			'title'    => __( 'Feed Slug', 'mihdan-yandex-turbo-feed' ),
-			'default'  => $opt_name,
-		),
-		array(
-			'id'       => 'feed_image_copyright',
+			'id'       => 'images_copyright',
 			'type'     => 'text',
 			'title'    => __( 'Copyright', 'mihdan-yandex-turbo-feed' ),
 			'default'  => wp_parse_url( get_home_url(), PHP_URL_HOST ),
 		),
-
 	),
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Gallery', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-gallery',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Slider', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-slider',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Video', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-slider',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Share', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-share',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Blockquote', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-blockquote',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Table', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-table',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Menu', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-menu',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Social Content', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-social-content',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Yandex Map', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-yandex-map',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Yandex Music', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-yandex-music',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Comments', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-comments',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Rating', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-rating',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Widget Feedback', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-widget-feedback',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Search', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-search',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'callback', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-callback',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Button', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-button',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Accordion', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-accordion',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Ad Network', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-ad-network',
+	'subsection'       => true,
+) );
+
+Redux::setSection( $opt_name, array(
+	'title'            => __( 'Analytics', 'mihdan-yandex-turbo-feed' ),
+	'id'               => 'elements-analytics',
+	'subsection'       => true,
 ) );
 
     /*Redux::setSection( $opt_name, array(
