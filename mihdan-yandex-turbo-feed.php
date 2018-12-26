@@ -207,6 +207,10 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			// Подчеркивание нельзя использовать на старых серверах.
 			$this->feedname = str_replace( '_', '-', $this->feedname );
+
+			// Подключить конфиг Redux после фильтрации,
+			// чтобы работали переопределения полей, сделанный фильтрами ранее.
+			require_once $this->dir_path . 'includes/redux-config.php';
 		}
 
 		/**
@@ -229,7 +233,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 				// Redux Framework.
 				require_once $this->dir_path . 'vendor/redux/framework.php';
-				require_once $this->dir_path . 'includes/redux-config.php';
+
 			//}
 		}
 
@@ -676,10 +680,16 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			if ( $wp_query->is_main_query() && $wp_query->is_feed( $this->feedname ) ) {
 
 				// Ограничить посты 50-ю
-				$wp_query->set( 'posts_per_rss', $this->posts_per_rss );
+				$wp_query->set( 'posts_per_rss', $this->get_option( 'feed_total_posts' ) );
 
 				// Впариваем нужные нам типы постов
 				$wp_query->set( 'post_type', $this->post_type );
+
+				// Указываем поле для сортировки.
+				$wp_query->set( 'orderby', $this->get_option( 'feed_orderby' ) );
+
+				// Указываем направление сортировки.
+				$wp_query->set( 'order', $this->get_option( 'feed_order' ) );
 
 				// Получаем текущие мета запросы.
 				$meta_query = $wp_query->get( 'meta_query' );
