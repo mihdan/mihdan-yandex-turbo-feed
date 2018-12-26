@@ -42,8 +42,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 	 */
 	class Mihdan_Yandex_Turbo_Feed {
 
-		private $defaults = array();
-
 		/**
 		 * @var string слюг плагина
 		 */
@@ -53,16 +51,6 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * @var string $feedname слюг фида
 		 */
 		public $feedname;
-
-		/**
-		 * @var string $copyright текст копирайта для фото
-		 */
-		private $copyright;
-
-		/**
-		 * @var integer $posts_per_rss максимальное количество постов в ленте
-		 */
-		private $posts_per_rss;
 
 		/**
 		 * @var array $allowable_tags массив разрешенных тегов для контента
@@ -197,20 +185,17 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Фильтры для переопределения настроек внутри темы
 		 */
 		public function after_setup_theme() {
-			$this->posts_per_rss  = apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 1000 );
-			$this->categories     = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
-			$this->taxonomy       = apply_filters( 'mihdan_yandex_turbo_feed_taxonomy', $this->taxonomy );
-			$this->post_type      = (array) apply_filters( 'mihdan_yandex_turbo_feed_post_type', $this->post_type );
-			$this->feedname       = apply_filters( 'mihdan_yandex_turbo_feed_feedname', $this->slug );
-			$this->allowable_tags = apply_filters( 'mihdan_yandex_turbo_feed_allowable_tags', $this->allowable_tags );
-			$this->copyright      = apply_filters( 'mihdan_yandex_turbo_feed_copyright', wp_parse_url( get_home_url(), PHP_URL_HOST ) );
-
-			// Подчеркивание нельзя использовать на старых серверах.
-			$this->feedname = str_replace( '_', '-', $this->feedname );
 
 			// Подключить конфиг Redux после фильтрации,
 			// чтобы работали переопределения полей, сделанный фильтрами ранее.
 			require_once $this->dir_path . 'includes/redux-config.php';
+
+
+			$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
+
+			$this->post_type = $this->get_option( 'feed_post_type' );
+			$this->taxonomy  = $this->get_option( 'feed_taxonomy' );
+			$this->feedname  = $this->get_option( 'feed_slug' );
 		}
 
 		/**
@@ -225,16 +210,12 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Подключаем зависимости
 		 */
 		private function includes() {
-			// Для админки.
-			//if ( is_admin() ) {
 
-				// Для работы с переводами.
-				require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+			// Для работы с переводами.
+			require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 
-				// Redux Framework.
-				require_once $this->dir_path . 'vendor/redux/framework.php';
-
-			//}
+			// Redux Framework.
+			require_once $this->dir_path . 'vendor/redux/framework.php';
 		}
 
 		/**
@@ -247,6 +228,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
 			add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
 			add_action( 'plugins_loaded', array( $this, 'load_translations' ) );
+			add_action( 'redux/options/' . $this->slug . '/saved', array( $this, 'on_redux_saved' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
@@ -261,6 +243,13 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
+		}
+
+		/**
+		 * Всплывает при сохранении настроек в Redux.
+		 */
+		public function on_redux_saved() {
+			update_option( $this->slug . '_flush_rewrite_rules', 1, true );
 		}
 
 		/**
@@ -290,7 +279,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Получаем данные из поля Redux по ключу.
 		 *
 		 * @param string $key ключ поля.
-		 * @return string
+		 * @return string|array
 		 */
 		public function get_option( $key ) {
 			$option = Redux::getOption( $this->slug, $key );

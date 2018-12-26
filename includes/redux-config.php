@@ -26,6 +26,34 @@ if ( $translations ) {
 	}
 }
 
+$post_type_array = array();
+$args            = array(
+	'public' => true,
+);
+
+// Список всех публичных CPT.
+$post_types = get_post_types( $args, 'objects' );
+
+if ( $post_types ) {
+	foreach ( $post_types as $key => $value ) {
+		$post_type_array[ $key ] = $value->label;
+	}
+}
+
+$taxonomy_array = array();
+$args           = array(
+	'public' => true,
+);
+
+// Список всех зареганных таксономий.
+$taxonomies = get_taxonomies( $args, 'objects' );
+
+if ( $taxonomies ) {
+	foreach ( $taxonomies as $key => $value ) {
+		$taxonomy_array[ $key ] = $value->label;
+	}
+}
+
 /**
  * @link https://docs.reduxframework.com/core/arguments/
  * @link http://elusiveicons.com/icons/
@@ -52,7 +80,7 @@ $args = array(
 	'last_tab'           => '',
 	'page_slug'          => $this->slug,
 	'save_defaults'      => true,
-	'default_show'       => false,
+	'default_show'       => true,
 	'default_mark'       => '',
 	'show_import_export' => true,
 	'transient_time'     => 60 * MINUTE_IN_SECONDS,
@@ -108,8 +136,9 @@ Redux::setSection( $this->slug, array(
 			'id'       => 'feed_slug',
 			'type'     => 'text',
 			'title'    => __( 'Feed Slug', 'mihdan-yandex-turbo-feed' ),
-			'default'  => str_replace( '_', '-', $this->slug ),
-			'readonly' => (boolean) has_filter( 'mihdan_yandex_turbo_feed_feedname' ),
+			'default'  => apply_filters( 'mihdan_yandex_turbo_feed_feedname', str_replace( '_', '-', $this->slug ) ),
+			'validate' => 'not_empty',
+			'desc'     => get_bloginfo_rss( 'url' ) . '/feed/%slug%/',
 		),
 		array(
 			'id'      => 'feed_charset',
@@ -156,10 +185,35 @@ Redux::setSection( $this->slug, array(
 			'id'      => 'feed_total_posts',
 			'type'    => 'spinner',
 			'title'   => __( 'Total Posts', 'mihdan-yandex-turbo-feed' ),
-			'default' => 50,
+			'default' => apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 1000 ),
 			'min'     => 1,
 			'max'     => 1000,
 			'step'    => 1,
+		),
+		array(
+			'id'      => 'feed_post_type',
+			'type'    => 'select',
+			'multi'   => true,
+			'title'   => __( 'Post type', 'mihdan-yandex-turbo-feed' ),
+			'default' => apply_filters(
+				'mihdan_yandex_turbo_feed_post_type',
+				array( 'post' )
+			),
+			'options' => $post_type_array,
+		),
+		array(
+			'id'      => 'feed_taxonomy',
+			'type'    => 'select',
+			'multi'   => true,
+			'title'   => __( 'Taxonomy', 'mihdan-yandex-turbo-feed' ),
+			'default' => apply_filters(
+				'mihdan_yandex_turbo_feed_taxonomy',
+				array(
+					'category',
+					'post_tag',
+				)
+			),
+			'options' => $taxonomy_array,
 		),
 	),
 ) );
@@ -227,11 +281,10 @@ Redux::setSection(
 		'icon'   => 'el el-picture',
 		'fields' => array(
 			array(
-				'id'       => 'images_copyright',
-				'type'     => 'text',
-				'title'    => __( 'Copyright', 'mihdan-yandex-turbo-feed' ),
-				'default'  => wp_parse_url( get_home_url(), PHP_URL_HOST ),
-				'readonly' => has_filter( 'mihdan_yandex_turbo_feed_copyright' ),
+				'id'      => 'images_copyright',
+				'type'    => 'text',
+				'title'   => __( 'Copyright', 'mihdan-yandex-turbo-feed' ),
+				'default' => apply_filters( 'mihdan_yandex_turbo_feed_copyright', wp_parse_url( get_home_url(), PHP_URL_HOST ) ),
 			),
 		),
 	)
