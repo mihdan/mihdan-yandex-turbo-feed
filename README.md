@@ -1,6 +1,8 @@
 # Mihdan: Yandex Turbo Feed
 WordPress-плагин, генерирующий фид для [Турбо-страниц](https://yandex.ru/adv/turbo) от компании Яндекс
 
+![Mihdan: Yandex Turbo Feed](./screenshot-1.png)
+
 ## Автора ##
 "Писатель" - [Кобзарёв Михаил](https://www.kobzarev.com/)
 
@@ -85,3 +87,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 ## Подробности ##
 
 Более подробную информацию о проекте вы можете найти у меня в [блоге](https://www.kobzarev.com/projects/yandex-turbo-feed/).
+
+## Помочь проекту
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BENCPARA8S224)
