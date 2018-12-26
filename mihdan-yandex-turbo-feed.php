@@ -34,6 +34,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 	// Слюг плагина
 	define( 'MIHDAN_YANDEX_TURBO_FEED_SLUG', 'mihdan_yandex_turbo_feed' );
+	define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.1.5' );
 
 	/**
 	 * Class Mihdan_Yandex_Turbo_Feed
@@ -176,6 +177,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Mihdan_FAQ constructor.
 		 */
 		private function __construct() {
+			$this->includes();
 			$this->setup();
 			$this->hooks();
 		}
@@ -215,7 +217,18 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		/**
 		 * Подключаем зависимости
 		 */
-		private function includes() {}
+		private function includes() {
+			// Для админки.
+			if ( is_admin() ) {
+
+				// Для работы с переводами.
+				require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+
+				// Redux Framework.
+				require_once $this->dir_path . 'vendor/redux/framework.php';
+				require_once $this->dir_path . 'vendor/redux/config.php';
+			}
+		}
 
 		/**
 		 * Хукаем.
@@ -225,6 +238,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_action( 'pre_get_posts', array( $this, 'alter_query' ) );
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
 			add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
+			add_action( 'plugins_loaded', array( $this, 'load_translations' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
 			add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
@@ -239,6 +253,13 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
+		}
+
+		/**
+		 * Регистрируем переводы.
+		 */
+		public function load_translations() {
+			load_plugin_textdomain( 'mihdan-yandex-turbo-feed', false, $this->dir_path . 'languages' );
 		}
 
 		/**
