@@ -186,8 +186,8 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 * Установка основных переменных плагина
 		 */
 		private function setup() {
-			$this->dir_path = apply_filters( 'mihdan_yandex_turbo_feed_dir_path', trailingslashit( plugin_dir_path( __FILE__ ) ) );
-			$this->dir_uri  = apply_filters( 'mihdan_yandex_turbo_feed_dir_uri', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+			$this->dir_path = trailingslashit( plugin_dir_path( __FILE__ ) );
+			$this->dir_uri  = trailingslashit( plugin_dir_url( __FILE__ ) );
 		}
 
 		/**
