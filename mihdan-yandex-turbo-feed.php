@@ -713,11 +713,23 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function clear_xml( $str ) {
 
-			$str = str_replace( array(
-				'&', '>', '<', '"', '\'', '&nbsp;',
-			), array(
-				'&amp;', '&gt;', '&lt;', '&quot;', '&apos;', ' ',
-			), $str );
+			$str = strtr(
+				$str,
+				array(
+					'&'      => '&amp;',
+					'>'      => '&gt;',
+					'<'      => '&lt;',
+					'"'      => '&quot;',
+					'\''     => '&apos;',
+					'&nbsp;' => ' ',
+//					'…'      => '&#133;',
+//					'–'      => '&#150;',
+//					'—'      => '&#151;',
+//					'«'      => '&#171;',
+//					'»'      => '&#187;',
+//					'№'      => '&#8470;',
+				)
+			);
 
 			$str = force_balance_tags( $str );
 
