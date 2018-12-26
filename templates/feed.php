@@ -2,15 +2,17 @@
 /**
  * @link https://yandex.ru/support/webmaster/turbo/feed.html
  * @link https://yandex.ru/support/webmaster/turbo/rss-elements.html
+ *
+ * @var Mihdan_Yandex_Turbo_Feed $this
  */
-header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
-echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>';
+header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . $this->get_option( 'feed_charset' ), true );
+echo '<?xml version="1.0" encoding="' . esc_html( $this->get_option( 'feed_charset' ) ) . '"?' . '>';
 ?>
 <rss version="2.0" xmlns:yandex="http://news.yandex.ru" xmlns:media="http://search.yahoo.com/mrss/" xmlns:turbo="http://turbo.yandex.ru">
 	<channel>
-		<title><?php bloginfo_rss( 'name' ); ?></title>
-		<link><?php bloginfo_rss( 'url' ); ?></link>
-		<description><?php bloginfo_rss( 'description' ); ?></description>
+		<title><?php echo esc_html( $this->get_option( 'channel_title' ) ); ?></title>
+		<link><?php echo esc_html( $this->get_option( 'channel_link' ) ); ?></link>
+		<description><?php echo esc_html( $this->get_option( 'channel_description' ) ); ?></description>
 		<language><?php echo substr( get_bloginfo_rss( 'language' ), 0, strpos( get_bloginfo_rss( 'language' ), '-' ) ); ?></language>
 		<turbo:cms_plugin>7391CC2B1408947EFD5084459F5BD0CA</turbo:cms_plugin>
 		<?php do_action( 'rss2_head' ); ?>
