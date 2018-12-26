@@ -105,6 +105,8 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			'<td>',
 			'<menu>',
 			'<hr>',
+			'<div>',
+			'<code>',
 		);
 
 		/**
