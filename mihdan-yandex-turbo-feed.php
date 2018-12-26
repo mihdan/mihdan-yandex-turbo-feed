@@ -222,15 +222,15 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		private function includes() {
 			// Для админки.
-			if ( is_admin() ) {
+			//if ( is_admin() ) {
 
 				// Для работы с переводами.
 				require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 
 				// Redux Framework.
 				require_once $this->dir_path . 'vendor/redux/framework.php';
-				require_once $this->dir_path . 'vendor/redux/config.php';
-			}
+				require_once $this->dir_path . 'includes/redux-config.php';
+			//}
 		}
 
 		/**
@@ -238,6 +238,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		private function hooks() {
 			add_action( 'init', array( $this, 'add_feed' ) );
+			add_action( 'init', array( $this, 'flush_rewrite_rules' ), 99 );
 			add_action( 'pre_get_posts', array( $this, 'alter_query' ) );
 			add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
 			add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
@@ -263,6 +264,43 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function load_translations() {
 			load_plugin_textdomain( 'mihdan-yandex-turbo-feed', false, $this->dir_path . 'languages' );
+		}
+
+		/**
+		 * Скидываем реврайты, если в базе есть опция.
+		 */
+		public function flush_rewrite_rules() {
+
+			// Ищем опцию.
+			if ( get_option( $this->slug . '_flush_rewrite_rules' ) ) {
+
+				// Скидываем реврайты.
+				flush_rewrite_rules();
+
+				// Удаляем опцию.
+				delete_option( $this->slug . '_flush_rewrite_rules' );
+			}
+		}
+
+		/**
+		 * Получаем данные из поля Redux по ключу.
+		 *
+		 * @param string $key ключ поля.
+		 * @return string
+		 */
+		public function get_option( $key ) {
+			$option = Redux::getOption( $this->slug, $key );
+
+			// Если пусто - берем настройку по дефолту.
+			if ( empty( $option ) ) {
+				$field = Redux::getField( $this->slug, $key );
+
+				if ( $field ) {
+					$option = $field['default'];
+				}
+			}
+
+			return $option;
 		}
 
 		/**
@@ -608,27 +646,8 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function add_feed() {
 
-			global $wp_rewrite;
-
-			$registered = false;
-
 			// Добавить новый фид
 			add_feed( $this->feedname, array( $this, 'require_feed_template' ) );
-
-			// Получить правила из базы (опция `rewrite_rules`)
-			// и выбрать их те, что связаны с фидами
-			$feeds = array_keys( $wp_rewrite->wp_rewrite_rules(), 'index.php?&feed=$matches[1]', true );
-
-			// Если нашего фила нет в списке реврайтов - сбросим правила
-			foreach ( $feeds as $feed ) {
-				if ( false !== strpos( $feed, $this->feedname ) ) {
-					$registered = true;
-					break;
-				}
-			}
-			if ( ! $registered ) {
-				flush_rewrite_rules( false );
-			}
 		}
 
 		/**
@@ -785,8 +804,9 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 		 */
 		public function on_activate() {
 
-			// Сбросить правила реврайтов
-			flush_rewrite_rules();
+			// Добавим флаг, свидетельствующий о том,
+			// что нужно сбросить реврайты.
+			update_option( $this->slug . '_flush_rewrite_rules', 1, true );
 		}
 
 		/**
