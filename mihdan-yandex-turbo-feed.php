@@ -5,6 +5,7 @@
  * @package   mihdan-yandex-turbo-feed
  * @author    Mikhail Kobzarev
  * @link      https://github.com/mihdan/mihdan-yandex-turbo-feed/
+ * @link      https://yandex.ru/support/webmaster/turbo/rss-elements.html
  * @copyright Copyright (c) 2017
  * @license   GPL-2.0+
  * @wordpress-plugin
