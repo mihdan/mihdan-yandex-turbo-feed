@@ -1,7 +1,14 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: mihdan
- * Date: 26.12.18
- * Time: 15:37
+ * Fired when the plugin is uninstalled.
  */
+
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+	exit;
+}
+
+// Удалить все настройки плагина.
+delete_option( 'mihdan_yandex_turbo_feed' );
+delete_option( 'mihdan_yandex_turbo_feed-transients' );
+
+// eof;
