@@ -1,0 +1,14 @@
+{
+    "name": "mihdan/mihdan-yandex-turbo-feed",
+    "description": "Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site materials into Yandex.Turbo format.",
+    "type": "wordpress-plugin",
+    "license": "GPL2",
+    "authors": [
+        {
+            "name": "mihdan",
+            "email": "mikhail@kobzarev.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
