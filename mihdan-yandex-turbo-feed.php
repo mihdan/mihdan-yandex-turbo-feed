@@ -866,10 +866,12 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 			// Получить ID всех термов поста
 			// во всех его таксономиях
-			$ids = $this->get_categories( array(
-				'post_id' => $post->ID,
-				'fields'  => 'ids',
-			) );
+			$ids = $this->get_categories(
+				array(
+					'post_id' => $post->ID,
+					'fields'  => 'ids',
+				)
+			);
 
 			if ( ! empty( $ids ) ) {
 
