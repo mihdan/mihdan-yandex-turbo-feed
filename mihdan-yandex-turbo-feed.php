@@ -15,7 +15,7 @@
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин генерирует фид для сервиса Яндекс Турбо
- * Version: 1.1.6
+ * Version: 1.1.7
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 	// Слюг плагина
 	define( 'MIHDAN_YANDEX_TURBO_FEED_SLUG', 'mihdan_yandex_turbo_feed' );
-	define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.1.6' );
+	define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.1.7' );
 
 	/**
 	 * Class Mihdan_Yandex_Turbo_Feed
@@ -240,9 +240,16 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 			add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 			add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 			add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
+			add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
 
 			register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
+		}
+
+		public function send_headers_for_aio_seo_pack() {
+			// Добавим заголовок `X-Robots-Tag`
+			// для решения проблемы с сеошными плагинами.
+			header( 'X-Robots-Tag: index, follow', true );
 		}
 
 		/**

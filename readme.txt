@@ -5,8 +5,8 @@ Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed
 Requires at least: 4.6
 Requires PHP: 5.6
-Tested up to: 5.0
-Stable tag: 1.1.6
+Tested up to: 5.1
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,10 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.1.7 (2019-02-02) =
+* Интеграция с плагином All in One SEO Pack
+* Интеграция с Travis CI
 
 = 1.1.6 (2018-12-27) =
 * Добавил страницу настроек в админке, сохранив работу старых фильтров
