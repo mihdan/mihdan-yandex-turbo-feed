@@ -1,3 +1,5 @@
+[![RIPS CodeRisk](https://coderisk.com/wp/plugin/mihdan-yandex-turbo-feed/badge "RIPS CodeRisk")](https://coderisk.com/wp/plugin/mihdan-yandex-turbo-feed)
+
 # Mihdan: Yandex Turbo Feed
 WordPress-плагин, генерирующий фид для [Турбо-страниц](https://yandex.ru/adv/turbo) от компании Яндекс
 
