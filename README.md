@@ -91,3 +91,5 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 ## Помочь проекту
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BENCPARA8S224)
+
+[](http://coderisk.com/wp/plugin/mihdan-yandex-turbo-feed/RIPS-xig8tE5A4u)
