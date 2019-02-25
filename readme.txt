@@ -103,6 +103,8 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 = 1.2 (2019-02-23) =
 * Подключаем Redux при помощи composer
 * Переходим на Redux 4
+* Принудительно отключаем режима разработки Redux
+* Удаляем меню Redux
 * Добавлена галочка для удаления записи из Яндекса
 * Добавлен фильтр `mihdan_yandex_turbo_feed_item_attributes` для управления атрибутами item'а
 * Оптимизация кода

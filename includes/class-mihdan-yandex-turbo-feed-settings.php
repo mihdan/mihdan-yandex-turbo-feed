@@ -7,16 +7,28 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 
 	public function hooks() {
 		add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widget' ) );
-
-
-		//add_action( 'init', array( $this, 'remove_redux_menu' ), 999 );
+		add_action( 'redux/construct', array( $this, 'disable_dev_mode' ) );
+		add_action( 'redux/pro/welcome/admin/menu', array( $this, 'remove_redux_menu' ), 10, 2 );
 	}
 
-	public function remove_redux_menu() {
-		add_action( 'admin_menu', function () {
-			remove_submenu_page( 'tools.php', 'redux-about' );
-			remove_submenu_page( 'tools.php', 'redux-framework' );
-		} );
+	/**
+	 * Отключаем режима разработки
+	 *
+	 * @param ReduxFramework $redux
+	 */
+	public function disable_dev_mode( ReduxFramework $redux ) {
+		$redux->args['dev_mode'] = false;
+		$redux->args['forced_dev_mode_off'] = false;
+	}
+
+	/**
+	 * Удаляем меню Redux
+	 *
+	 * @param string        $page
+	 * @param Redux_Welcome $welcome
+	 */
+	public function remove_redux_menu( $page, Redux_Welcome $welcome ) {
+		remove_submenu_page( 'tools.php', 'redux-framework' );
 	}
 
 	public function remove_dashboard_widget() {
@@ -116,8 +128,6 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			'admin_bar'          => false,
 			'global_variable'    => false,
 			'dev_mode'           => false,
-			'dev_mode_forced'    => false,
-			'forced_dev_mode_off'    => true,
 			'update_notice'      => true,
 			'hide_reset'         => true,
 			'hide_expand'        => true,

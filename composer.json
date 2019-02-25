@@ -75,5 +75,11 @@
         "classmap": [
             "includes"
         ]
+    },
+    "archive": {
+        "exclude": [
+            "/vendor/redux-framework-4/*",
+            "!/vendor/redux-framework-4/ReduxCore"
+        ]
     }
 }
