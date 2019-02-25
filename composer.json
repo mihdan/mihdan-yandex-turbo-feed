@@ -9,6 +9,71 @@
             "email": "mikhail@kobzarev.com"
         }
     ],
-    "minimum-stability": "stable",
-    "require": {}
+    "keywords": [
+        "mihdan", "composer", "yandex", "turbo", "feed", "wordpress", "wp", "wp-config", "wordpress-plugin"
+    ],
+    "support": {
+        "issues": "https://wordpress.org/support/plugin/mihdan-yandex-turbo-feed"
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "reduxframework/redux-framework-4",
+                "type": "wordpress-plugin",
+                "version": "4.0.1",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/reduxframework/redux-framework-4/archive/master.zip"
+                },
+                "require" : {
+                    "composer/installers": "*"
+                }
+            }
+        }
+    ],
+    "require": {
+        "xrstf/composer-php52": "1.*",
+        "composer/installers": "*",
+        "reduxframework/redux-framework-4" : "*"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "sebastian/phpcpd": "^3.0",
+        "10up/wp_mock": "~0.3",
+        "phpunit/phpunit": "^6.5",
+        "squizlabs/php_codesniffer": "^2.9",
+        "phpcompatibility/php-compatibility": "^9.0",
+        "wp-coding-standards/wpcs": "^1.2",
+        "wp-cli/wp-cli": "*"
+    },
+    "extra": {
+        "installer-paths": {
+            "vendor/{$name}/": ["type:wordpress-plugin"]
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "xrstf\\Composer52\\Generator::onPostInstallCmd"
+        ],
+        "post-update-cmd": [
+            "xrstf\\Composer52\\Generator::onPostInstallCmd"
+        ],
+        "post-autoload-dump": [
+            "xrstf\\Composer52\\Generator::onPostInstallCmd"
+        ]
+    },
+    "autoload": {
+        "classmap": [
+            "includes",
+            "vendor/redux-framework-4/ReduxCore"
+        ]
+    },
+    "autoload-dev": {
+        "classmap": [
+            "includes"
+        ]
+    }
 }
