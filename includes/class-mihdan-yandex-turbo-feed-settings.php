@@ -6,7 +6,6 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 	}
 
 	public function hooks() {
-		add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widget' ) );
 		add_action( 'redux/construct', array( $this, 'disable_dev_mode' ) );
 		add_action( 'redux/pro/welcome/admin/menu', array( $this, 'remove_redux_menu' ), 10, 2 );
 	}
@@ -29,12 +28,6 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 	 */
 	public function remove_redux_menu( $page, Redux_Welcome $welcome ) {
 		remove_submenu_page( 'tools.php', 'redux-framework' );
-	}
-
-	public function remove_dashboard_widget() {
-		global $wp_meta_boxes;
-
-		unset( $wp_meta_boxes['dashboard']['side']['core']['dashboard_primary'] );
 	}
 
 	public function footer_credit() {
