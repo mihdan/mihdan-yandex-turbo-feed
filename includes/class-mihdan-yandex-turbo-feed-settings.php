@@ -15,9 +15,11 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 	 *
 	 * @param ReduxFramework $redux
 	 */
-	public function disable_dev_mode( ReduxFramework $redux ) {
-		$redux->args['dev_mode'] = false;
-		$redux->args['forced_dev_mode_off'] = false;
+	public function disable_dev_mode( $redux ) {
+		if ( $redux instanceof ReduxFramework ) {
+			$redux->args['dev_mode']            = false;
+			$redux->args['forced_dev_mode_off'] = false;
+		}
 	}
 
 	/**

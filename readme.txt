@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 4.6
 Requires PHP: 5.6
 Tested up to: 5.1
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,11 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.2.1 (2019-03-13) =
+* Обновил ядро Redux до версии 4.0.1.6
+* Исправил фатал, связанный с хуком `redux/construct`. Спасибо @kaggdesign за помощь
+* Исправил фатал `Fatal error: Access to undeclared static property: Redux_Functions_Ex::$args`
 
 = 1.2 (2019-02-23) =
 * Подключаем Redux при помощи composer
