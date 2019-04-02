@@ -367,6 +367,26 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title' => __( 'Comments', 'mihdan-yandex-turbo-feed' ),
+				'id'    => 'comments',
+				'icon'  => 'el el-comment',
+				'fields' => array(
+					array(
+						'id'      => 'comments_enable',
+						'type'    => 'switch',
+						'title'   => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle'   => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'      => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'     => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default' => false,
+					),
+				),
+			)
+		);
+
 		/*
 
 		Redux::set_section(
@@ -479,14 +499,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Comments', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-comments',
-				'icon'  => 'el el-comment',
-			)
-		);
+
 
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,

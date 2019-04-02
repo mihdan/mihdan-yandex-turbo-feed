@@ -418,6 +418,11 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 
 	public function insert_comments() {
 
+		// Если модуль выключен.
+		if ( ! $this->redux->get_option( 'comments_enable' ) ) {
+			return;
+		}
+
 		if ( comments_open() || have_comments() ) {
 
 			// Аргументы получения комментариев
