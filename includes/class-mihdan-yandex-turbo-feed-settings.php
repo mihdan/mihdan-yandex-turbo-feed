@@ -1,13 +1,38 @@
 <?php
 class Mihdan_Yandex_Turbo_Feed_Settings {
+	private $post_types;
+	private $taxonomies;
+
 	public function __construct() {
-		$this->config();
 		$this->hooks();
 	}
 
 	public function hooks() {
 		add_action( 'redux/construct', array( $this, 'disable_dev_mode' ) );
 		add_action( 'redux/pro/welcome/admin/menu', array( $this, 'remove_redux_menu' ), 10, 2 );
+		add_action( 'init', array( $this, 'init' ) );
+	}
+
+	public function setup() {
+		// Список всех публичных CPT.
+		$args            = array(
+			'public' => true,
+		);
+
+		$this->post_types = wp_list_pluck( get_post_types( $args, 'objects' ), 'label', 'name' );
+
+		// Список всех зареганных таксономий.
+		$args           = array(
+			'public' => true,
+		);
+
+		$this->taxonomies = wp_list_pluck( get_taxonomies( $args, 'objects' ), 'label', 'name' );
+		 //do_action( 'qm/debug', $this->taxonomies );
+	}
+
+	public function init() {
+		$this->setup();
+		$this->config();
 	}
 
 	/**
@@ -71,34 +96,6 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 
 				// Соберем массив: array( code => name ).
 				$languages[ $key ] = $translation['native_name'];
-			}
-		}
-
-		$post_type_array = array();
-		$args            = array(
-			'public' => true,
-		);
-
-		// Список всех публичных CPT.
-		$post_types = get_post_types( $args, 'objects' );
-
-		if ( $post_types ) {
-			foreach ( $post_types as $key => $value ) {
-				$post_type_array[ $key ] = $value->label;
-			}
-		}
-
-		$taxonomy_array = array();
-		$args           = array(
-			'public' => true,
-		);
-
-		// Список всех зареганных таксономий.
-		$taxonomies = get_taxonomies( $args, 'objects' );
-
-		if ( $taxonomies ) {
-			foreach ( $taxonomies as $key => $value ) {
-				$taxonomy_array[ $key ] = $value->label;
 			}
 		}
 
@@ -249,7 +246,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 							'mihdan_yandex_turbo_feed_post_type',
 							array( 'post' )
 						),
-						'options' => $post_type_array,
+						'options' => $this->post_types,
 					),
 					array(
 						'id'      => 'feed_taxonomy',
@@ -263,7 +260,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 								'post_tag',
 							)
 						),
-						'options' => $taxonomy_array,
+						'options' => $this->taxonomies,
 					),
 				),
 			)
@@ -312,6 +309,25 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,
 			array(
+				'title'  => __( 'Images', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'elements-images',
+				'icon'   => 'el el-picture',
+				'fields' => array(
+					array(
+						'id'      => 'images_copyright',
+						'type'    => 'text',
+						'title'   => __( 'Copyright', 'mihdan-yandex-turbo-feed' ),
+						'default' => apply_filters( 'mihdan_yandex_turbo_feed_copyright', wp_parse_url( get_home_url(), PHP_URL_HOST ) ),
+					),
+				),
+			)
+		);
+
+		/*
+
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
 				'title' => __( 'Header', 'mihdan-yandex-turbo-feed' ),
 				'id'    => 'elements-header',
 				'icon'  => 'el el-photo',
@@ -333,23 +349,6 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 				'title' => __( 'Related Posts', 'mihdan-yandex-turbo-feed' ),
 				'id'    => 'elements-related-posts',
 				'icon'  => 'el el-fork',
-			)
-		);
-
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title'  => __( 'Images', 'mihdan-yandex-turbo-feed' ),
-				'id'     => 'elements-images',
-				'icon'   => 'el el-picture',
-				'fields' => array(
-					array(
-						'id'      => 'images_copyright',
-						'type'    => 'text',
-						'title'   => __( 'Copyright', 'mihdan-yandex-turbo-feed' ),
-						'default' => apply_filters( 'mihdan_yandex_turbo_feed_copyright', wp_parse_url( get_home_url(), PHP_URL_HOST ) ),
-					),
-				),
 			)
 		);
 
@@ -523,6 +522,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 				'icon'  => 'el el-graph',
 			)
 		);
+		*/
 	}
 
 	/**
