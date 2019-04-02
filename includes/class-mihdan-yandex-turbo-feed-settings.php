@@ -1,7 +1,11 @@
 <?php
 class Mihdan_Yandex_Turbo_Feed_Settings {
+	/**
+	 * @var $post_types
+	 */
 	private $post_types;
 	private $taxonomies;
+	private $share_networks;
 
 	public function __construct() {
 		$this->hooks();
@@ -27,7 +31,15 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 		);
 
 		$this->taxonomies = wp_list_pluck( get_taxonomies( $args, 'objects' ), 'label', 'name' );
-		 //do_action( 'qm/debug', $this->taxonomies );
+
+		// Доступные соцсети для шеров.
+		$this->share_networks = array(
+			'facebook' => __( 'Facebook', 'mihdan-yandex-turbo-feed' ),
+			'google' => __( 'Google', 'mihdan-yandex-turbo-feed' ),
+			'odnoklassniki' => __( 'Odnoklassniki', 'mihdan-yandex-turbo-feed' ),
+			'telegram' => __( 'Telegram', 'mihdan-yandex-turbo-feed' ),
+			'vkontakte' => __( 'Vkontakte', 'mihdan-yandex-turbo-feed' ),
+		);
 	}
 
 	public function init() {
@@ -323,6 +335,38 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title'  => __( 'Share', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'share',
+				'icon'   => 'el el-share',
+				'fields' => array(
+					array(
+						'id'      => 'share_enable',
+						'type'    => 'switch',
+						'title'   => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle'   => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'      => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'     => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default' => false,
+					),
+					array(
+						'id'      => 'share_networks',
+						'type'    => 'select',
+						'title'   => __( 'Share Networks', 'mihdan-yandex-turbo-feed' ),
+						'multi'   => true,
+						'sortable' => true,
+						'default' => array_keys( $this->share_networks ),
+						'options' => $this->share_networks,
+						'required' => array(
+							array( 'share_enable', '=', '1' )
+						),
+					),
+				),
+			)
+		);
+
 		/*
 
 		Redux::set_section(
@@ -379,14 +423,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Share', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-share',
-				'icon'  => 'el el-share',
-			)
-		);
+
 
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,

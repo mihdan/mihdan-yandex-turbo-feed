@@ -516,20 +516,12 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	 */
 	public function insert_share() {
 
-		// Массив предустановленных социальных сетей
-		$networks = array(
-			'facebook',
-			'google',
-			'odnoklassniki',
-			'telegram',
-			'twitter',
-			'vkontakte',
-		);
+		// Если модуль выключен.
+		if ( ! $this->redux->get_option( 'share_enable' ) ) {
+			return;
+		}
 
-		// Возможность отфильтровать соцсети
-		$network = apply_filters( 'mihdan_yandex_turbo_feed_networks', $networks );
-
-		echo sprintf( '<div data-block="share" data-network="%s"></div>', implode( ',', $network ) );
+		echo sprintf( '<div data-block="share" data-network="%s"></div>', implode( ',', $this->redux->get_option( 'share_networks' ) ) );
 	}
 
 	/**
