@@ -171,6 +171,7 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_comments' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_callback' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box' ) );
 		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
@@ -414,6 +415,23 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 			}
 			echo '</yandex:related>';
 		}
+	}
+
+	/**
+	 * Вставка форма обратной связи
+	 */
+	public function insert_callback() {
+		// Если модуль выключен.
+		if ( ! $this->redux->get_option( 'callback_enable' ) ) {
+			return;
+		}
+
+		printf(
+			'<form data-type="callback" data-send-to="%s" data-agreement-company="%s" data-agreement-link="%s"></form>',
+			esc_attr( $this->redux->get_option( 'callback_send_to' ) ),
+			esc_attr( $this->redux->get_option( 'callback_agreement_company' ) ),
+			esc_url( $this->redux->get_option( 'callback_agreement_link' ) )
+		);
 	}
 
 	public function insert_comments() {

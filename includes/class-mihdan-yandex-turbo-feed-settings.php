@@ -387,6 +387,56 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title' => __( 'Callback', 'mihdan-yandex-turbo-feed' ),
+				'id'    => 'callback',
+				'icon'  => 'el el-envelope',
+				'fields' => array(
+					array(
+						'id'      => 'callback_enable',
+						'type'    => 'switch',
+						'title'   => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle'   => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'      => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'     => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default' => false,
+					),
+					array(
+						'id'       => 'callback_send_to',
+						'type'     => 'text',
+						'title'    => __( 'Callback Send To', 'mihdan-yandex-turbo-feed' ),
+						'default'  => get_bloginfo_rss( 'admin_email' ),
+						'validate' => 'email',
+						'required' => array(
+							array( 'callback_enable', '=', '1' )
+						),
+					),
+					array(
+						'id'       => 'callback_agreement_company',
+						'type'     => 'text',
+						'title'    => __( 'Callback Agreement Company', 'mihdan-yandex-turbo-feed' ),
+						'default'  => get_bloginfo_rss( 'name' ),
+						'validate' => 'not_empty',
+						'required' => array(
+							array( 'callback_enable', '=', '1' )
+						),
+					),
+					array(
+						'id'       => 'callback_agreement_link',
+						'type'     => 'text',
+						'title'    => __( 'Callback Agreement Link', 'mihdan-yandex-turbo-feed' ),
+						'default'  => get_privacy_policy_url(),
+						'validate' => 'url',
+						'required' => array(
+							array( 'callback_enable', '=', '1' )
+						),
+					),
+				),
+			)
+		);
+
 		/*
 
 		Redux::set_section(
@@ -528,14 +578,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Callback', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-callback',
-				'icon'  => 'el el-envelope',
-			)
-		);
+
 
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,
