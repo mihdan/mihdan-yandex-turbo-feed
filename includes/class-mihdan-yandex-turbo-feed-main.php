@@ -218,7 +218,9 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	 * для решения проблемы с сеошными плагинами.
 	 */
 	public function send_headers_for_aio_seo_pack() {
-		header( 'X-Robots-Tag: index, follow', true );
+		if ( is_feed( $this->feedname ) ) {
+			header( 'X-Robots-Tag: index, follow', true );
+		}
 	}
 
 	/**
