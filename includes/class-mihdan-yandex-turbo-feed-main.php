@@ -116,7 +116,7 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	 */
 	public function __construct() {
 
-		$this->notifications = new Mihdan_Yandex_Turbo_Feed_Notifications();
+		//$this->notifications = new Mihdan_Yandex_Turbo_Feed_Notifications();
 
 		$this->includes();
 		$this->setup();
@@ -176,6 +176,7 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
 		add_action( 'plugins_loaded', array( $this, 'load_translations' ) );
 		add_action( 'redux/options/' . $this->slug . '/saved', array( $this, 'on_redux_saved' ) );
+		add_action( 'mihdan_yandex_turbo_feed_channel', array( $this, 'insert_analytics' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
@@ -546,6 +547,86 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 
 			// Вывести меню
 			echo $this->create_menu( $menu );
+		}
+	}
+
+	/**
+	 * Создаёт тег для вставки аналитики.
+	 *
+	 * @param string $type Тип счётчика.
+	 * @param string $id Идентификатор счётчика у провайдера.
+	 * @param string $params JSON с параметрами.
+	 *
+	 * @return string
+	 */
+	public function create_analytics( $type, $id = '', $params = '' ) {
+		return sprintf(
+			'<turbo:analytics type="%s" id="%s" params="%s"></turbo:analytics>',
+			esc_attr( $type ),
+			esc_attr( $id ),
+			esc_attr( $params )
+		);
+	}
+
+	/**
+	 * Вставка счетчиков аналитики.
+	 */
+	public function insert_analytics() {
+		if ( $this->redux->get_option( 'analytics_enable' ) ) {
+			$yandex_metrika = $this->redux->get_option( 'analytics_yandex_metrika' );
+			$live_internet  = $this->redux->get_option( 'analytics_live_internet' );
+			$google         = $this->redux->get_option( 'analytics_google' );
+			$mail_ru        = $this->redux->get_option( 'analytics_mail_ru' );
+			$rambler        = $this->redux->get_option( 'analytics_rambler' );
+			$mediascope     = $this->redux->get_option( 'analytics_mediascope' );
+
+			if ( false !== $yandex_metrika && is_array( $yandex_metrika ) ) {
+				foreach ( $yandex_metrika as $item ) {
+					if ( ! empty( $item ) ) {
+						echo $this->create_analytics( 'Yandex', $item );
+					}
+				}
+			}
+
+			if ( false !== $live_internet && is_array( $live_internet ) ) {
+				foreach ( $live_internet as $item ) {
+					if ( ! empty( $item ) ) {
+						echo $this->create_analytics( 'LiveInternet', '', $item );
+					}
+				}
+			}
+
+			if ( false !== $google && is_array( $google ) ) {
+				foreach ( $google as $item ) {
+					if ( ! empty( $item ) ) {
+						echo $this->create_analytics( 'Google', $item );
+					}
+				}
+			}
+
+			if ( false !== $mail_ru && is_array( $mail_ru ) ) {
+				foreach ( $mail_ru as $item ) {
+					if ( ! empty( $item ) ) {
+						echo $this->create_analytics( 'MailRu', $item );
+					}
+				}
+			}
+
+			if ( false !== $rambler && is_array( $rambler ) ) {
+				foreach ( $rambler as $item ) {
+					if ( ! empty( $item ) ) {
+						echo $this->create_analytics( 'Rambler', $item );
+					}
+				}
+			}
+
+			if ( false !== $mediascope && is_array( $mediascope ) ) {
+				foreach ( $mediascope as $item ) {
+					if ( ! empty( $item ) ) {
+						echo $this->create_analytics( 'Mediascope', $item );
+					}
+				}
+			}
 		}
 	}
 

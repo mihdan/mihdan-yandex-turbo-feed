@@ -458,9 +458,105 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 						'id'       => 'menu_attention',
 						'type'     => 'raw',
 						'title'    => __( 'Attention', 'mihdan-yandex-turbo-feed' ),
-						'desc'     => sprintf( __( 'For adding menu to you feed, first <a href="%s">created him</a> and attach to "Yandex.Turbo" location', 'mihdan-yandex-turbo-feed' ), admin_url( 'nav-menus.php' ) ),
+						'desc'     => sprintf( __( 'For adding menu to your feed, first <a href="%s">created it</a> and attach to "Yandex.Turbo" location', 'mihdan-yandex-turbo-feed' ), admin_url( 'nav-menus.php' ) ),
 						'required' => array(
 							array( 'menu_enable', '=', '1' ),
+						),
+					),
+				),
+			)
+		);
+
+		/**
+		 * @link https://yandex.ru/dev/turbo/doc/settings/analytics-docpage
+		 * @link https://yandex.ru/dev/turbo/doc/settings/find-counter-id-docpage/
+		 */
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title'  => __( 'Analytics', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'analytics',
+				'icon'   => 'el el-graph',
+				'fields' => array(
+					array(
+						'id'       => 'analytics_enable',
+						'type'     => 'switch',
+						'title'    => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle' => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'       => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'      => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default'  => false,
+					),
+					array(
+						'id'          => 'analytics_yandex_metrika',
+						'type'        => 'multi_text',
+						'show_empty'  => false,
+						'title'       => __( 'Yandex.Metrika', 'mihdan-yandex-turbo-feed' ),
+						'placeholder' => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+						'desc'        => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
+						'add_text'    => __( 'Add More', 'mihdan-yandex-turbo-feed' ),
+						'required'    => array(
+							array( 'analytics_enable', '=', '1' ),
+						),
+					),
+					array(
+						'id'          => 'analytics_live_internet',
+						'show_empty'  => false,
+						'type'        => 'multi_text',
+						'title'       => __( 'LiveInternet', 'mihdan-yandex-turbo-feed' ),
+						'placeholder' => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+						'desc'        => __( 'Укажите имя именованного счётчика. Например, <code>example.com</code>.', 'mihdan-yandex-turbo-feed' ),
+						'add_text'    => __( 'Add More', 'mihdan-yandex-turbo-feed' ),
+						'required'    => array(
+							array( 'analytics_enable', '=', '1' ),
+						),
+					),
+					array(
+						'id'          => 'analytics_google',
+						'type'        => 'multi_text',
+						'show_empty'  => false,
+						'title'       => __( 'Google Analytics', 'mihdan-yandex-turbo-feed' ),
+						'placeholder' => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+						'desc'        => __( 'Укажите идентификатор отслеживания. Например, <code>UA-12345678-9</code>.', 'mihdan-yandex-turbo-feed' ),
+						'add_text'    => __( 'Add More', 'mihdan-yandex-turbo-feed' ),
+						'required'    => array(
+							array( 'analytics_enable', '=', '1' ),
+						),
+					),
+					array(
+						'id'          => 'analytics_mail_ru',
+						'type'        => 'multi_text',
+						'show_empty'  => false,
+						'title'       => __( 'Rating Mail.RU', 'mihdan-yandex-turbo-feed' ),
+						'placeholder' => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+						'desc'        => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
+						'add_text'    => __( 'Add More', 'mihdan-yandex-turbo-feed' ),
+						'required'    => array(
+							array( 'analytics_enable', '=', '1' ),
+						),
+					),
+					array(
+						'id'          => 'analytics_rambler',
+						'type'        => 'multi_text',
+						'show_empty'  => false,
+						'title'       => __( 'Rambler Top-100', 'mihdan-yandex-turbo-feed' ),
+						'placeholder' => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+						'desc'        => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
+						'add_text'    => __( 'Add More', 'mihdan-yandex-turbo-feed' ),
+						'required'    => array(
+							array( 'analytics_enable', '=', '1' ),
+						),
+					),
+					array(
+						'id'          => 'analytics_mediascope',
+						'type'        => 'multi_text',
+						'show_empty'  => false,
+						'title'       => __( 'Mediascope (TNS)', 'mihdan-yandex-turbo-feed' ),
+						'placeholder' => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+						'desc'        => __( 'Идентификатор проекта <code>tmsec</code> с окончанием «-<code>turbo</code>». Например, если для обычных страниц сайта установлен счетчик <code>example_total</code>, то для Турбо-страниц указывается <code>example_total-turbo</code>.', 'mihdan-yandex-turbo-feed' ),
+						'add_text'    => __( 'Add More', 'mihdan-yandex-turbo-feed' ),
+						'required'    => array(
+							array( 'analytics_enable', '=', '1' ),
 						),
 					),
 				),
@@ -630,14 +726,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Analytics', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-analytics',
-				'icon'  => 'el el-graph',
-			)
-		);
+
 		*/
 	}
 
@@ -654,7 +743,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 		if ( empty( $option ) ) {
 			$field = Redux::get_field( MIHDAN_YANDEX_TURBO_FEED_SLUG, $key );
 
-			if ( $field ) {
+			if ( $field && isset( $field['default'] ) ) {
 				$option = $field['default'];
 			}
 		}
