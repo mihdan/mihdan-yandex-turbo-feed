@@ -146,6 +146,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			'database'           => '',
 			'use_cdn'            => true,
 			'footer_credit'      => $this->footer_credit(),
+			//'admin_theme' => 'classic',
 
 			// HINTS
 			'hints'              => array(
@@ -437,6 +438,35 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title'  => __( 'Menu', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'menu',
+				'icon'   => 'el el-lines',
+				'fields' => array(
+					array(
+						'id'       => 'menu_enable',
+						'type'     => 'switch',
+						'title'    => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle' => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'       => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'      => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default'  => false,
+					),
+					array(
+						'id'       => 'menu_attention',
+						'type'     => 'raw',
+						'title'    => __( 'Attention', 'mihdan-yandex-turbo-feed' ),
+						'desc'     => sprintf( __( 'For adding menu to you feed, first <a href="%s">created him</a> and attach to "Yandex.Turbo" location', 'mihdan-yandex-turbo-feed' ), admin_url( 'nav-menus.php' ) ),
+						'required' => array(
+							array( 'menu_enable', '=', '1' ),
+						),
+					),
+				),
+			)
+		);
+
 		/*
 
 		Redux::set_section(
@@ -513,14 +543,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Menu', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-menu',
-				'icon'  => 'el el-lines',
-			)
-		);
+
 
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,

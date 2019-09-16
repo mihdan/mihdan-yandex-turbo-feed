@@ -99,7 +99,15 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	 */
 	private $post_type = array( 'post' );
 
+	/**
+	 * @var Mihdan_Yandex_Turbo_Feed_Settings
+	 */
 	private $redux;
+
+	/**
+	 * @var Mihdan_Yandex_Turbo_Feed_Notifications
+	 */
+	private $notifications;
 
 	/**
 	 * Инициализируем нужные методы
@@ -107,6 +115,9 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	 * Mihdan_FAQ constructor.
 	 */
 	public function __construct() {
+
+		$this->notifications = new Mihdan_Yandex_Turbo_Feed_Notifications();
+
 		$this->includes();
 		$this->setup();
 		$this->hooks();
@@ -518,15 +529,17 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	public function insert_menu() {
 
 		// Если юзер сделал меню
-		if ( has_nav_menu( $this->slug ) ) {
+		if ( $this->redux->get_option( 'menu_enable' ) && has_nav_menu( $this->slug ) ) {
 
 			// Получить меню
-			$menu = wp_nav_menu( array(
-				'theme_location' => $this->slug,
-				'container'      => false,
-				'echo'           => false,
-				'depth'          => 1,
-			) );
+			$menu = wp_nav_menu(
+				array(
+					'theme_location' => $this->slug,
+					'container'      => false,
+					'echo'           => false,
+					'depth'          => 1,
+				)
+			);
 
 			// Оставить в меню только ссылки
 			$menu = strip_tags( $menu, '<a>' );

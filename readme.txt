@@ -4,7 +4,7 @@ Contributors: mihdan
 Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed
 Requires at least: 4.6
-Requires PHP: 5.6
+Requires PHP: 5.6.20
 Tested up to: 5.1
 Stable tag: 1.2.3
 License: GPLv2 or later
@@ -103,6 +103,11 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.2.4 (2019-09-16) =
+* Обновлен Redux Framework
+* Выпелена поддержка PHP ниже 5.6.20
+* Добавлено управление меню
 
 = 1.2.3 (2019-07-16) =
 * Разрешил индексирование только ленты плагина
