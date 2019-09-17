@@ -6,6 +6,7 @@
 .gitlab-ci.yml
 .travis.yml
 .DS_Store
+.idea
 Thumbs.db
 behat.yml
 circle.yml
