@@ -183,6 +183,8 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 
 		/**
 		 * Секции
+		 *
+		 * @link https://yandex.ru/dev/turbo/doc/rss/elements/index-docpage/
 		 */
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,
@@ -563,6 +565,53 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
+		/**
+		 * Похожие записи.
+		 */
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title'  => __( 'Related Posts', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'related_posts',
+				'icon'   => 'el el-fork',
+				'fields' => array(
+					array(
+						'id'       => 'related_posts_enable',
+						'type'     => 'switch',
+						'title'    => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle' => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'       => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'      => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default'  => false,
+					),
+					array(
+						'id'       => 'related_posts_infinity',
+						'type'     => 'switch',
+						'title'    => __( 'Infinity Feed', 'mihdan-yandex-turbo-feed' ),
+						'subtitle' => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'       => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'      => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default'  => false,
+						'required' => array(
+							array( 'related_posts_enable', '=', '1' ),
+						),
+					),
+					array(
+						'id'       => 'related_posts_total',
+						'type'     => 'spinner',
+						'title'    => __( 'Total Posts', 'mihdan-yandex-turbo-feed' ),
+						'default'  => 10,
+						'min'      => 1,
+						'max'      => 30,
+						'step'     => 1,
+						'required' => array(
+							array( 'related_posts_enable', '=', '1' ),
+						),
+					),
+				),
+			)
+		);
+
 		/*
 
 		Redux::set_section(
@@ -583,14 +632,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Related Posts', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-related-posts',
-				'icon'  => 'el el-fork',
-			)
-		);
+
 
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,

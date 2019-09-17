@@ -417,11 +417,24 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		}
 	}
 
+	/**
+	 * Вставляет похожие записи.
+	 */
 	public function insert_related() {
+
+		if ( ! $this->redux->get_option( 'related_posts_enable' ) ) {
+			return;
+		}
+
 		$related = $this->get_related();
 
 		if ( $related->have_posts() ) {
-			echo '<yandex:related>';
+			// Если включена бесконечная лента.
+			if ( $this->redux->get_option( 'related_posts_infinity' ) ) {
+				echo '<yandex:related type="infinity">';
+			} else {
+				echo '<yandex:related>';
+			}
 			while ( $related->have_posts() ) {
 				$related->the_post();
 				echo $this->create_related(
