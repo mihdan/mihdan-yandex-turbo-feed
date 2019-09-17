@@ -192,6 +192,7 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box' ) );
 		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
+		add_filter( 'the_content_feed', array( $this, 'invisible_border' ) );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
@@ -238,6 +239,23 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		if ( is_feed( $this->feedname ) ) {
 			header( 'X-Robots-Tag: index, follow', true );
 		}
+	}
+
+	/**
+	 * Добавить атрибут для всех таблиц,
+	 * чтобы сделать рамки прозрачне
+	 *
+	 * @param string $content Сожержимое записи.
+	 *
+	 * @return string
+	 */
+	public function invisible_border( $content ) {
+
+		if ( $this->redux->get_option( 'invisible_border_enable' ) ) {
+			$content = str_replace( '<table', '<table data-invisible="true"', $content );
+		}
+
+		return $content;
 	}
 
 	/**

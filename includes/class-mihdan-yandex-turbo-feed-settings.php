@@ -482,6 +482,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,
 			array(
 				'title'  => __( 'Analytics', 'mihdan-yandex-turbo-feed' ),
+				'desc'   => __( 'Если информация о счетчиках передается в RSS-канале (в элементе <code>turbo:analytics</code>), то настройки счетчиков в Яндекс.Вебмастере не учитываются. Чтобы подключить счетчики в Яндекс.Вебмастере, отключите полность модуль аналитики ниже.', 'mihdan-yandex-turbo-feed' ),
 				'id'     => 'analytics',
 				'icon'   => 'el el-graph',
 				'fields' => array(
@@ -703,6 +704,28 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
+		/**
+		 * Настройки для таблиц.
+		 */
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title'  => __( 'Tables', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'tables',
+				'icon'   => 'el el-th',
+				'fields' => array(
+					array(
+						'id'      => 'invisible_border_enable',
+						'type'    => 'switch',
+						'title'   => __( 'Invisible Border', 'mihdan-yandex-turbo-feed' ),
+						'on'      => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'     => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default' => false,
+					),
+				),
+			)
+		);
+
 		/*
 
 		Redux::set_section(
@@ -751,17 +774,6 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 				'icon'  => 'el el-video',
 			)
 		);
-
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Table', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-table',
-				'icon'  => 'el el-th',
-			)
-		);
-
-
 
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,
