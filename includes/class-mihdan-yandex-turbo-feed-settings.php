@@ -752,17 +752,6 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-
-
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Blockquote', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-blockquote',
-				'icon'  => 'el el-quotes',
-			)
-		);
-
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,
 			array(

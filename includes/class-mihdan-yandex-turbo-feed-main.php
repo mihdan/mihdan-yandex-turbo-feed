@@ -119,7 +119,7 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	 */
 	public function __construct() {
 
-		//$this->notifications = new Mihdan_Yandex_Turbo_Feed_Notifications();
+		$this->notifications = new Mihdan_Yandex_Turbo_Feed_Notifications();
 
 		$this->includes();
 		$this->setup();
