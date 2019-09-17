@@ -390,21 +390,26 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
+		/**
+		 * Форма обратной связи
+		 *
+		 * @link https://yandex.ru/dev/turbo/doc/rss/elements/fos-docpage/
+		 */
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,
 			array(
-				'title' => __( 'Callback', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'callback',
-				'icon'  => 'el el-envelope',
+				'title'  => __( 'Callback', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'callback',
+				'icon'   => 'el el-envelope',
 				'fields' => array(
 					array(
-						'id'      => 'callback_enable',
-						'type'    => 'switch',
-						'title'   => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
-						'subtitle'   => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
-						'on'      => __( 'On', 'mihdan-yandex-turbo-feed' ),
-						'off'     => __( 'Off', 'mihdan-yandex-turbo-feed' ),
-						'default' => false,
+						'id'       => 'callback_enable',
+						'type'     => 'switch',
+						'title'    => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle' => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'       => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'      => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default'  => false,
 					),
 					array(
 						'id'       => 'callback_send_to',
@@ -413,7 +418,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 						'default'  => get_bloginfo_rss( 'admin_email' ),
 						'validate' => 'email',
 						'required' => array(
-							array( 'callback_enable', '=', '1' )
+							array( 'callback_enable', '=', '1' ),
 						),
 					),
 					array(
@@ -423,7 +428,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 						'default'  => get_bloginfo_rss( 'name' ),
 						'validate' => 'not_empty',
 						'required' => array(
-							array( 'callback_enable', '=', '1' )
+							array( 'callback_enable', '=', '1' ),
 						),
 					),
 					array(
@@ -433,7 +438,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 						'default'  => get_privacy_policy_url(),
 						'validate' => 'url',
 						'required' => array(
-							array( 'callback_enable', '=', '1' )
+							array( 'callback_enable', '=', '1' ),
 						),
 					),
 				),
@@ -574,6 +579,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 				'title'  => __( 'Related Posts', 'mihdan-yandex-turbo-feed' ),
 				'id'     => 'related_posts',
 				'icon'   => 'el el-fork',
+				'desc'   => 'Если лента формируется в RSS-канале, то настройки ленты в Яндекс.Вебмастере не учитываются. Чтобы включить автоматическую ленту в Яндекс.Вебмастере, отключите данную возможность ниже.',
 				'fields' => array(
 					array(
 						'id'       => 'related_posts_enable',
@@ -606,6 +612,91 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 						'step'     => 1,
 						'required' => array(
 							array( 'related_posts_enable', '=', '1' ),
+						),
+					),
+				),
+			)
+		);
+
+		/**
+		 * Форма поиска
+		 *
+		 * @link https://yandex.ru/dev/turbo/doc/rss/elements/search-block-docpage/
+		 */
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title'  => __( 'Search', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'search',
+				'icon'   => 'el el-search',
+				'fields' => array(
+					array(
+						'id'       => 'search_enable',
+						'type'     => 'switch',
+						'title'    => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle' => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'       => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'      => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default'  => false,
+					),
+					array(
+						'id'       => 'search_placeholder',
+						'type'     => 'text',
+						'title'    => __( 'Placeholder', 'mihdan-yandex-turbo-feed' ),
+						'default'  => __( 'Search', 'mihdan-yandex-turbo-feed' ),
+						'validate' => array( 'not_empty' ),
+						'required' => array(
+							array( 'search_enable', '=', '1' ),
+						),
+					),
+				),
+			)
+		);
+
+		/**
+		 * Рейтинг записи.
+		 *
+		 * @link https://yandex.ru/dev/turbo/doc/rss/elements/rating-docpage/
+		 */
+		Redux::set_section(
+			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			array(
+				'title'  => __( 'Rating', 'mihdan-yandex-turbo-feed' ),
+				'id'     => 'rating',
+				'icon'   => 'el el-star',
+				'fields' => array(
+					array(
+						'id'       => 'rating_enable',
+						'type'     => 'switch',
+						'title'    => __( 'Enable', 'mihdan-yandex-turbo-feed' ),
+						'subtitle' => __( 'Switch On', 'mihdan-yandex-turbo-feed' ),
+						'on'       => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'off'      => __( 'Off', 'mihdan-yandex-turbo-feed' ),
+						'default'  => false,
+					),
+					array(
+						'id'       => 'rating_min',
+						'type'     => 'spinner',
+						'title'    => __( 'Minimal', 'mihdan-yandex-turbo-feed' ),
+						'default'  => 4,
+						'min'      => 1,
+						'max'      => 100,
+						'step'     => 1,
+						'validate' => array( 'numeric', 'not_empty' ),
+						'required' => array(
+							array( 'rating_enable', '=', '1' ),
+						),
+					),
+					array(
+						'id'       => 'rating_max',
+						'type'     => 'spinner',
+						'title'    => __( 'Maximum', 'mihdan-yandex-turbo-feed' ),
+						'default'  => 5,
+						'min'      => 1,
+						'max'      => 100,
+						'step'     => 1,
+						'required' => array(
+							array( 'rating_enable', '=', '1' ),
 						),
 					),
 				),
@@ -710,17 +801,6 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-
-
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Rating', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-rating',
-				'icon'  => 'el el-star',
-			)
-		);
-
 		Redux::set_section(
 			MIHDAN_YANDEX_TURBO_FEED_SLUG,
 			array(
@@ -730,14 +810,7 @@ class Mihdan_Yandex_Turbo_Feed_Settings {
 			)
 		);
 
-		Redux::set_section(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
-			array(
-				'title' => __( 'Search', 'mihdan-yandex-turbo-feed' ),
-				'id'    => 'elements-search',
-				'icon'  => 'el el-search',
-			)
-		);
+
 
 
 

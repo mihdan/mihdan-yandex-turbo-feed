@@ -187,6 +187,8 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_comments' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_callback' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_search' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_rating' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box' ) );
 		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
@@ -464,6 +466,49 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		);
 	}
 
+	/**
+	 * Получить имя домена для сайта.
+	 *
+	 * @return string
+	 */
+	private function get_site_domain() {
+		return parse_url( get_bloginfo_rss( 'url' ), PHP_URL_HOST );
+	}
+
+	/**
+	 * Вставляет форму поиска.
+	 */
+	public function insert_search() {
+		// Если модуль выключен.
+		if ( ! $this->redux->get_option( 'search_enable' ) ) {
+			return;
+		}
+		?>
+		<form action="https://yandex.ru/search/?text={text}&site=<?php echo esc_attr( $this->get_site_domain() ); ?>" method="GET">
+			<input type="search" name="text" placeholder="<?php echo esc_attr( $this->redux->get_option( 'search_placeholder' ) ); ?>>" />
+		</form>
+		<?php
+	}
+
+	/**
+	 * Вставляет рейтинг звёздами.
+	 */
+	public function insert_rating() {
+		// Если модуль выключен.
+		if ( ! $this->redux->get_option( 'rating_enable' ) ) {
+			return;
+		}
+		?>
+		<div itemscope itemtype="http://schema.org/Rating">
+			<meta itemprop="ratingValue" content="<?php echo esc_attr( mt_rand( $this->redux->get_option( 'rating_min' ), $this->redux->get_option( 'rating_max' ) ) ); ?>">
+			<meta itemprop="bestRating" content="<?php echo esc_attr( $this->redux->get_option( 'rating_max' ) ); ?>">
+		</div>
+		<?php
+	}
+
+	/**
+	 * Вставляет комментарийй к записям.
+	 */
 	public function insert_comments() {
 
 		// Если модуль выключен.
@@ -500,6 +545,11 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		}
 	}
 
+	/**
+	 * @param $comment
+	 * @param $args
+	 * @param $depth
+	 */
 	public function comments_callback( $comment, $args, $depth ) {
 		?>
 		<div
