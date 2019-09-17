@@ -54,6 +54,9 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		'<hr>',
 		'<div>',
 		'<code>',
+		'<dl>',
+		'<dt>',
+		'<dd>',
 	);
 
 	/**
