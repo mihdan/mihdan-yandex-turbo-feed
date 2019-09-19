@@ -17,6 +17,11 @@
     },
     "prefer-stable": true,
     "minimum-stability": "dev",
+    "config": {
+        "platform": {
+            "php": "5.6"
+        }
+    },
     "repositories": [
         {
             "type": "package",
@@ -38,16 +43,6 @@
         "composer/installers": "*",
         "reduxframework/redux-framework-4" : "*"
     },
-    "require-dev": {
-        "roave/security-advisories": "dev-master",
-        "sebastian/phpcpd": "^3.0",
-        "10up/wp_mock": "~0.3",
-        "phpunit/phpunit": "^6.5",
-        "squizlabs/php_codesniffer": "^2.9",
-        "phpcompatibility/php-compatibility": "^9.0",
-        "wp-coding-standards/wpcs": "^1.2",
-        "wp-cli/wp-cli": "*"
-    },
     "extra": {
         "installer-paths": {
             "vendor/{$name}/": ["type:wordpress-plugin"]
@@ -57,11 +52,6 @@
         "classmap": [
             "includes",
             "vendor/redux-framework-4/ReduxCore"
-        ]
-    },
-    "autoload-dev": {
-        "classmap": [
-            "includes"
         ]
     },
     "archive": {
