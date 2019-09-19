@@ -1,13 +1,21 @@
 <?php
 /**
+ * Основной класс плагина.
  *
+ * @package mihdan-yandex-turbo-feed
  */
+
 namespace Mihdan_Yandex_Turbo_Feed;
 
 use Mihdan_Yandex_Turbo_Feed\Settings;
 use Mihdan_Yandex_Turbo_Feed\Helpers;
 use Mihdan_Yandex_Turbo_Feed\Notifications;
 
+/**
+ * Class Main
+ *
+ * @package mihdan-yandex-turbo-feed
+ */
 class Main {
 	/**
 	 * @var string слюг плагина
@@ -216,8 +224,8 @@ class Main {
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
-		register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
-		register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
+		register_activation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_activate' ) );
+		register_deactivation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_deactivate' ) );
 	}
 
 	public function www_authenticate() {
@@ -391,10 +399,12 @@ class Main {
 	public function insert_category( $post_id ) {
 
 		// Получить категории текущего поста
-		$categories = $this->get_categories( array(
-			'post_id' => $post_id,
-			'fields'  => 'names',
-		) );
+		$categories = $this->get_categories(
+			array(
+				'post_id' => $post_id,
+				'fields'  => 'names',
+			)
+		);
 
 		// Сгенерить тег категории
 		if ( $categories ) {
@@ -411,7 +421,7 @@ class Main {
 	 * Удалить ненужные атрибуты при генерации картинок
 	 *
 	 * @param array $attr
-	 * @param WP_Post $attachment объект вложения
+	 * @param \WP_Post $attachment объект вложения
 	 * @param string|array $size размер
 	 *
 	 * @return array
@@ -536,7 +546,7 @@ class Main {
 		}
 		?>
 		<div itemscope itemtype="http://schema.org/Rating">
-			<meta itemprop="ratingValue" content="<?php echo esc_attr( mt_rand( $this->redux->get_option( 'rating_min' ), $this->redux->get_option( 'rating_max' ) ) ); ?>">
+			<meta itemprop="ratingValue" content="<?php echo esc_attr( wp_rand( $this->redux->get_option( 'rating_min' ), $this->redux->get_option( 'rating_max' ) ) ); ?>">
 			<meta itemprop="bestRating" content="<?php echo esc_attr( $this->redux->get_option( 'rating_max' ) ); ?>">
 		</div>
 		<?php
@@ -842,9 +852,9 @@ class Main {
 	/**
 	 * Подправляем основной луп фида
 	 *
-	 * @param WP_Query $wp_query объект запроса
+	 * @param \WP_Query $wp_query объект запроса
 	 */
-	public function alter_query( WP_Query $wp_query ) {
+	public function alter_query( \WP_Query $wp_query ) {
 
 		if ( $wp_query->is_main_query() && $wp_query->is_feed( $this->feedname ) ) {
 
@@ -964,7 +974,7 @@ class Main {
 
 		foreach ( $haystack as $key => $value ) {
 			$current_key = $key;
-			if ( $needle === $value or ( is_array( $value ) && $this->array_search( $needle, $value ) !== false ) ) {
+			if ( $needle === $value || ( is_array( $value ) && $this->array_search( $needle, $value ) !== false ) ) {
 				return $current_key;
 			}
 		}
@@ -980,6 +990,9 @@ class Main {
 		// Добавим флаг, свидетельствующий о том,
 		// что нужно сбросить реврайты.
 		update_option( $this->slug . '_flush_rewrite_rules', 1, true );
+
+		// Спрячем тур от Redux.
+		update_user_meta( get_current_user_id(), 'redux_tour', time() );
 	}
 
 	/**
@@ -1017,7 +1030,7 @@ class Main {
 	/**
 	 * Получить массив похожих постов
 	 *
-	 * @return WP_Query
+	 * @return \WP_Query
 	 */
 	public function get_related() {
 
@@ -1069,8 +1082,10 @@ class Main {
 		// Фильтруем аргументы запроса похожих постов.
 		$args = apply_filters( 'mihdan_yandex_turbo_feed_related_args', $args );
 
-		$query = new WP_Query( $args );
+		$query = new \WP_Query( $args );
 
 		return $query;
 	}
 }
+
+// eol.

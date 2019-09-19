@@ -38,6 +38,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 	define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.2.6' );
 	define( 'MIHDAN_YANDEX_TURBO_FEED_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 	define( 'MIHDAN_YANDEX_TURBO_FEED_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+	define( 'MIHDAN_YANDEX_TURBO_FEED_FILE', __FILE__ );
 
 	/**
 	 * Init plugin class on plugin load.

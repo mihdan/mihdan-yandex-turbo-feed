@@ -35,11 +35,11 @@ class Settings {
 
 		// Доступные соцсети для шеров.
 		$this->share_networks = array(
-			'facebook' => __( 'Facebook', 'mihdan-yandex-turbo-feed' ),
-			'google' => __( 'Google', 'mihdan-yandex-turbo-feed' ),
+			'facebook'      => __( 'Facebook', 'mihdan-yandex-turbo-feed' ),
+			'google'        => __( 'Google', 'mihdan-yandex-turbo-feed' ),
 			'odnoklassniki' => __( 'Odnoklassniki', 'mihdan-yandex-turbo-feed' ),
-			'telegram' => __( 'Telegram', 'mihdan-yandex-turbo-feed' ),
-			'vkontakte' => __( 'Vkontakte', 'mihdan-yandex-turbo-feed' ),
+			'telegram'      => __( 'Telegram', 'mihdan-yandex-turbo-feed' ),
+			'vkontakte'     => __( 'Vkontakte', 'mihdan-yandex-turbo-feed' ),
 		);
 	}
 
@@ -122,6 +122,7 @@ class Settings {
 			'display_version'    => MIHDAN_YANDEX_TURBO_FEED_VERSION,
 			'menu_type'          => 'menu',
 			'allow_sub_menu'     => false,
+			'allow_tracking'     => false,
 			'menu_title'         => __( 'Yandex Turbo', 'mihdan-yandex-turbo-feed' ),
 			'page_title'         => __( 'Yandex Turbo', 'mihdan-yandex-turbo-feed' ),
 			'async_typography'   => false,
