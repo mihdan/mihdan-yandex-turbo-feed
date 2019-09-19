@@ -1,5 +1,14 @@
 <?php
-class Mihdan_Yandex_Turbo_Feed_Main {
+/**
+ *
+ */
+namespace Mihdan_Yandex_Turbo_Feed;
+
+use Mihdan_Yandex_Turbo_Feed\Settings;
+use Mihdan_Yandex_Turbo_Feed\Helpers;
+use Mihdan_Yandex_Turbo_Feed\Notifications;
+
+class Main {
 	/**
 	 * @var string слюг плагина
 	 */
@@ -60,6 +69,16 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	);
 
 	/**
+	 * @var Helpers
+	 */
+	private $helpers;
+
+	/**
+	 * @var Assets
+	 */
+	private $assets;
+
+	/**
 	 * @var array $enclosure для хранения фото у поста
 	 */
 	private $enclosure = array();
@@ -103,12 +122,12 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	private $post_type = array( 'post' );
 
 	/**
-	 * @var Mihdan_Yandex_Turbo_Feed_Settings
+	 * @var Settings
 	 */
 	private $redux;
 
 	/**
-	 * @var Mihdan_Yandex_Turbo_Feed_Notifications
+	 * @var Notifications
 	 */
 	private $notifications;
 
@@ -119,7 +138,8 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	 */
 	public function __construct() {
 
-		$this->notifications = new Mihdan_Yandex_Turbo_Feed_Notifications();
+		$this->assets  = new Assets();
+		$this->helpers = new Helpers();
 
 		$this->includes();
 		$this->setup();
@@ -130,8 +150,8 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	 * Установка основных переменных плагина
 	 */
 	private function setup() {
-		$this->dir_path = trailingslashit( plugin_dir_path( __FILE__ ) );
-		$this->dir_uri  = trailingslashit( plugin_dir_url( __FILE__ ) );
+		$this->dir_path = trailingslashit( MIHDAN_YANDEX_TURBO_FEED_PATH );
+		$this->dir_uri  = trailingslashit( MIHDAN_YANDEX_TURBO_FEED_URL );
 	}
 
 	/**
@@ -141,8 +161,8 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 
 		// Подключить конфиг Redux после фильтрации,
 		// чтобы работали переопределения полей, сделанный фильтрами ранее.
-		$this->redux = new Mihdan_Yandex_Turbo_Feed_Settings();
-
+		$this->redux         = new Settings();
+		$this->notifications = new Notifications( $this->redux );
 
 		$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
 
@@ -198,6 +218,13 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
 		register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'on_deactivate' ) );
+	}
+
+	public function www_authenticate() {
+		if ( $this->redux->get_option( 'access_enable' ) ) {
+			header( 'WWW-Authenticate: Basic realm="My Realm"' );
+			header( 'HTTP/1.0 401 Unauthorized' );
+		}
 	}
 
 	/**
@@ -485,15 +512,6 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 	}
 
 	/**
-	 * Получить имя домена для сайта.
-	 *
-	 * @return string
-	 */
-	private function get_site_domain() {
-		return parse_url( get_bloginfo_rss( 'url' ), PHP_URL_HOST );
-	}
-
-	/**
 	 * Вставляет форму поиска.
 	 */
 	public function insert_search() {
@@ -502,7 +520,7 @@ class Mihdan_Yandex_Turbo_Feed_Main {
 			return;
 		}
 		?>
-		<form action="https://yandex.ru/search/?text={text}&site=<?php echo esc_attr( $this->get_site_domain() ); ?>" method="GET">
+		<form action="https://yandex.ru/search/?text={text}&site=<?php echo esc_attr( $this->helpers->get_site_domain() ); ?>" method="GET">
 			<input type="search" name="text" placeholder="<?php echo esc_attr( $this->redux->get_option( 'search_placeholder' ) ); ?>>" />
 		</form>
 		<?php
