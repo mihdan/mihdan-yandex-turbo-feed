@@ -7,10 +7,6 @@
 
 namespace Mihdan_Yandex_Turbo_Feed;
 
-use Mihdan_Yandex_Turbo_Feed\Settings;
-use Mihdan_Yandex_Turbo_Feed\Helpers;
-use Mihdan_Yandex_Turbo_Feed\Notifications;
-
 /**
  * Class Main
  *

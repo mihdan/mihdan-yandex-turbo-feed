@@ -11,6 +11,8 @@
  * @wordpress-plugin
  */
 
+use Mihdan_Yandex_Turbo_Feed\Main;
+
 /**
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
@@ -48,7 +50,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 
 	if ( ! isset( $plugin ) ) {
 		require_once MIHDAN_YANDEX_TURBO_FEED_PATH . 'vendor/autoload.php';
-		$plugin = new Mihdan_Yandex_Turbo_Feed\Main();
+		$plugin = new Main();
 	}
 }
 
