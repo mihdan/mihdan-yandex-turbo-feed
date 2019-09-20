@@ -165,7 +165,7 @@ class Main {
 
 		// Подключить конфиг Redux после фильтрации,
 		// чтобы работали переопределения полей, сделанный фильтрами ранее.
-		$this->redux         = new Settings();
+		$this->redux         = new Settings( $this->helpers );
 		$this->notifications = new Notifications( $this->redux );
 
 		$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
@@ -525,8 +525,11 @@ class Main {
 		if ( ! $this->redux->get_option( 'search_enable' ) ) {
 			return;
 		}
+		if ( ! isset( $this->redux->providers[ $this->redux->get_option( 'search_provider' ) ] ) ) {
+			return;
+		}
 		?>
-		<form action="https://yandex.ru/search/?text={text}&site=<?php echo esc_attr( $this->helpers->get_site_domain() ); ?>" method="GET">
+		<form action="<?php echo esc_attr( $this->redux->providers[ $this->redux->get_option( 'search_provider' ) ]['url'] ); ?>" method="GET">
 			<input type="search" name="text" placeholder="<?php echo esc_attr( $this->redux->get_option( 'search_placeholder' ) ); ?>>" />
 		</form>
 		<?php

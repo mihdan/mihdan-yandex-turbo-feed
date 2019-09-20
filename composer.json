@@ -41,7 +41,8 @@
     ],
     "require": {
         "composer/installers": "*",
-        "reduxframework/redux-framework-4" : "*"
+        "reduxframework/redux-framework-4" : "*",
+        "wptrt/admin-notices": "^1.0"
     },
     "extra": {
         "installer-paths": {

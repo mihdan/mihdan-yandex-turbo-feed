@@ -8,7 +8,19 @@ class Settings {
 	private $taxonomies;
 	private $share_networks;
 
-	public function __construct() {
+	/**
+	 * @var Helpers
+	 */
+	private $helpers;
+
+	/**
+	 * @var array
+	 */
+	public $providers;
+
+	public function __construct( Helpers $helpers ) {
+		$this->helpers = $helpers;
+
 		$this->hooks();
 	}
 
@@ -40,6 +52,37 @@ class Settings {
 			'odnoklassniki' => __( 'Odnoklassniki', 'mihdan-yandex-turbo-feed' ),
 			'telegram'      => __( 'Telegram', 'mihdan-yandex-turbo-feed' ),
 			'vkontakte'     => __( 'Vkontakte', 'mihdan-yandex-turbo-feed' ),
+		);
+
+		/**
+		 * Провайдеры поиска.
+		 */
+		$this->providers = array(
+			'site'   => array(
+				'id'   => 'site',
+				'name' => __( 'Site', 'mihdan-yandex-turbo-feed' ),
+				'url'  => get_bloginfo_rss( 'url' ) . '/?s={text}',
+			),
+			'bing'   => array(
+				'id'   => 'bing',
+				'name' => __( 'Bing', 'mihdan-yandex-turbo-feed' ),
+				'url'  => 'https://www.bing.com/search?q={text}%20site:' . $this->helpers->get_site_domain(),
+			),
+			'yahoo'  => array(
+				'id'   => 'yahoo',
+				'name' => __( 'Yahoo', 'mihdan-yandex-turbo-feed' ),
+				'url'  => 'https://search.yahoo.com/search?p={text}%20site:' . $this->helpers->get_site_domain(),
+			),
+			'yandex' => array(
+				'id'   => 'yandex',
+				'name' => __( 'Yandex', 'mihdan-yandex-turbo-feed' ),
+				'url'  => 'https://yandex.ru/search/?text={text}&site=' . $this->helpers->get_site_domain(),
+			),
+			'google' => array(
+				'id'   => 'google',
+				'name' => __( 'Google', 'mihdan-yandex-turbo-feed' ),
+				'url'  => 'https://google.com/search?q={text}%20site:' . $this->helpers->get_site_domain(),
+			),
 		);
 	}
 
@@ -648,6 +691,17 @@ class Settings {
 						'title'    => __( 'Placeholder', 'mihdan-yandex-turbo-feed' ),
 						'default'  => __( 'Search', 'mihdan-yandex-turbo-feed' ),
 						'validate' => array( 'not_empty' ),
+						'required' => array(
+							array( 'search_enable', '=', '1' ),
+						),
+					),
+					array(
+						'id'       => 'search_provider',
+						'type'     => 'select',
+						'title'    => __( 'Provider', 'mihdan-yandex-turbo-feed' ),
+						'desc'     => __( 'Провайдер поиска', 'mihdan-yandex-turbo-feed' ),
+						'default'  => 'site',
+						'options'  => wp_list_pluck( $this->providers, 'name', 'id' ),
 						'required' => array(
 							array( 'search_enable', '=', '1' ),
 						),

@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 4.6
 Requires PHP: 5.6.20
 Tested up to: 5.2
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.2.6 (2019-09-20) =
+* В настройках поиска можно выбрать провайдера
 
 = 1.2.5 (2019-09-19) =
 * Исправлена ошибка, когда не убиралось окно с просьбой оценки
