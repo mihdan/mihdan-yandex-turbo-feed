@@ -24,25 +24,14 @@
     },
     "repositories": [
         {
-            "type": "package",
-            "package": {
-                "name": "reduxframework/redux-framework-4",
-                "type": "wordpress-plugin",
-                "version": "4.0.2",
-                "dist": {
-                    "type": "zip",
-                    "url": "https://github.com/reduxframework/redux-framework-4/archive/master.zip"
-                },
-                "require" : {
-                    "composer/installers": "*"
-                }
-            }
+            "type":"composer",
+            "url":"https://wpackagist.org"
         }
     ],
     "require": {
         "composer/installers": "*",
-        "reduxframework/redux-framework-4" : "*",
-        "wptrt/admin-notices": "^1.0"
+        "wptrt/admin-notices": "^1.0",
+        "wpackagist-plugin/advanced-custom-fields": "^5.8"
     },
     "extra": {
         "installer-paths": {
@@ -51,14 +40,7 @@
     },
     "autoload": {
         "classmap": [
-            "includes",
-            "vendor/redux-framework-4/ReduxCore"
-        ]
-    },
-    "archive": {
-        "exclude": [
-            "/vendor/redux-framework-4/*",
-            "!/vendor/redux-framework-4/ReduxCore"
+            "includes"
         ]
     }
 }
