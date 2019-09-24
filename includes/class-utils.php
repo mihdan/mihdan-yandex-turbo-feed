@@ -1,9 +1,12 @@
 <?php
-namespace Mihdan_Yandex_Turbo_Feed;
+/**
+ * @package mihdan-yandex-turbo-feed
+ */
+namespace Mihdan\YandexTurboFeed;
 /**
  * Class Helpers
  */
-class Helpers {
+class Utils {
 	public function __construct() {
 	}
 
