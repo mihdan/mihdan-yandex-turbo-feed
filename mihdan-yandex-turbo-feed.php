@@ -11,7 +11,7 @@
  * @wordpress-plugin
  */
 
-use Mihdan_Yandex_Turbo_Feed\Main;
+use Mihdan\YandexTurboFeed\Main;
 
 /**
  * Plugin Name: Mihdan: Yandex Turbo Feed
@@ -38,7 +38,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 	// Слюг плагина
 	define( 'MIHDAN_YANDEX_TURBO_FEED_SLUG', 'mihdan_yandex_turbo_feed' );
 	define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.2.6' );
-	define( 'MIHDAN_YANDEX_TURBO_FEED_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
+	define( 'MIHDAN_YANDEX_TURBO_FEED_PATH', __DIR__ );
 	define( 'MIHDAN_YANDEX_TURBO_FEED_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 	define( 'MIHDAN_YANDEX_TURBO_FEED_FILE', __FILE__ );
 
@@ -49,7 +49,7 @@ if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
 	static $plugin;
 
 	if ( ! isset( $plugin ) ) {
-		require_once MIHDAN_YANDEX_TURBO_FEED_PATH . 'vendor/autoload.php';
+		require_once MIHDAN_YANDEX_TURBO_FEED_PATH . '/vendor/autoload.php';
 		$plugin = new Main();
 	}
 }
