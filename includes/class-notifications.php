@@ -29,7 +29,8 @@ class Notifications {
 		$template  = '<p>';
 		$template .= __( 'Hello!', 'mihdan-yandex-turbo-feed' );
 		$template .= '<br />';
-		$template .= __( 'We are very pleased that you by now have been using the <strong>Mihdan Yandex Turbo Feed</strong> plugin a few days. Please <a href="" target="_blank">rate plugin</a>. It will help us a lot.', 'mihdan-yandex-turbo-feed' );
+		/* translators: ссылка на голосование */
+		$template .= sprintf( __( 'We are very pleased that you by now have been using the <strong>Mihdan Yandex Turbo Feed</strong> plugin a few days. Please <a href="%s" target="_blank">rate plugin</a>. It will help us a lot.', 'mihdan-yandex-turbo-feed' ), self::URL );
 		$template .= '</p>';
 
 		$this->notices->add(
