@@ -5,7 +5,7 @@
  * @package mihdan-yandex-turbo-feed
  */
 
-namespace Mihdan_Yandex_Turbo_Feed;
+namespace Mihdan\YandexTurboFeed;
 
 /**
  * Class Main
@@ -73,14 +73,9 @@ class Main {
 	);
 
 	/**
-	 * @var Helpers
+	 * @var Utils
 	 */
-	private $helpers;
-
-	/**
-	 * @var Assets
-	 */
-	private $assets;
+	private $utils;
 
 	/**
 	 * @var array $enclosure для хранения фото у поста
@@ -91,20 +86,6 @@ class Main {
 	 * @var array Массив похожих постов
 	 */
 	private $related = array();
-
-	/**
-	 * Путь к плагину
-	 *
-	 * @var string
-	 */
-	public $dir_path;
-
-	/**
-	 * URL до плагина
-	 *
-	 * @var string
-	 */
-	public $dir_uri;
 
 	/**
 	 * Соотношение категорий.
@@ -128,7 +109,7 @@ class Main {
 	/**
 	 * @var Settings
 	 */
-	private $redux;
+	private $settings;
 
 	/**
 	 * @var Notifications
@@ -136,43 +117,37 @@ class Main {
 	private $notifications;
 
 	/**
+	 * @var Template
+	 */
+	private $template;
+
+	/**
+	 * @var integer $feed_id Идентификатор фида
+	 */
+	private $feed_id;
+
+	/**
 	 * Инициализируем нужные методы
 	 *
-	 * Mihdan_FAQ constructor.
+	 * Main constructor.
+	 *
+	 * @param Utils         $utils    Утилиты/Хелперы.
+	 * @param Settings      $settings Ностройки.
+	 * @param Template      $template Шаблон.
+	 * @param Notifications $notices  Уведомления в админке.
 	 */
-	public function __construct() {
-
-		$this->assets  = new Assets();
-		$this->helpers = new Helpers();
-
+	public function __construct( Utils $utils = null, Settings $settings = null, Template $template = null, Notifications $notices = null ) {
 		$this->includes();
-		$this->setup();
-		$this->hooks();
-	}
-
-	/**
-	 * Установка основных переменных плагина
-	 */
-	private function setup() {
-		$this->dir_path = trailingslashit( MIHDAN_YANDEX_TURBO_FEED_PATH );
-		$this->dir_uri  = trailingslashit( MIHDAN_YANDEX_TURBO_FEED_URL );
-	}
-
-	/**
-	 * Фильтры для переопределения настроек внутри темы
-	 */
-	public function after_setup_theme() {
-
-		// Подключить конфиг Redux после фильтрации,
-		// чтобы работали переопределения полей, сделанный фильтрами ранее.
-		$this->redux         = new Settings( $this->helpers );
-		$this->notifications = new Notifications( $this->redux );
+		$this->utils         = new Utils();
+		$this->settings      = new Settings( $this->utils );
+		$this->notifications = new Notifications( $this->settings );
+		$this->template      = new Template( $this->settings );
 
 		$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
 
-		$this->post_type = $this->redux->get_option( 'feed_post_type' );
-		$this->taxonomy  = $this->redux->get_option( 'feed_taxonomy' );
-		$this->feedname  = $this->redux->get_option( 'feed_slug' );
+		//$this->feedname  = $this->settings->get_option( 'slug' );
+
+		$this->hooks();
 	}
 
 	/**
@@ -196,36 +171,42 @@ class Main {
 	 * Хукаем.
 	 */
 	private function hooks() {
-		add_action( 'init', array( $this, 'add_feed' ) );
 		add_action( 'init', array( $this, 'flush_rewrite_rules' ), 99 );
-		add_action( 'pre_get_posts', array( $this, 'alter_query' ) );
-		add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
+		add_filter( 'mihdan_yandex_turbo_feed_args', array( $this, 'alter_query' ), 9 );
 		add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
 		add_action( 'plugins_loaded', array( $this, 'load_translations' ) );
-		add_action( 'redux/options/' . $this->slug . '/saved', array( $this, 'on_redux_saved' ) );
 		add_action( 'mihdan_yandex_turbo_feed_channel', array( $this, 'insert_analytics' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_comments' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_callback' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_search' ) );
+
+
+		//add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
+
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_rating' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
-		add_action( 'save_post', array( $this, 'save_meta_box' ) );
 		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 		add_filter( 'the_content_feed', array( $this, 'invisible_border' ) );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
+		add_action( 'template_redirect', array( $this, 'set_feed_id' ), 1 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		register_activation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_activate' ) );
 		register_deactivation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_deactivate' ) );
 	}
 
+	public function set_feed_id() {
+		$this->feed_id = get_the_ID();
+	}
+
+	/**
+	 * Загружаем ресурсы для плагина.
+	 */
+	public function assets() {
+		wp_enqueue_script( MIHDAN_YANDEX_TURBO_FEED_SLUG, MIHDAN_YANDEX_TURBO_FEED_URL . 'admin/js/app.js', array( 'wp-util' ), filemtime( MIHDAN_YANDEX_TURBO_FEED_PATH . '/admin/js/app.js' ) );
+		wp_enqueue_style( MIHDAN_YANDEX_TURBO_FEED_SLUG, MIHDAN_YANDEX_TURBO_FEED_URL . 'admin/css/app.css', array(), filemtime( MIHDAN_YANDEX_TURBO_FEED_PATH . '/admin/css/app.css' ) );
+	}
+
 	public function www_authenticate() {
-		if ( $this->redux->get_option( 'access_enable' ) ) {
+		if ( $this->settings->get_option( 'access_enable' ) ) {
 			header( 'WWW-Authenticate: Basic realm="My Realm"' );
 			header( 'HTTP/1.0 401 Unauthorized' );
 		}
@@ -266,7 +247,7 @@ class Main {
 	 * Добавим заголовок `X-Robots-Tag`
 	 * для решения проблемы с сеошными плагинами.
 	 */
-	public function send_headers_for_aio_seo_pack() {
+	public function send_headers_for_aio_seo_pack() { var_dump(get_the_ID());die;
 		if ( is_feed( $this->feedname ) ) {
 			header( 'X-Robots-Tag: index, follow', true );
 		}
@@ -282,7 +263,7 @@ class Main {
 	 */
 	public function invisible_border( $content ) {
 
-		if ( $this->redux->get_option( 'invisible_border_enable' ) ) {
+		if ( $this->settings->get_option( 'invisible_border_enable' ) ) {
 			$content = str_replace( '<table', '<table data-invisible="true"', $content );
 		}
 
@@ -290,17 +271,10 @@ class Main {
 	}
 
 	/**
-	 * Всплывает при сохранении настроек в Redux.
-	 */
-	public function on_redux_saved() {
-		update_option( $this->slug . '_flush_rewrite_rules', 1, true );
-	}
-
-	/**
 	 * Регистрируем переводы.
 	 */
 	public function load_translations() {
-		load_plugin_textdomain( 'mihdan-yandex-turbo-feed', false, $this->dir_path . 'languages' );
+		load_plugin_textdomain( 'mihdan-yandex-turbo-feed', false, MIHDAN_YANDEX_TURBO_FEED_PATH . '/languages' );
 	}
 
 	/**
@@ -316,63 +290,6 @@ class Main {
 
 			// Удаляем опцию.
 			delete_option( $this->slug . '_flush_rewrite_rules' );
-		}
-	}
-
-
-
-	/**
-	 * Добавляем метабок с настройками поста.
-	 */
-	public function add_meta_box() {
-
-		// На каких экранах админки показывать.
-		$screen = $this->post_type;
-
-		// Добавляем метабокс.
-		add_meta_box( $this->slug, 'Турбо-страницы', array( $this, 'render_meta_box' ), $screen, 'side', 'high' );
-	}
-
-	/**
-	 * Отрисовываем содержимое метабокса с настройками поста.
-	 */
-	public function render_meta_box() {
-		$exclude = (bool) get_post_meta( get_the_ID(), $this->slug . '_exclude', true );
-		$remove  = (bool) get_post_meta( get_the_ID(), $this->slug . '_remove', true );
-		?>
-		<label for="<?php echo esc_attr( $this->slug ); ?>_exclude" title="Включить/Исключить запись из ленты">
-			<input type="checkbox" value="1" name="<?php echo esc_attr( $this->slug ); ?>_exclude" id="<?php echo esc_attr( $this->slug ); ?>_exclude" <?php checked( $exclude, true ); ?>> Исключить из ленты
-		</label>
-		<br/>
-		<label for="<?php echo esc_attr( $this->slug ); ?>_remove" title="Удалить запись из Яндекса. В ленте будет добавлен атрибут turbo=false">
-			<input type="checkbox" value="1" name="<?php echo esc_attr( $this->slug ); ?>_remove" id="<?php echo esc_attr( $this->slug ); ?>_remove" <?php checked( $remove, true ); ?>> Удалить из Яндекса
-		</label>
-		<?php
-	}
-
-	/**
-	 * Созраняем данные метабокса.
-	 *
-	 * @param int $post_id идентификатор записи.
-	 */
-	public function save_meta_box( $post_id ) {
-		if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) ) {
-			return;
-		}
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return;
-		}
-
-		if ( isset( $_POST[ $this->slug . '_exclude' ] ) ) {
-			update_post_meta( $post_id, $this->slug . '_exclude', 1 );
-		} else {
-			delete_post_meta( $post_id, $this->slug . '_exclude' );
-		}
-
-		if ( isset( $_POST[ $this->slug . '_remove' ] ) ) {
-			update_post_meta( $post_id, $this->slug . '_remove', 1 );
-		} else {
-			delete_post_meta( $post_id, $this->slug . '_remove' );
 		}
 	}
 
@@ -455,211 +372,27 @@ class Main {
 		$this->enclosure = array();
 	}
 
-	/**
-	 * Генерит валидный тег <link />
-	 *
-	 * @param string $url ссылка на пост
-	 * @param string $src ссылка на кртинку
-	 * @param string $title текст ссылки
-	 *
-	 * @return string
-	 */
-	public function create_related( $url, $src, $title ) {
-		if ( ! empty( $title ) && ! empty( $src ) ) {
-			return sprintf( '<link url="%s" img="%s"><![CDATA[%s]]></link>', esc_url( $url ), esc_url( $src ), esc_html( $title ) );
-		}
-	}
 
-	/**
-	 * Вставляет похожие записи.
-	 */
-	public function insert_related() {
-
-		if ( ! $this->redux->get_option( 'related_posts_enable' ) ) {
-			return;
-		}
-
-		$related = $this->get_related();
-
-		if ( $related->have_posts() ) {
-			// Если включена бесконечная лента.
-			if ( $this->redux->get_option( 'related_posts_infinity' ) ) {
-				echo '<yandex:related type="infinity">';
-			} else {
-				echo '<yandex:related>';
-			}
-			while ( $related->have_posts() ) {
-				$related->the_post();
-				echo $this->create_related(
-					get_permalink(),
-					get_the_post_thumbnail_url(),
-					get_the_title()
-				);
-			}
-			echo '</yandex:related>';
-		}
-	}
-
-	/**
-	 * Вставка форма обратной связи
-	 */
-	public function insert_callback() {
-		// Если модуль выключен.
-		if ( ! $this->redux->get_option( 'callback_enable' ) ) {
-			return;
-		}
-
-		printf(
-			'<form data-type="callback" data-send-to="%s" data-agreement-company="%s" data-agreement-link="%s"></form>',
-			esc_attr( $this->redux->get_option( 'callback_send_to' ) ),
-			esc_attr( $this->redux->get_option( 'callback_agreement_company' ) ),
-			esc_url( $this->redux->get_option( 'callback_agreement_link' ) )
-		);
-	}
-
-	/**
-	 * Вставляет форму поиска.
-	 */
-	public function insert_search() {
-		// Если модуль выключен.
-		if ( ! $this->redux->get_option( 'search_enable' ) ) {
-			return;
-		}
-		if ( ! isset( $this->redux->providers[ $this->redux->get_option( 'search_provider' ) ] ) ) {
-			return;
-		}
-		?>
-		<form action="<?php echo esc_attr( $this->redux->providers[ $this->redux->get_option( 'search_provider' ) ]['url'] ); ?>" method="GET">
-			<input type="search" name="text" placeholder="<?php echo esc_attr( $this->redux->get_option( 'search_placeholder' ) ); ?>>" />
-		</form>
-		<?php
-	}
 
 	/**
 	 * Вставляет рейтинг звёздами.
 	 */
 	public function insert_rating() {
 		// Если модуль выключен.
-		if ( ! $this->redux->get_option( 'rating_enable' ) ) {
+		if ( ! $this->settings->get_option( 'rating_enable' ) ) {
 			return;
 		}
 		?>
 		<div itemscope itemtype="http://schema.org/Rating">
-			<meta itemprop="ratingValue" content="<?php echo esc_attr( wp_rand( $this->redux->get_option( 'rating_min' ), $this->redux->get_option( 'rating_max' ) ) ); ?>">
-			<meta itemprop="bestRating" content="<?php echo esc_attr( $this->redux->get_option( 'rating_max' ) ); ?>">
+			<meta itemprop="ratingValue" content="<?php echo esc_attr( wp_rand( $this->settings->get_option( 'rating_min' ), $this->settings->get_option( 'rating_max' ) ) ); ?>">
+			<meta itemprop="bestRating" content="<?php echo esc_attr( $this->settings->get_option( 'rating_max' ) ); ?>">
 		</div>
 		<?php
 	}
 
-	/**
-	 * Вставляет комментарийй к записям.
-	 */
-	public function insert_comments() {
 
-		// Если модуль выключен.
-		if ( ! $this->redux->get_option( 'comments_enable' ) ) {
-			return;
-		}
 
-		if ( comments_open() || have_comments() ) {
 
-			// Аргументы получения комментариев
-			$comments_args = array(
-				'post_id' => get_the_ID(),
-				'status'  => 'approve',
-				'type'    => 'comment',
-			);
-
-			// Фильтруем аргументы получения комментариев
-			$comments_args = apply_filters( 'mihdan_yandex_turbo_feed_comments_args', $comments_args );
-
-			// Получаем комментарии
-			$comments = get_comments( $comments_args );
-
-			$args = array(
-				'style'        => 'div',
-				'avatar_size'  => 64,
-				'per_page'     => 40, // яндекс обрабатывает не более 40 комментов
-				'callback'     => array( $this, 'comments_callback' ),
-				'end-callback' => array( $this, 'comments_end_callback' ),
-			);
-
-			printf( '<div data-block="comments" data-url="%s#comments">', get_permalink() );
-			wp_list_comments( $args, $comments );
-			echo '</div>';
-		}
-	}
-
-	/**
-	 * @param $comment
-	 * @param $args
-	 * @param $depth
-	 */
-	public function comments_callback( $comment, $args, $depth ) {
-		?>
-		<div
-		data-block="comment"
-		data-author="<?php comment_author(); ?>"
-		data-avatar-url="<?php echo esc_url( get_avatar_url( $comment, 64 ) ); ?>"
-		data-subtitle="<?php echo get_comment_date(); ?> в <?php echo get_comment_time(); ?>"
-		>
-		<div data-block="content">
-			<?php comment_text(); ?>
-		</div>
-		<?php if ( $args['has_children'] ) : ?>
-			<div data-block="comments">
-		<?php endif; ?>
-		<?php
-
-		return;
-	}
-
-	public function comments_end_callback( $comment, $args, $depth ) {
-		?>
-		</div>
-		<?php if ( 1 === $depth ) : ?>
-			</div>
-		<?php endif; ?>
-		<?php
-	}
-
-	/**
-	 * Генерим тег <menu>
-	 *
-	 * @param string $menu строка с меню
-	 *
-	 * @return string
-	 */
-	public function create_menu( $menu ) {
-		return sprintf( '<menu>%s</menu>', $menu );
-	}
-
-	/**
-	 * Вставлем пользовательское меню
-	 * в каждый item фида
-	 */
-	public function insert_menu() {
-
-		// Если юзер сделал меню
-		if ( $this->redux->get_option( 'menu_enable' ) && has_nav_menu( $this->slug ) ) {
-
-			// Получить меню
-			$menu = wp_nav_menu(
-				array(
-					'theme_location' => $this->slug,
-					'container'      => false,
-					'echo'           => false,
-					'depth'          => 1,
-				)
-			);
-
-			// Оставить в меню только ссылки
-			$menu = strip_tags( $menu, '<a>' );
-
-			// Вывести меню
-			echo $this->create_menu( $menu );
-		}
-	}
 
 	/**
 	 * Создаёт тег для вставки аналитики.
@@ -683,13 +416,13 @@ class Main {
 	 * Вставка счетчиков аналитики.
 	 */
 	public function insert_analytics() {
-		if ( $this->redux->get_option( 'analytics_enable' ) ) {
-			$yandex_metrika = $this->redux->get_option( 'analytics_yandex_metrika' );
-			$live_internet  = $this->redux->get_option( 'analytics_live_internet' );
-			$google         = $this->redux->get_option( 'analytics_google' );
-			$mail_ru        = $this->redux->get_option( 'analytics_mail_ru' );
-			$rambler        = $this->redux->get_option( 'analytics_rambler' );
-			$mediascope     = $this->redux->get_option( 'analytics_mediascope' );
+		if ( $this->settings->get_option( 'analytics_enable' ) ) {
+			$yandex_metrika = $this->settings->get_option( 'analytics_yandex_metrika' );
+			$live_internet  = $this->settings->get_option( 'analytics_live_internet' );
+			$google         = $this->settings->get_option( 'analytics_google' );
+			$mail_ru        = $this->settings->get_option( 'analytics_mail_ru' );
+			$rambler        = $this->settings->get_option( 'analytics_rambler' );
+			$mediascope     = $this->settings->get_option( 'analytics_mediascope' );
 
 			if ( false !== $yandex_metrika && is_array( $yandex_metrika ) ) {
 				foreach ( $yandex_metrika as $item ) {
@@ -739,19 +472,6 @@ class Main {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Вставляет блок с шерами
-	 */
-	public function insert_share() {
-
-		// Если модуль выключен.
-		if ( ! $this->redux->get_option( 'share_enable' ) ) {
-			return;
-		}
-
-		echo sprintf( '<div data-block="share" data-network="%s"></div>', implode( ',', $this->redux->get_option( 'share_networks' ) ) );
 	}
 
 	/**
@@ -824,15 +544,6 @@ class Main {
 	}
 
 	/**
-	 * Регистрация нашего фида
-	 */
-	public function add_feed() {
-
-		// Добавить новый фид
-		add_feed( $this->feedname, array( $this, 'require_feed_template' ) );
-	}
-
-	/**
 	 * Hide RSS footer created by WordPress SEO from our RSS feed
 	 *
 	 * @param  boolean $include_footer Default inclusion value
@@ -851,47 +562,39 @@ class Main {
 	/**
 	 * Подправляем основной луп фида
 	 *
-	 * @param \WP_Query $wp_query объект запроса
+	 * @param array $args
+	 *
+	 * @return array
 	 */
-	public function alter_query( \WP_Query $wp_query ) {
+	public function alter_query( $args ) {
 
-		if ( $wp_query->is_main_query() && $wp_query->is_feed( $this->feedname ) ) {
+		// Ограничить посты 50-ю
+		$args['posts_per_page'] = $this->settings->get_option( 'total_posts' );
 
-			// Ограничить посты 50-ю
-			$wp_query->set( 'posts_per_rss', $this->redux->get_option( 'feed_total_posts' ) );
+		// Впариваем нужные нам типы постов
+		$args['post_type'] = $this->settings->get_option( 'post_type' );
 
-			// Впариваем нужные нам типы постов
-			$wp_query->set( 'post_type', $this->post_type );
+		// Указываем поле для сортировки.
+		$args['orderby'] = $this->settings->get_option( 'orderby' );
 
-			// Указываем поле для сортировки.
-			$wp_query->set( 'orderby', $this->redux->get_option( 'feed_orderby' ) );
+		// Указываем направление сортировки.
+		$args['order'] = $this->settings->get_option( 'order' );
 
-			// Указываем направление сортировки.
-			$wp_query->set( 'order', $this->redux->get_option( 'feed_order' ) );
-
-			// Получаем текущие мета запросы.
-			$meta_query = $wp_query->get( 'meta_query' );
-
-			if ( empty( $meta_query ) ) {
-				$meta_query = array();
-			}
-
-			// Добавляем исключения.
-			$meta_query[] = array(
+		// Добавляем исключения.
+		$args['meta_query'] = array(
+			'relation' => 'OR',
+			array(
 				'key'     => $this->slug . '_exclude',
 				'compare' => 'NOT EXISTS',
-			);
+			),
+			array(
+				'key'     => $this->slug . '_exclude',
+				'compare' => '=',
+				'value'   => '',
+			),
+		);
 
-			// Исключаем записи с галочкой в админке
-			$wp_query->set( 'meta_query', $meta_query );
-		}
-	}
-
-	/**
-	 * Подключаем шаблон фида
-	 */
-	public function require_feed_template() {
-		require MIHDAN_YANDEX_TURBO_FEED_PATH . 'templates/feed.php';
+		return $args;
 	}
 
 	/**
@@ -950,15 +653,7 @@ class Main {
 		return $this->array_search( $category_id, $this->categories );
 	}
 
-	/**
-	 * Получить название такосномии для соотношений.
-	 * По-умолчанию, это category.
-	 *
-	 * @return array
-	 */
-	public function get_taxonomy() {
-		return (array) $this->taxonomy;
-	}
+
 
 	/**
 	 * Рекурсивный поиск в массиве.
@@ -989,9 +684,6 @@ class Main {
 		// Добавим флаг, свидетельствующий о том,
 		// что нужно сбросить реврайты.
 		update_option( $this->slug . '_flush_rewrite_rules', 1, true );
-
-		// Спрячем тур от Redux.
-		update_user_meta( get_current_user_id(), 'redux_tour', time() );
 	}
 
 	/**
@@ -1003,88 +695,9 @@ class Main {
 		flush_rewrite_rules();
 	}
 
-	public function get_categories( $args = [] ) {
 
-		$taxonomy = $this->get_taxonomy();
 
-		$default = [
-			'hide_empty' => false,
-		];
 
-		$args = wp_parse_args( $args, $default );
-
-		if ( ! empty( $args['post_id'] ) ) {
-			$result = wp_get_object_terms( $args['post_id'], $taxonomy, $args );
-		} else {
-			$result = get_terms( $taxonomy, $args );
-		}
-
-		if ( is_wp_error( $result ) ) {
-			$result = false;
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Получить массив похожих постов
-	 *
-	 * @return \WP_Query
-	 */
-	public function get_related() {
-
-		$post = get_post();
-
-		$args = array(
-			'post_type'           => $this->post_type,
-			'posts_per_page'      => 10,
-			'ignore_sticky_posts' => true,
-			'no_found_rows'       => true,
-			'post__not_in'        => array( $post->ID ),
-		);
-
-		// Получить ID всех термов поста
-		// во всех его таксономиях
-		$ids = $this->get_categories(
-			array(
-				'post_id' => $post->ID,
-				'fields'  => 'ids',
-			)
-		);
-
-		if ( ! empty( $ids ) ) {
-
-			// Получить массив слагов таксономий
-			$taxonomies = $this->get_taxonomy();
-
-			// Если переданы таксономии
-			if ( $taxonomies ) {
-
-				// Если таксономий больше одной,
-				// ставим логику ИЛИ
-				if ( count( $taxonomies ) > 1 ) {
-					$args['tax_query']['relation'] = 'OR';
-				}
-
-				// Формируем запрос на поиск по термам
-				// для каждой таксономии
-				foreach ( $taxonomies as $taxonomy ) {
-					$args['tax_query'][] = array(
-						'taxonomy' => $taxonomy,
-						'field'    => 'id',
-						'terms'    => $ids,
-					);
-				}
-			}
-		}
-
-		// Фильтруем аргументы запроса похожих постов.
-		$args = apply_filters( 'mihdan_yandex_turbo_feed_related_args', $args );
-
-		$query = new \WP_Query( $args );
-
-		return $query;
-	}
 }
 
 // eol.
