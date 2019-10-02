@@ -1,0 +1,86 @@
+#acf-group_feed_settings .acf-tab-button {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#acf-group_feed_settings .acf-tab-button:before {
+	font-family: dashicons;
+	display: inline-block;
+	line-height: 1;
+	font-weight: 400;
+	font-style: normal;
+	speak: none;
+	text-decoration: inherit;
+	text-transform: none;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	vertical-align: top;
+	text-align: center;
+	transition: color 0.1s ease-in;
+	margin-right: 5px;
+}
+
+#acf-group_feed_settings .description {
+	font-style: normal;
+	font-size: 11px;
+}
+
+a[data-key$="feed_tab"]:before {
+	content: '\f303';
+}
+
+a[data-key$="channel_tab"]:before {
+	content: '\f484';
+}
+
+a[data-key$="images_tab"]:before {
+	content: '\f161';
+}
+
+a[data-key$="share_tab"]:before {
+	content: '\f237';
+}
+
+a[data-key$="donate_tab"]:before {
+	content: '\f487';
+}
+
+a[data-key$="search_tab"]:before {
+	content: '\f179';
+}
+
+a[data-key$="rating_tab"]:before {
+	content: '\f155';
+}
+
+a[data-key$="tables_tab"]:before {
+	content: '\f535';
+}
+
+a[data-key$="access_tab"]:before {
+	content: '\f12e';
+}
+
+a[data-key$="comments_tab"]:before {
+	content: '\f101';
+}
+
+a[data-key$="callback_tab"]:before {
+	content: '\f465';
+}
+
+a[data-key$="menu_tab"]:before {
+	content: '\f228';
+}
+
+a[data-key$="analytics_tab"]:before {
+	content: '\f185';
+}
+
+a[data-key$="related_posts_tab"]:before {
+	content: '\f124';
+}
