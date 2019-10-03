@@ -481,6 +481,10 @@ class Template {
 
 		$this->feed_id = get_the_ID();
 
+		if ( ! is_singular( $this->settings->cpt_key ) ) {
+			return;
+		}
+
 		if ( ! $this->settings->get_option( 'access_enable', $this->feed_id ) ) {
 			return;
 		}
