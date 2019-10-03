@@ -185,7 +185,6 @@ class Main {
 		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 		add_filter( 'the_content_feed', array( $this, 'invisible_border' ) );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
-		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
 		add_action( 'template_redirect', array( $this, 'set_feed_id' ), 1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
@@ -203,13 +202,6 @@ class Main {
 	public function assets() {
 		wp_enqueue_script( MIHDAN_YANDEX_TURBO_FEED_SLUG, MIHDAN_YANDEX_TURBO_FEED_URL . 'admin/js/app.js', array( 'wp-util' ), filemtime( MIHDAN_YANDEX_TURBO_FEED_PATH . '/admin/js/app.js' ) );
 		wp_enqueue_style( MIHDAN_YANDEX_TURBO_FEED_SLUG, MIHDAN_YANDEX_TURBO_FEED_URL . 'admin/css/app.css', array(), filemtime( MIHDAN_YANDEX_TURBO_FEED_PATH . '/admin/css/app.css' ) );
-	}
-
-	public function www_authenticate() {
-		if ( $this->settings->get_option( 'access_enable' ) ) {
-			header( 'WWW-Authenticate: Basic realm="My Realm"' );
-			header( 'HTTP/1.0 401 Unauthorized' );
-		}
 	}
 
 	/**
@@ -406,22 +398,6 @@ class Main {
 		}
 
 		return $content;
-	}
-
-	/**
-	 * Hide RSS footer created by WordPress SEO from our RSS feed
-	 *
-	 * @param  boolean $include_footer Default inclusion value
-	 *
-	 * @return boolean                 Modified inclusion value
-	 */
-	public function hide_wpseo_rss_footer( $include_footer = true ) {
-
-		if ( is_feed( $this->feedname ) ) {
-			$include_footer = false;
-		}
-
-		return $include_footer;
 	}
 
 	/**

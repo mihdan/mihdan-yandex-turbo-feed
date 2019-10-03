@@ -51,6 +51,7 @@ class Template {
 		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
+		add_action( 'wp', array( $this, 'authenticate' ) );
 	}
 
 	/**
@@ -459,11 +460,40 @@ class Template {
 	 */
 	public function render() {
 		if ( is_singular( $this->settings->cpt_key ) ) {
-
-			$this->feed_id = get_the_ID();
-
 			require MIHDAN_YANDEX_TURBO_FEED_PATH . '/templates/feed.php';
 			die;
+		}
+	}
+
+	/**
+	 * Отправляет заголовки авторизации.
+	 */
+	public function auth_headers() {
+		header( 'WWW-Authenticate: Basic realm="Access Denied"' );
+		header( 'HTTP/1.0 401 Unauthorized' );
+		die( __( 'Для доступа к ленте нужно ввести пароль', 'mihdan-yandex-turbo-feed' ) );
+	}
+
+	/**
+	 * Проверка введенного логина и пароля.
+	 */
+	public function authenticate() {
+
+		$this->feed_id = get_the_ID();
+
+		if ( ! $this->settings->get_option( 'access_enable', $this->feed_id ) ) {
+			return;
+		}
+
+		if ( empty( $_SERVER['PHP_AUTH_USER'] ) || empty( $_SERVER['PHP_AUTH_PW'] ) ) {
+			$this->auth_headers();
+		} else {
+			$login    = $this->settings->get_option( 'access_login', $this->feed_id );
+			$password = $this->settings->get_option( 'access_password', $this->feed_id );
+
+			if ( $_SERVER['PHP_AUTH_USER'] !== $login || $_SERVER['PHP_AUTH_PW'] !== $password ) {
+				$this->auth_headers();
+			}
 		}
 	}
 }
