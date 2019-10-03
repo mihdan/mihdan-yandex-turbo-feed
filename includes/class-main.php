@@ -175,13 +175,13 @@ class Main {
 		add_filter( 'mihdan_yandex_turbo_feed_args', array( $this, 'alter_query' ), 9 );
 		add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
 		add_action( 'plugins_loaded', array( $this, 'load_translations' ) );
-		add_action( 'mihdan_yandex_turbo_feed_channel', array( $this, 'insert_analytics' ) );
+
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 
 
-		//add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
 
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_rating' ) );
+
+
 		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 		add_filter( 'the_content_feed', array( $this, 'invisible_border' ) );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
@@ -293,42 +293,7 @@ class Main {
 		}
 	}
 
-	/**
-	 * Генерим тег категории
-	 *
-	 * @param string $category название категории
-	 *
-	 * @return string
-	 */
-	public function create_category( $category ) {
-		return sprintf( '<category><![CDATA[%s]]></category>', html_entity_decode( $category, ENT_COMPAT, 'UTF-8' ) );
-	}
 
-	/**
-	 * Вставляем категории поста в фид
-	 *
-	 * @param integer $post_id идентификатор поста
-	 */
-	public function insert_category( $post_id ) {
-
-		// Получить категории текущего поста
-		$categories = $this->get_categories(
-			array(
-				'post_id' => $post_id,
-				'fields'  => 'names',
-			)
-		);
-
-		// Сгенерить тег категории
-		if ( $categories ) {
-			// Выбрать уникальные термы, так как они
-			// могут совпадать в разных таксономиях
-			$categories = array_unique( $categories );
-			foreach ( $categories as $category ) {
-				echo $this->create_category( $category );
-			}
-		}
-	}
 
 	/**
 	 * Удалить ненужные атрибуты при генерации картинок
@@ -373,106 +338,6 @@ class Main {
 	}
 
 
-
-	/**
-	 * Вставляет рейтинг звёздами.
-	 */
-	public function insert_rating() {
-		// Если модуль выключен.
-		if ( ! $this->settings->get_option( 'rating_enable' ) ) {
-			return;
-		}
-		?>
-		<div itemscope itemtype="http://schema.org/Rating">
-			<meta itemprop="ratingValue" content="<?php echo esc_attr( wp_rand( $this->settings->get_option( 'rating_min' ), $this->settings->get_option( 'rating_max' ) ) ); ?>">
-			<meta itemprop="bestRating" content="<?php echo esc_attr( $this->settings->get_option( 'rating_max' ) ); ?>">
-		</div>
-		<?php
-	}
-
-
-
-
-
-	/**
-	 * Создаёт тег для вставки аналитики.
-	 *
-	 * @param string $type Тип счётчика.
-	 * @param string $id Идентификатор счётчика у провайдера.
-	 * @param string $params JSON с параметрами.
-	 *
-	 * @return string
-	 */
-	public function create_analytics( $type, $id = '', $params = '' ) {
-		return sprintf(
-			'<turbo:analytics type="%s" id="%s" params="%s"></turbo:analytics>',
-			esc_attr( $type ),
-			esc_attr( $id ),
-			esc_attr( $params )
-		);
-	}
-
-	/**
-	 * Вставка счетчиков аналитики.
-	 */
-	public function insert_analytics() {
-		if ( $this->settings->get_option( 'analytics_enable' ) ) {
-			$yandex_metrika = $this->settings->get_option( 'analytics_yandex_metrika' );
-			$live_internet  = $this->settings->get_option( 'analytics_live_internet' );
-			$google         = $this->settings->get_option( 'analytics_google' );
-			$mail_ru        = $this->settings->get_option( 'analytics_mail_ru' );
-			$rambler        = $this->settings->get_option( 'analytics_rambler' );
-			$mediascope     = $this->settings->get_option( 'analytics_mediascope' );
-
-			if ( false !== $yandex_metrika && is_array( $yandex_metrika ) ) {
-				foreach ( $yandex_metrika as $item ) {
-					if ( ! empty( $item ) ) {
-						echo $this->create_analytics( 'Yandex', $item );
-					}
-				}
-			}
-
-			if ( false !== $live_internet && is_array( $live_internet ) ) {
-				foreach ( $live_internet as $item ) {
-					if ( ! empty( $item ) ) {
-						echo $this->create_analytics( 'LiveInternet', '', $item );
-					}
-				}
-			}
-
-			if ( false !== $google && is_array( $google ) ) {
-				foreach ( $google as $item ) {
-					if ( ! empty( $item ) ) {
-						echo $this->create_analytics( 'Google', $item );
-					}
-				}
-			}
-
-			if ( false !== $mail_ru && is_array( $mail_ru ) ) {
-				foreach ( $mail_ru as $item ) {
-					if ( ! empty( $item ) ) {
-						echo $this->create_analytics( 'MailRu', $item );
-					}
-				}
-			}
-
-			if ( false !== $rambler && is_array( $rambler ) ) {
-				foreach ( $rambler as $item ) {
-					if ( ! empty( $item ) ) {
-						echo $this->create_analytics( 'Rambler', $item );
-					}
-				}
-			}
-
-			if ( false !== $mediascope && is_array( $mediascope ) ) {
-				foreach ( $mediascope as $item ) {
-					if ( ! empty( $item ) ) {
-						echo $this->create_analytics( 'Mediascope', $item );
-					}
-				}
-			}
-		}
-	}
 
 	/**
 	 * Превращаем абсолютный URL в относительный
@@ -582,17 +447,14 @@ class Main {
 
 		// Добавляем исключения.
 		$args['meta_query'] = array(
-			'relation' => 'OR',
 			array(
 				'key'     => $this->slug . '_exclude',
-				'compare' => 'NOT EXISTS',
-			),
-			array(
-				'key'     => $this->slug . '_exclude',
-				'compare' => '=',
-				'value'   => '',
+				'compare' => '!=',
+				'value'   => '1',
 			),
 		);
+
+		// TODO: потеряли категории и теги.
 
 		return $args;
 	}

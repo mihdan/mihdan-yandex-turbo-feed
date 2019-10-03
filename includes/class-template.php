@@ -42,11 +42,14 @@ class Template {
 	 */
 	public function hooks() {
 		add_action( 'template_redirect', array( $this, 'render' ) );
+		add_action( 'mihdan_yandex_turbo_feed_channel', array( $this, 'insert_analytics' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_search' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_comments' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_callback' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_rating' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
 	}
 
@@ -171,6 +174,22 @@ class Template {
 	}
 
 	/**
+	 * Вставляет рейтинг звёздами.
+	 */
+	public function insert_rating() {
+		// Если модуль выключен.
+		if ( ! $this->settings->get_option( 'rating_enable', $this->feed_id ) ) {
+			return;
+		}
+		?>
+		<div itemscope itemtype="http://schema.org/Rating">
+			<meta itemprop="ratingValue" content="<?php echo esc_attr( wp_rand( $this->settings->get_option( 'rating_min', $this->feed_id ), $this->settings->get_option( 'rating_max', $this->feed_id ) ) ); ?>">
+			<meta itemprop="bestRating" content="<?php echo esc_attr( $this->settings->get_option( 'rating_max', $this->feed_id ) ); ?>">
+		</div>
+		<?php
+	}
+
+	/**
 	 * Генерим тег <menu>
 	 *
 	 * @param string $menu строка с меню
@@ -205,6 +224,44 @@ class Template {
 
 			// Вывести меню
 			echo $this->create_menu( $menu );
+		}
+	}
+
+	/**
+	 * Генерим тег категории
+	 *
+	 * @param string $category название категории
+	 *
+	 * @return string
+	 */
+	public function create_category( $category ) {
+		return sprintf( '<category><![CDATA[%s]]></category>', html_entity_decode( $category, ENT_COMPAT, 'UTF-8' ) );
+	}
+
+	/**
+	 * Вставляем категории поста в фид
+	 *
+	 * @param integer $post_id идентификатор поста
+	 */
+	public function insert_category( $post_id ) {
+
+		// Получить категории текущего поста
+		$categories = $this->get_categories(
+			array(
+				'post_id' => $post_id,
+				//'fields'  => 'id=>name',
+				'fields'  => 'names',
+			)
+		);
+
+		// Сгенерить тег категории
+		if ( $categories ) {
+			// Выбрать уникальные термы, так как они
+			// могут совпадать в разных таксономиях
+			$categories = array_unique( $categories );
+			foreach ( $categories as $category ) {
+				echo $this->create_category( $category );
+			}
 		}
 	}
 
@@ -315,25 +372,86 @@ class Template {
 
 	public function get_categories( $args = [] ) {
 
-		$taxonomy = $this->settings->get_taxonomy();
+		$taxonomy = $this->settings->get_option( 'taxonomy', $this->feed_id );
 
 		$default = [
 			'hide_empty' => false,
+			'orderby'    => 'none',
 		];
 
 		$args = wp_parse_args( $args, $default );
 
 		if ( ! empty( $args['post_id'] ) ) {
-			$result = wp_get_object_terms( $args['post_id'], $taxonomy, $args );
+			$post_id = $args['post_id'];
+			unset( $args['post_id'] );
+			$result = wp_get_object_terms( $post_id, $taxonomy, $args );
 		} else {
 			$result = get_terms( $taxonomy, $args );
-		}
+		}// print_r($args);print_r($result);
 
 		if ( is_wp_error( $result ) ) {
 			$result = false;
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Создаёт тег для вставки аналитики.
+	 *
+	 * @param string $type Тип счётчика.
+	 * @param string $id Идентификатор счётчика у провайдера.
+	 * @param string $params JSON с параметрами.
+	 *
+	 * @return string
+	 */
+	public function create_analytics( $type, $id = '', $params = '' ) {
+		return sprintf(
+			'<turbo:analytics type="%s" id="%s" params="%s"></turbo:analytics>' . PHP_EOL,
+			esc_attr( $type ),
+			esc_attr( $id ),
+			esc_attr( $params )
+		);
+	}
+
+	/**
+	 * Вставка счетчиков аналитики.
+	 */
+	public function insert_analytics() {
+		if ( ! $this->settings->get_option( 'analytics_enable', $this->feed_id ) ) {
+			return;
+		}
+
+		$yandex_metrika = $this->settings->get_option( 'analytics_yandex_metrika', $this->feed_id );
+		$live_internet  = $this->settings->get_option( 'analytics_live_internet', $this->feed_id );
+		$google         = $this->settings->get_option( 'analytics_google', $this->feed_id );
+		$mail_ru        = $this->settings->get_option( 'analytics_mail_ru', $this->feed_id );
+		$rambler        = $this->settings->get_option( 'analytics_rambler', $this->feed_id );
+		$mediascope     = $this->settings->get_option( 'analytics_mediascope', $this->feed_id );
+
+		if ( $yandex_metrika ) {
+			echo $this->create_analytics( 'Yandex', $yandex_metrika );
+		}
+
+		if ( $live_internet ) {
+			echo $this->create_analytics( 'LiveInternet', '', $live_internet );
+		}
+
+		if ( $google ) {
+			echo $this->create_analytics( 'Google', $google );
+		}
+
+		if ( $mail_ru ) {
+			echo $this->create_analytics( 'MailRu', $mail_ru );
+		}
+
+		if ( $rambler ) {
+			echo $this->create_analytics( 'Rambler', $rambler );
+		}
+
+		if ( $mediascope ) {
+			echo $this->create_analytics( 'Mediascope', $mediascope );
+		}
 	}
 
 	/**

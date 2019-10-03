@@ -212,7 +212,7 @@ class Settings {
 			array(
 				'title'    => __( 'Yandex Turbo', 'mihdan-yandex-turbo-feed' ),
 				'position' => 'side',
-				'style'    => 'seamless',
+				//'style'    => 'seamless',
 			)
 		);
 
@@ -243,6 +243,8 @@ class Settings {
 
 		/**
 		 * Настройки ленты.
+		 *
+		 * @link https://yandex.ru/dev/turbo/doc/rss/elements/index-docpage/
 		 */
 		$feed_settings = new FieldsBuilder(
 			'feed_settings',
@@ -344,7 +346,7 @@ class Settings {
 					)
 				)
 				->addSelect(
-					$this->prefix . '_post_taxonomy',
+					$this->prefix . '_taxonomy',
 					array(
 						'label'         => __( 'Taxonomy', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => apply_filters(
@@ -515,6 +517,71 @@ class Settings {
 					'label'     => __( 'Analytics', 'mihdan-yandex-turbo-feed' ),
 				)
 			)
+				->addMessage(
+					__( 'Attention Analytics', 'mihdan-yandex-turbo-feed' ),
+					__( 'Если информация о счетчиках передается в RSS-канале (в элементе <code>turbo:analytics</code>), то настройки счетчиков в Яндекс.Вебмастере не учитываются. Чтобы подключить счетчики в Яндекс.Вебмастере, отключите полность модуль аналитики ниже.', 'mihdan-yandex-turbo-feed' )
+				)
+				->addTrueFalse(
+					$this->prefix . '_analytics_enable',
+					array(
+						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'label'   => __( 'Analytics', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+				->addText(
+					$this->prefix . '_analytics_yandex_metrika',
+					array(
+						'label'        => __( 'Yandex.Metrika', 'mihdan-yandex-turbo-feed' ),
+						'instructions' => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
+						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+				->addText(
+					$this->prefix . '_analytics_live_internet',
+					array(
+						'label'        => __( 'LiveInternet', 'mihdan-yandex-turbo-feed' ),
+						'instructions' => __( 'Укажите имя именованного счётчика. Например, <code>example.com</code>.', 'mihdan-yandex-turbo-feed' ),
+						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+				->addText(
+					$this->prefix . '_analytics_google',
+					array(
+						'label'        => __( 'Google Analytics', 'mihdan-yandex-turbo-feed' ),
+						'instructions' => __( 'Укажите идентификатор отслеживания. Например, <code>UA-12345678-9</code>.', 'mihdan-yandex-turbo-feed' ),
+						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+				->addText(
+					$this->prefix . '_analytics_mail_ru',
+					array(
+						'label'        => __( 'Rating Mail.RU', 'mihdan-yandex-turbo-feed' ),
+						'instructions' => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
+						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+				->addText(
+					$this->prefix . '_analytics_rambler',
+					array(
+						'label'        => __( 'Rambler Top-100', 'mihdan-yandex-turbo-feed' ),
+						'instructions' => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
+						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+				->addText(
+					$this->prefix . '_analytics_mediascope',
+					array(
+						'label'        => __( 'Mediascope (TNS)', 'mihdan-yandex-turbo-feed' ),
+						'instructions' => __( 'Идентификатор проекта <code>tmsec</code> с окончанием «-<code>turbo</code>». Например, если для обычных страниц сайта установлен счетчик <code>example_total</code>, то для Турбо-страниц указывается <code>example_total-turbo</code>.', 'mihdan-yandex-turbo-feed' ),
+						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
 			/**
 			 * Похожие записи.
 			 */
@@ -568,6 +635,37 @@ class Settings {
 					'label'     => __( 'Rating', 'mihdan-yandex-turbo-feed' ),
 				)
 			)
+				->addTrueFalse(
+					$this->prefix . '_rating_enable',
+					array(
+						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'label'   => __( 'Rating', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+				->addNumber(
+					$this->prefix . '_rating_min',
+					array(
+						'label'         => __( 'Minimal', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => 4,
+						'min'           => 1,
+						'max'           => 100,
+						'step'          => 1,
+						'required'      => true,
+					)
+				)
+					->conditional( $this->prefix . '_rating_enable', '==', '1' )
+				->addNumber(
+					$this->prefix . '_rating_max',
+					array(
+						'label'         => __( 'Maximum', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => 5,
+						'min'           => 2,
+						'max'           => 100,
+						'step'          => 1,
+						'required'      => true,
+					)
+				)
+					->conditional( $this->prefix . '_rating_enable', '==', '1' )
 			/**
 			 * Шеры.
 			 */
@@ -642,6 +740,13 @@ class Settings {
 					'label'     => __( 'Tables', 'mihdan-yandex-turbo-feed' ),
 				)
 			)
+				->addTrueFalse(
+					$this->prefix . '_invisible_border_enable',
+					array(
+						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'label'   => __( 'Invisible Border', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
 			/**
 			 * Настройки для таблиц.
 			 */
@@ -652,6 +757,33 @@ class Settings {
 					'label'     => __( 'Access', 'mihdan-yandex-turbo-feed' ),
 				)
 			)
+				->AddMessage(
+					__( 'Attention Access', 'mihdan-yandex-turbo-feed' ),
+					__( 'Использовать авторизацию для доступа к файлу с данными для формирования Турбо-страниц.', 'mihdan-yandex-turbo-feed' )
+				)
+				->addTrueFalse(
+					$this->prefix . '_access_enable',
+					array(
+						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'label'   => __( 'Access', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+				->addText(
+					$this->prefix . '_access_login',
+					array(
+						'label'    => __( 'Login', 'mihdan-yandex-turbo-feed' ),
+						'required' => true,
+					)
+				)
+					->conditional( $this->prefix . '_access_enable', '==', '1' )
+				->addText(
+					$this->prefix . '_access_password',
+					array(
+						'label'    => __( 'Password', 'mihdan-yandex-turbo-feed' ),
+						'required' => true,
+					)
+				)
+					->conditional( $this->prefix . '_access_enable', '==', '1' )
 			/**
 			 * Форма запроса помощи проекту.
 			 */
@@ -662,6 +794,11 @@ class Settings {
 					'label'     => __( 'Donate', 'mihdan-yandex-turbo-feed' ),
 				)
 			)
+				->AddMessage(
+					__( 'Attention Donate', 'mihdan-yandex-turbo-feed' ),
+					/* translators: donate link */
+					sprintf( __( 'Проект отнимает огромное количество сил, времени и энергии. Чтобы у разработчика была мотивация продолжать разрабатывать плагин и дальше, вы всегда можете <a target="_blank" href="%s">помочь символической суммой</a>.', 'mihdan-yandex-turbo-feed' ), 'https://www.kobzarev.com/donate/' )
+				)
 			->setLocation( 'post_type', '==', $this->cpt_key );
 
 		acf_add_local_field_group( $feed_settings->build() );
@@ -689,7 +826,29 @@ class Settings {
 	 * @return array
 	 */
 	public function get_taxonomy() {
-		return (array) $this->taxonomies;
+		return array_keys( $this->taxonomies );
+	}
+
+	public function credit() {
+		ob_start();
+		?>
+		<div style="display: flex; align-items: center;">
+
+			<h3 style="margin: 0;">Помочь проекту</h3>
+
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="hosted_button_id" value="BENCPARA8S224">
+				<input
+					type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif"
+					name="submit" alt="PayPal - The safer, easier way to pay online!">
+
+			</form>
+		</div>
+		<?php
+		$content = ob_get_contents();
+		ob_end_clean();
+		return $content;
 	}
 }
 
