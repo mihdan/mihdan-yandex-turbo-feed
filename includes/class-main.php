@@ -122,6 +122,11 @@ class Main {
 	private $template;
 
 	/**
+	 * @var SiteHealth
+	 */
+	private $site_health;
+
+	/**
 	 * @var integer $feed_id Идентификатор фида
 	 */
 	private $feed_id;
@@ -131,23 +136,28 @@ class Main {
 	 *
 	 * Main constructor.
 	 *
-	 * @param Utils         $utils    Утилиты/Хелперы.
-	 * @param Settings      $settings Ностройки.
-	 * @param Template      $template Шаблон.
-	 * @param Notifications $notices  Уведомления в админке.
+	 * @param Utils         $utils        Утилиты/Хелперы.
+	 * @param Settings      $settings     Ностройки.
+	 * @param Template      $template     Шаблон.
+	 * @param Notifications $notices      Уведомления в админке.
+	 * @param SiteHealth    $site_health  Состояние здоровья сайта.
 	 */
-	public function __construct( Utils $utils = null, Settings $settings = null, Template $template = null, Notifications $notices = null ) {
+	public function __construct( Utils $utils = null, Settings $settings = null, Template $template = null, Notifications $notices = null, SiteHealth $site_health = null ) {
 		$this->includes();
 		$this->utils         = new Utils();
 		$this->settings      = new Settings( $this->utils );
 		$this->notifications = new Notifications( $this->settings );
 		$this->template      = new Template( $this->settings );
+		//$this->site_health   = new SiteHealth( $this->settings );
 
 		$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
 
 		//$this->feedname  = $this->settings->get_option( 'slug' );
 
 		$this->hooks();
+
+		// Hook fired when plugin init.
+		add_action( 'mihdan_yandex_turbo_feed_init', $this );
 	}
 
 	/**
@@ -175,6 +185,7 @@ class Main {
 		add_filter( 'mihdan_yandex_turbo_feed_args', array( $this, 'alter_query' ), 9 );
 		add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
 		add_action( 'plugins_loaded', array( $this, 'load_translations' ) );
+		add_filter( 'plugin_action_links', [ $this, 'add_settings_link' ], 10, 2 );
 
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 
@@ -202,6 +213,32 @@ class Main {
 	public function assets() {
 		wp_enqueue_script( MIHDAN_YANDEX_TURBO_FEED_SLUG, MIHDAN_YANDEX_TURBO_FEED_URL . 'admin/js/app.js', array( 'wp-util' ), filemtime( MIHDAN_YANDEX_TURBO_FEED_PATH . '/admin/js/app.js' ) );
 		wp_enqueue_style( MIHDAN_YANDEX_TURBO_FEED_SLUG, MIHDAN_YANDEX_TURBO_FEED_URL . 'admin/css/app.css', array(), filemtime( MIHDAN_YANDEX_TURBO_FEED_PATH . '/admin/css/app.css' ) );
+	}
+
+	/**
+	 * Add plugin action links
+	 *
+	 * @param array $actions
+	 * @param string $plugin_file
+	 *
+	 * @return array
+	 */
+	public function add_settings_link( $actions, $plugin_file ) {
+		if ( 'mihdan-yandex-turbo-feed/mihdan-yandex-turbo-feed.php' === $plugin_file ) {
+			$actions[] = sprintf(
+				'<a href="%s">%s</a>',
+				admin_url( 'edit.php?post_type=mytf' ),
+				esc_html__( 'Settings', 'mihdan-yandex-turbo-feed' )
+			);
+
+			$actions[] = sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				__( 'https://www.kobzarev.com/donate/', 'mihdan-yandex-turbo-feed' ),
+				esc_html__( 'Donate', 'mihdan-yandex-turbo-feed' )
+			);
+		}
+
+		return $actions;
 	}
 
 	/**
@@ -239,7 +276,7 @@ class Main {
 	 * Добавим заголовок `X-Robots-Tag`
 	 * для решения проблемы с сеошными плагинами.
 	 */
-	public function send_headers_for_aio_seo_pack() { var_dump(get_the_ID());die;
+	public function send_headers_for_aio_seo_pack() {
 		if ( is_feed( $this->feedname ) ) {
 			header( 'X-Robots-Tag: index, follow', true );
 		}

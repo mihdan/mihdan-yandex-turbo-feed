@@ -388,7 +388,7 @@ class Template {
 			$result = wp_get_object_terms( $post_id, $taxonomy, $args );
 		} else {
 			$result = get_terms( $taxonomy, $args );
-		}// print_r($args);print_r($result);
+		}
 
 		if ( is_wp_error( $result ) ) {
 			$result = false;

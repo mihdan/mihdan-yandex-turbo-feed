@@ -16,7 +16,7 @@ use Mihdan\YandexTurboFeed\Main;
 /**
  * Plugin Name: Mihdan: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
- * Description: Плагин генерирует фид для сервиса Яндекс Турбо
+ * Description: Плагин создаёт настраиваемые ленты для сервиса Яндекс Турбо
  * Version: 1.2.6
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
@@ -33,25 +33,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Mihdan_Yandex_Turbo_Feed' ) ) {
+// Слаг плагина
+define( 'MIHDAN_YANDEX_TURBO_FEED_SLUG', 'mihdan_yandex_turbo_feed' );
+define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.2.6' );
+define( 'MIHDAN_YANDEX_TURBO_FEED_PATH', __DIR__ );
+define( 'MIHDAN_YANDEX_TURBO_FEED_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+define( 'MIHDAN_YANDEX_TURBO_FEED_FILE', __FILE__ );
 
-	// Слюг плагина
-	define( 'MIHDAN_YANDEX_TURBO_FEED_SLUG', 'mihdan_yandex_turbo_feed' );
-	define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.2.6' );
-	define( 'MIHDAN_YANDEX_TURBO_FEED_PATH', __DIR__ );
-	define( 'MIHDAN_YANDEX_TURBO_FEED_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
-	define( 'MIHDAN_YANDEX_TURBO_FEED_FILE', __FILE__ );
+/**
+ * Init plugin class on plugin load.
+ */
+static $plugin;
 
-	/**
-	 * Init plugin class on plugin load.
-	 */
-
-	static $plugin;
-
-	if ( ! isset( $plugin ) ) {
-		require_once MIHDAN_YANDEX_TURBO_FEED_PATH . '/vendor/autoload.php';
-		$plugin = new Main();
-	}
+if ( ! isset( $plugin ) ) {
+	require_once MIHDAN_YANDEX_TURBO_FEED_PATH . '/vendor/autoload.php';
+	$plugin = new Main();
 }
+
 
 // eof;
