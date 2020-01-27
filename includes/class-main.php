@@ -460,10 +460,15 @@ class Main {
 
 		// Добавляем исключения.
 		$args['meta_query'] = array(
+			'relation' => 'OR',
 			array(
 				'key'     => $this->slug . '_exclude',
-				'compare' => '!=',
-				'value'   => '1',
+				'compare' => '=',
+				'value'   => '0',
+			),
+			array(
+				'key'     => $this->slug . '_exclude',
+				'compare' => 'NOT EXISTS',
 			),
 		);
 
