@@ -15,7 +15,6 @@
     "support": {
         "issues": "https://wordpress.org/support/plugin/mihdan-yandex-turbo-feed"
     },
-    "prefer-stable": true,
     "minimum-stability": "dev",
     "config": {
         "platform": {
@@ -30,9 +29,9 @@
     ],
     "require": {
         "composer/installers": "*",
-        "wptrt/admin-notices": "^1.0",
+        "wptrt/admin-notices": "*",
         "wpackagist-plugin/advanced-custom-fields": "^5.8",
-        "stoutlogic/acf-builder": "^1.8"
+        "stoutlogic/acf-builder": "^1.9"
     },
     "extra": {
         "installer-paths": {
