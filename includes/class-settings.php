@@ -4,6 +4,7 @@
  */
 
 namespace Mihdan\YandexTurboFeed;
+
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class Settings {
