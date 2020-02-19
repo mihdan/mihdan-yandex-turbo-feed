@@ -11,7 +11,7 @@
  * @wordpress-plugin
  */
 
-use Mihdan\YandexTurboFeed\Main;
+namespace Mihdan\YandexTurboFeed;
 
 /**
  * Plugin Name: Mihdan: Yandex Turbo Feed
@@ -25,7 +25,7 @@ use Mihdan\YandexTurboFeed\Main;
  * Text Domain: mihdan-yandex-turbo-feed
  * GitHub Plugin URI: https://github.com/mihdan/mihdan-yandex-turbo-feed/
  * GitHub Branch:     master
- * Requires WP:       4.6
+ * Requires WP:       5.0
  * Requires PHP:      5.6.20
  */
 
