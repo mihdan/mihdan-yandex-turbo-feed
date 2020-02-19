@@ -10,5 +10,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 // Удалить все настройки плагина.
 delete_option( 'mihdan_yandex_turbo_feed' );
 delete_option( 'mihdan_yandex_turbo_feed-transients' );
+delete_option( 'mihdan_yandex_turbo_feed_version' );
 
 // eof;
