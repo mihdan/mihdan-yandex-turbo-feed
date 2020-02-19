@@ -146,8 +146,8 @@ class Main {
 		$this->includes();
 		$this->utils         = new Utils();
 		$this->settings      = new Settings( $this->utils );
-		$this->notifications = new Notifications( $this->settings );
-		$this->template      = new Template( $this->settings );
+		$this->notifications = new Notifications( $this->utils, $this->settings );
+		$this->template      = new Template( $this->utils, $this->settings );
 		//$this->site_health   = new SiteHealth( $this->settings );
 
 		$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
@@ -165,7 +165,7 @@ class Main {
 	 * для создания меню в админке
 	 */
 	public function register_nav_menu() {
-		register_nav_menu( $this->slug, 'Яндекс.Турбо' );
+		register_nav_menu( $this->utils->get_slug(), 'Яндекс.Турбо' );
 	}
 
 	/**
@@ -199,8 +199,37 @@ class Main {
 		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
 		add_action( 'template_redirect', array( $this, 'set_feed_id' ), 1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
+
+		add_action( 'upgrader_process_complete', array( $this, 'upgrade' ), 10, 2 );
 		register_activation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_activate' ) );
 		register_deactivation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_deactivate' ) );
+	}
+
+	/**
+	 * Get plugin version.
+	 *
+	 * @return string
+	 */
+	public function get_version() {
+		return MIHDAN_YANDEX_TURBO_FEED_VERSION;
+	}
+
+	/**
+	 * Set plugin version.
+	 *
+	 * @param \WP_Upgrader $upgrader WP_Upgrader instance.
+	 * @param array        $options  Array of bulk item update data.
+	 */
+	public function upgrade( \WP_Upgrader $upgrader, $options ) {
+		$our_plugin = plugin_basename( MIHDAN_YANDEX_TURBO_FEED_FILE );
+
+		if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
+			foreach ( $options['plugins'] as $plugin ) {
+				if ( $plugin === $our_plugin ) {
+					update_option( $this->utils->get_slug() . '_version', $this->get_version(), false );
+				}
+			}
+		}
 	}
 
 	public function set_feed_id() {
@@ -249,7 +278,7 @@ class Main {
 	public function item_attributes( $post_id ) {
 
 		$atts = array(
-			'turbo' => ! get_post_meta( $post_id, $this->slug . '_remove', true ),
+			'turbo' => ! get_post_meta( $post_id, $this->utils->get_slug() . '_remove', true ),
 		);
 
 		$atts = apply_filters( 'mihdan_yandex_turbo_feed_item_attributes', $atts, $post_id );
@@ -312,13 +341,13 @@ class Main {
 	public function flush_rewrite_rules() {
 
 		// Ищем опцию.
-		if ( get_option( $this->slug . '_flush_rewrite_rules' ) ) {
+		if ( get_option( $this->utils->get_slug() . '_flush_rewrite_rules' ) ) {
 
 			// Скидываем реврайты.
 			flush_rewrite_rules();
 
 			// Удаляем опцию.
-			delete_option( $this->slug . '_flush_rewrite_rules' );
+			delete_option( $this->utils->get_slug() . '_flush_rewrite_rules' );
 		}
 	}
 
@@ -462,12 +491,12 @@ class Main {
 		$args['meta_query'] = array(
 			'relation' => 'OR',
 			array(
-				'key'     => $this->slug . '_exclude',
+				'key'     => $this->utils->get_slug() . '_exclude',
 				'compare' => '=',
 				'value'   => '0',
 			),
 			array(
-				'key'     => $this->slug . '_exclude',
+				'key'     => $this->utils->get_slug() . '_exclude',
 				'compare' => 'NOT EXISTS',
 			),
 		);
@@ -563,7 +592,10 @@ class Main {
 
 		// Добавим флаг, свидетельствующий о том,
 		// что нужно сбросить реврайты.
-		update_option( $this->slug . '_flush_rewrite_rules', 1, true );
+		update_option( $this->utils->get_slug() . '_flush_rewrite_rules', 1, true );
+
+		// Set plugin version.
+		update_option( $this->utils->get_slug() . '_version', $this->get_version(), false );
 	}
 
 	/**
