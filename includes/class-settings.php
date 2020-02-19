@@ -13,16 +13,6 @@ class Settings {
 	private $utils;
 
 	/**
-	 * @var string
-	 */
-	private $prefix = MIHDAN_YANDEX_TURBO_FEED_SLUG;
-
-	/**
-	 * @var string
-	 */
-	public $cpt_key = 'mytf';
-
-	/**
 	 * @var array $post_types
 	 */
 	private $post_types;
@@ -52,6 +42,11 @@ class Settings {
 	 */
 	private $language;
 
+	/**
+	 * Settings constructor.
+	 *
+	 * @param Utils $utils
+	 */
 	public function __construct( Utils $utils ) {
 		$this->utils = $utils;
 		$this->setup();
@@ -142,27 +137,21 @@ class Settings {
 			'name'                  => _x( 'Ленты', 'Post Type General Name', 'mihdan-yandex-turbo-feed' ),
 			'singular_name'         => _x( 'Лента', 'Post Type Singular Name', 'mihdan-yandex-turbo-feed' ),
 			'menu_name'             => __( 'Yandex Turbo', 'mihdan-yandex-turbo-feed' ),
-			'name_admin_bar'        => __( 'Post Type', 'mihdan-yandex-turbo-feed' ),
+			'name_admin_bar'        => __( 'Yandex Turbo Feed', 'mihdan-yandex-turbo-feed' ),
 			'archives'              => __( 'Архивы', 'mihdan-yandex-turbo-feed' ),
 			'attributes'            => __( 'Item Attributes', 'mihdan-yandex-turbo-feed' ),
 			'parent_item_colon'     => __( 'Parent Item:', 'mihdan-yandex-turbo-feed' ),
-			'all_items'             => __( 'All Items', 'mihdan-yandex-turbo-feed' ),
-			'add_new_item'          => __( 'Add New Item', 'mihdan-yandex-turbo-feed' ),
-			'add_new'               => __( 'Add New', 'mihdan-yandex-turbo-feed' ),
+			'all_items'             => __( 'All Feeds', 'mihdan-yandex-turbo-feed' ),
+			'add_new_item'          => __( 'Add New Feed', 'mihdan-yandex-turbo-feed' ),
+			'add_new'               => __( 'Add Feed', 'mihdan-yandex-turbo-feed' ),
 			'new_item'              => __( 'New Item', 'mihdan-yandex-turbo-feed' ),
-			'edit_item'             => __( 'Edit Item', 'mihdan-yandex-turbo-feed' ),
+			'edit_item'             => __( 'Edit Feed', 'mihdan-yandex-turbo-feed' ),
 			'update_item'           => __( 'Update Item', 'mihdan-yandex-turbo-feed' ),
-			'view_item'             => __( 'View Item', 'mihdan-yandex-turbo-feed' ),
+			'view_item'             => __( 'View Feed', 'mihdan-yandex-turbo-feed' ),
 			'view_items'            => __( 'View Items', 'mihdan-yandex-turbo-feed' ),
-			'search_items'          => __( 'Search Item', 'mihdan-yandex-turbo-feed' ),
+			'search_items'          => __( 'Search Feed', 'mihdan-yandex-turbo-feed' ),
 			'not_found'             => __( 'Not found', 'mihdan-yandex-turbo-feed' ),
 			'not_found_in_trash'    => __( 'Not found in Trash', 'mihdan-yandex-turbo-feed' ),
-			'featured_image'        => __( 'Featured Image', 'mihdan-yandex-turbo-feed' ),
-			'set_featured_image'    => __( 'Set featured image', 'mihdan-yandex-turbo-feed' ),
-			'remove_featured_image' => __( 'Remove featured image', 'mihdan-yandex-turbo-feed' ),
-			'use_featured_image'    => __( 'Use as featured image', 'mihdan-yandex-turbo-feed' ),
-			'insert_into_item'      => __( 'Insert into item', 'mihdan-yandex-turbo-feed' ),
-			'uploaded_to_this_item' => __( 'Uploaded to this item', 'mihdan-yandex-turbo-feed' ),
 			'items_list'            => __( 'Items list', 'mihdan-yandex-turbo-feed' ),
 			'items_list_navigation' => __( 'Items list navigation', 'mihdan-yandex-turbo-feed' ),
 			'filter_items_list'     => __( 'Filter items list', 'mihdan-yandex-turbo-feed' ),
@@ -197,7 +186,7 @@ class Settings {
 			'show_in_rest'        => false,
 		);
 
-		register_post_type( $this->cpt_key, $args );
+		register_post_type( $this->utils->get_post_type(), $args );
 	}
 
 	/**
@@ -218,14 +207,14 @@ class Settings {
 
 		$post_settings
 			->addTrueFalse(
-				$this->prefix . '_exclude',
+				$this->utils->get_slug() . '_exclude',
 				array(
 					'message' => __( 'Исключить из ленты', 'mihdan-yandex-turbo-feed' ),
 					'label'   => '',
 				)
 			)
 			->addTrueFalse(
-				$this->prefix . '_remove',
+				$this->utils->get_slug() . '_remove',
 				array(
 					'message' => __( 'Удалить из Яндекс', 'mihdan-yandex-turbo-feed' ),
 					'label'   => '',
@@ -268,7 +257,7 @@ class Settings {
 				)
 			)
 				->addText(
-					$this->prefix . '_slug',
+					$this->utils->get_slug() . '_slug',
 					array(
 						'label'         => __( 'Feed Slug', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 'mihdan-yandex-turbo-feed',
@@ -276,7 +265,7 @@ class Settings {
 					)
 				)
 				->addSelect(
-					$this->prefix . '_charset',
+					$this->utils->get_slug() . '_charset',
 					array(
 						'label'         => __( 'Feed Charset', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 'UTF-8',
@@ -288,7 +277,7 @@ class Settings {
 					)
 				)
 				->addSelect(
-					$this->prefix . '_orderby',
+					$this->utils->get_slug() . '_orderby',
 					array(
 						'label'         => __( 'Order By', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 'date',
@@ -308,7 +297,7 @@ class Settings {
 					)
 				)
 				->addSelect(
-					$this->prefix . '_order',
+					$this->utils->get_slug() . '_order',
 					array(
 						'label'         => __( 'Order', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 'DESC',
@@ -319,7 +308,7 @@ class Settings {
 					)
 				)
 				->addNumber(
-					$this->prefix . '_total_posts',
+					$this->utils->get_slug() . '_total_posts',
 					array(
 						'label'         => __( 'Total Posts', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => apply_filters( 'mihdan_yandex_turbo_feed_posts_per_rss', 1000 ),
@@ -330,7 +319,7 @@ class Settings {
 					)
 				)
 				->addSelect(
-					$this->prefix . '_post_type',
+					$this->utils->get_slug() . '_post_type',
 					array(
 						'label'         => __( 'Post type', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => apply_filters(
@@ -346,7 +335,7 @@ class Settings {
 					)
 				)
 				->addSelect(
-					$this->prefix . '_taxonomy',
+					$this->utils->get_slug() . '_taxonomy',
 					array(
 						'label'         => __( 'Taxonomy', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => apply_filters(
@@ -373,7 +362,7 @@ class Settings {
 				)
 			)
 				->addText(
-					$this->prefix . '_channel_title',
+					$this->utils->get_slug() . '_channel_title',
 					array(
 						'label'         => __( 'Channel Title', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => get_bloginfo_rss( 'name' ),
@@ -381,7 +370,7 @@ class Settings {
 					)
 				)
 				->addLink(
-					$this->prefix . '_channel_link',
+					$this->utils->get_slug() . '_channel_link',
 					array(
 						'label'         => __( 'Channel Link', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => get_bloginfo_rss( 'url' ),
@@ -389,7 +378,7 @@ class Settings {
 					)
 				)
 				->addTextarea(
-					$this->prefix . '_channel_description',
+					$this->utils->get_slug() . '_channel_description',
 					array(
 						'label'         => __( 'Channel Description', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => get_bloginfo_rss( 'description' ),
@@ -397,7 +386,7 @@ class Settings {
 					)
 				)
 				->addSelect(
-					$this->prefix . '_channel_language',
+					$this->utils->get_slug() . '_channel_language',
 					array(
 						'label'         => __( 'Channel Language', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => $this->language,
@@ -412,7 +401,7 @@ class Settings {
 				)
 			)
 				->addText(
-					$this->prefix . '_images_copyright',
+					$this->utils->get_slug() . '_images_copyright',
 					array(
 						'label'         => __( 'Copyright', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => apply_filters(
@@ -434,7 +423,7 @@ class Settings {
 				)
 			)
 				->addTrueFalse(
-					$this->prefix . '_comments_enable',
+					$this->utils->get_slug() . '_comments_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Comments', 'mihdan-yandex-turbo-feed' ),
@@ -453,35 +442,35 @@ class Settings {
 				)
 			)
 				->addTrueFalse(
-					$this->prefix . '_callback_enable',
+					$this->utils->get_slug() . '_callback_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Callback', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-				->addText( $this->prefix . '_callback_send_to' )
+				->addText( $this->utils->get_slug() . '_callback_send_to' )
 					->setRequired()
 					->setDefaultValue( get_bloginfo_rss( 'admin_email' ) )
 					->setConfig( 'label', __( 'Callback Send To', 'mihdan-yandex-turbo-feed' ) )
-					->conditional( $this->prefix . '_callback_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_callback_enable', '==', '1' )
 				->addText(
-					$this->prefix . '_callback_agreement_company',
+					$this->utils->get_slug() . '_callback_agreement_company',
 					array(
 						'label'         => __( 'Callback Agreement Company', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => get_bloginfo_rss( 'name' ),
 						'required'      => true,
 					)
 				)
-					->conditional( $this->prefix . '_callback_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_callback_enable', '==', '1' )
 				->addLink(
-					$this->prefix . '_callback_agreement_link',
+					$this->utils->get_slug() . '_callback_agreement_link',
 					array(
 						'label'         => __( 'Callback Agreement Link', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => get_privacy_policy_url(),
 						'required'      => true,
 					)
 				)
-					->conditional( $this->prefix . '_callback_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_callback_enable', '==', '1' )
 			/**
 			 * Меню.
 			 */
@@ -498,7 +487,7 @@ class Settings {
 					sprintf( __( 'For adding menu to your feed, first <a href="%s">created it</a> and attach to "Yandex.Turbo" location', 'mihdan-yandex-turbo-feed' ), admin_url( 'nav-menus.php' ) )
 				)
 				->addTrueFalse(
-					$this->prefix . '_menu_enable',
+					$this->utils->get_slug() . '_menu_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Menu', 'mihdan-yandex-turbo-feed' ),
@@ -522,66 +511,66 @@ class Settings {
 					__( 'Если информация о счетчиках передается в RSS-канале (в элементе <code>turbo:analytics</code>), то настройки счетчиков в Яндекс.Вебмастере не учитываются. Чтобы подключить счетчики в Яндекс.Вебмастере, отключите полность модуль аналитики ниже.', 'mihdan-yandex-turbo-feed' )
 				)
 				->addTrueFalse(
-					$this->prefix . '_analytics_enable',
+					$this->utils->get_slug() . '_analytics_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Analytics', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
 				->addText(
-					$this->prefix . '_analytics_yandex_metrika',
+					$this->utils->get_slug() . '_analytics_yandex_metrika',
 					array(
 						'label'        => __( 'Yandex.Metrika', 'mihdan-yandex-turbo-feed' ),
 						'instructions' => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
 						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_analytics_enable', '==', '1' )
 				->addText(
-					$this->prefix . '_analytics_live_internet',
+					$this->utils->get_slug() . '_analytics_live_internet',
 					array(
 						'label'        => __( 'LiveInternet', 'mihdan-yandex-turbo-feed' ),
 						'instructions' => __( 'Укажите имя именованного счётчика. Например, <code>example.com</code>.', 'mihdan-yandex-turbo-feed' ),
 						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_analytics_enable', '==', '1' )
 				->addText(
-					$this->prefix . '_analytics_google',
+					$this->utils->get_slug() . '_analytics_google',
 					array(
 						'label'        => __( 'Google Analytics', 'mihdan-yandex-turbo-feed' ),
 						'instructions' => __( 'Укажите идентификатор отслеживания. Например, <code>UA-12345678-9</code>.', 'mihdan-yandex-turbo-feed' ),
 						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_analytics_enable', '==', '1' )
 				->addText(
-					$this->prefix . '_analytics_mail_ru',
+					$this->utils->get_slug() . '_analytics_mail_ru',
 					array(
 						'label'        => __( 'Rating Mail.RU', 'mihdan-yandex-turbo-feed' ),
 						'instructions' => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
 						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_analytics_enable', '==', '1' )
 				->addText(
-					$this->prefix . '_analytics_rambler',
+					$this->utils->get_slug() . '_analytics_rambler',
 					array(
 						'label'        => __( 'Rambler Top-100', 'mihdan-yandex-turbo-feed' ),
 						'instructions' => __( 'Укажите числовой идентификатор счётчика. Например, <code>12345678</code>.', 'mihdan-yandex-turbo-feed' ),
 						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_analytics_enable', '==', '1' )
 				->addText(
-					$this->prefix . '_analytics_mediascope',
+					$this->utils->get_slug() . '_analytics_mediascope',
 					array(
 						'label'        => __( 'Mediascope (TNS)', 'mihdan-yandex-turbo-feed' ),
 						'instructions' => __( 'Идентификатор проекта <code>tmsec</code> с окончанием «-<code>turbo</code>». Например, если для обычных страниц сайта установлен счетчик <code>example_total</code>, то для Турбо-страниц указывается <code>example_total-turbo</code>.', 'mihdan-yandex-turbo-feed' ),
 						'placeholder'  => __( 'Введите ID счётчика', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-					->conditional( $this->prefix . '_analytics_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_analytics_enable', '==', '1' )
 			/**
 			 * Похожие записи.
 			 */
@@ -597,22 +586,22 @@ class Settings {
 					__( 'Если лента формируется в RSS-канале, то настройки ленты в Яндекс.Вебмастере не учитываются. Чтобы включить автоматическую ленту в Яндекс.Вебмастере, отключите данную возможность ниже.', 'mihdan-yandex-turbo-feed' )
 				)
 				->addTrueFalse(
-					$this->prefix . '_related_posts_enable',
+					$this->utils->get_slug() . '_related_posts_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Related Posts', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
 				->addTrueFalse(
-					$this->prefix . '_related_posts_infinity',
+					$this->utils->get_slug() . '_related_posts_infinity',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Infinity Feed', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-					->conditional( $this->prefix . '_related_posts_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_related_posts_enable', '==', '1' )
 				->addNumber(
-					$this->prefix . '_related_posts_total',
+					$this->utils->get_slug() . '_related_posts_total',
 					array(
 						'label'         => __( 'Total Posts', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 10,
@@ -622,7 +611,7 @@ class Settings {
 						'required'      => true,
 					)
 				)
-					->conditional( $this->prefix . '_related_posts_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_related_posts_enable', '==', '1' )
 			/**
 			 * Рейтинг записи.
 			 *
@@ -636,14 +625,14 @@ class Settings {
 				)
 			)
 				->addTrueFalse(
-					$this->prefix . '_rating_enable',
+					$this->utils->get_slug() . '_rating_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Rating', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
 				->addNumber(
-					$this->prefix . '_rating_min',
+					$this->utils->get_slug() . '_rating_min',
 					array(
 						'label'         => __( 'Minimal', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 4,
@@ -653,9 +642,9 @@ class Settings {
 						'required'      => true,
 					)
 				)
-					->conditional( $this->prefix . '_rating_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_rating_enable', '==', '1' )
 				->addNumber(
-					$this->prefix . '_rating_max',
+					$this->utils->get_slug() . '_rating_max',
 					array(
 						'label'         => __( 'Maximum', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 5,
@@ -665,7 +654,7 @@ class Settings {
 						'required'      => true,
 					)
 				)
-					->conditional( $this->prefix . '_rating_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_rating_enable', '==', '1' )
 			/**
 			 * Шеры.
 			 */
@@ -677,14 +666,14 @@ class Settings {
 				)
 			)
 				->addTrueFalse(
-					$this->prefix . '_share_enable',
+					$this->utils->get_slug() . '_share_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Share', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
 				->addSelect(
-					$this->prefix . '_share_networks',
+					$this->utils->get_slug() . '_share_networks',
 					array(
 						'label'         => __( 'Share Networks', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => array_keys( $this->share_networks ),
@@ -694,7 +683,7 @@ class Settings {
 						'required'      => true,
 					)
 				)
-					->conditional( $this->prefix . '_share_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_share_enable', '==', '1' )
 			/**
 			 * Форма поиска
 			 *
@@ -708,14 +697,14 @@ class Settings {
 				)
 			)
 				->addTrueFalse(
-					$this->prefix . '_search_enable',
+					$this->utils->get_slug() . '_search_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => '',
 					)
 				)
 				->addText(
-					$this->prefix . '_search_placeholder',
+					$this->utils->get_slug() . '_search_placeholder',
 					array(
 						'label'         => __( 'Placeholder', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => __( 'Search', 'mihdan-yandex-turbo-feed' ),
@@ -723,7 +712,7 @@ class Settings {
 					)
 				)
 				->addSelect(
-					$this->prefix . '_search_provider',
+					$this->utils->get_slug() . '_search_provider',
 					array(
 						'label'         => __( 'Provider', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 'site',
@@ -741,7 +730,7 @@ class Settings {
 				)
 			)
 				->addTrueFalse(
-					$this->prefix . '_invisible_border_enable',
+					$this->utils->get_slug() . '_invisible_border_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Invisible Border', 'mihdan-yandex-turbo-feed' ),
@@ -762,28 +751,28 @@ class Settings {
 					__( 'Использовать авторизацию для доступа к файлу с данными для формирования Турбо-страниц.', 'mihdan-yandex-turbo-feed' )
 				)
 				->addTrueFalse(
-					$this->prefix . '_access_enable',
+					$this->utils->get_slug() . '_access_enable',
 					array(
 						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
 						'label'   => __( 'Access', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
 				->addText(
-					$this->prefix . '_access_login',
+					$this->utils->get_slug() . '_access_login',
 					array(
 						'label'    => __( 'Login', 'mihdan-yandex-turbo-feed' ),
 						'required' => true,
 					)
 				)
-					->conditional( $this->prefix . '_access_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_access_enable', '==', '1' )
 				->addText(
-					$this->prefix . '_access_password',
+					$this->utils->get_slug() . '_access_password',
 					array(
 						'label'    => __( 'Password', 'mihdan-yandex-turbo-feed' ),
 						'required' => true,
 					)
 				)
-					->conditional( $this->prefix . '_access_enable', '==', '1' )
+					->conditional( $this->utils->get_slug() . '_access_enable', '==', '1' )
 			/**
 			 * Форма запроса помощи проекту.
 			 */
@@ -799,7 +788,7 @@ class Settings {
 					/* translators: donate link */
 					sprintf( __( 'Проект отнимает огромное количество сил, времени и энергии. Чтобы у разработчика была мотивация продолжать разрабатывать плагин и дальше, вы всегда можете <a target="_blank" href="%s">помочь символической суммой</a>.', 'mihdan-yandex-turbo-feed' ), 'https://www.kobzarev.com/donate/' )
 				)
-			->setLocation( 'post_type', '==', $this->cpt_key );
+			->setLocation( 'post_type', '==', $this->utils->get_post_type() );
 
 		acf_add_local_field_group( $feed_settings->build() );
 	}
@@ -816,7 +805,7 @@ class Settings {
 			$post_id = get_the_ID();
 		}
 
-		return get_field( $this->prefix . '_' . $key, $post_id );
+		return get_field( $this->utils->get_slug() . '_' . $key, $post_id );
 	}
 
 	/**
@@ -827,28 +816,6 @@ class Settings {
 	 */
 	public function get_taxonomy() {
 		return array_keys( $this->taxonomies );
-	}
-
-	public function credit() {
-		ob_start();
-		?>
-		<div style="display: flex; align-items: center;">
-
-			<h3 style="margin: 0;">Помочь проекту</h3>
-
-			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-				<input type="hidden" name="cmd" value="_s-xclick">
-				<input type="hidden" name="hosted_button_id" value="BENCPARA8S224">
-				<input
-					type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif"
-					name="submit" alt="PayPal - The safer, easier way to pay online!">
-
-			</form>
-		</div>
-		<?php
-		$content = ob_get_contents();
-		ob_end_clean();
-		return $content;
 	}
 }
 
