@@ -2,8 +2,10 @@
 /**
  * @package mihdan-yandex-turbo-feed
  */
+
 namespace Mihdan\YandexTurboFeed;
 use WPTRT\AdminNotices\Notices;
+
 /**
  * Class Notifications
  *
@@ -21,8 +23,14 @@ class Notifications {
 	 */
 	private $notices;
 
-	public function __construct( $settings ) {
+	/**
+	 * @var Utils
+	 */
+	private $utils;
 
+	public function __construct( Utils $utils, Settings $settings ) {
+
+		$this->utils    = $utils;
 		$this->settings = $settings;
 		$this->notices  = new Notices();
 
@@ -34,9 +42,13 @@ class Notifications {
 		$template .= '</p>';
 
 		$this->notices->add(
-			MIHDAN_YANDEX_TURBO_FEED_SLUG,
+			'review_dismissed',
 			false,
-			$template
+			$template,
+			[
+				'scope'         => 'user',
+				'option_prefix' => $this->utils->get_slug(),
+			]
 		);
 
 		$this->notices->boot();
