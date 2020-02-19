@@ -3,9 +3,9 @@ Author: mihdan
 Contributors: mihdan
 Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed
-Requires at least: 4.6
+Requires at least: 5.0
 Requires PHP: 5.6.20
-Tested up to: 5.2
+Tested up to: 5.3
 Stable tag: 1.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,6 +14,23 @@ Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site material
 
 == Description ==
 Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site materials into Yandex.Turbo format.
+
+= Возможности плагина =
+* Создание не ограниченного количества лент
+* Индивидуальные настройки каждой ленты
+* Указание копирайта для фото
+* Вставка кнопок шеринга и изменение их набора
+* Вставка комментариев
+* Вставка формы обратной связи
+* Вставка и настройка меню
+* Вставка и настройка систем аналитики
+* Вставка похожих записей
+* Активация бесконечной ленты
+* Вставка и настройка формы поиска
+* Вставка и настройка рейтинга
+* Вставка таблиц и их настройка
+* Активация приватной ленты (запрос логина и пароля)
+* Экспорт/Импорт настроек
 
 = Recommended Settings =
 The default settings that are used on a fresh install of the plugin are what we recommend.
@@ -112,7 +129,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 
 == Changelog ==
 
-= 1.2.6 (2019-09-20) =
+= 1.2.6 (2020-02-19) =
 * В настройках поиска можно выбрать провайдера
 * Теперь настройки отдельные для каждого сайта в мультисате
 * Отключена зависимость от Rexux Framework, который вызывал много проблем
@@ -120,6 +137,8 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 * У каждой ленты свои настройки
 * Уведомления выводятся при помощи WPTRT по рекомендации Review Team
 * Исправлена ошибка исключения записей из ленты. Спасибо @theluckywp.
+* Удалена возможность изменения ярлыка ленты из метабокса настроек. Спасибо @theluckywp.
+* Добавлена возможность изменения ярлыка ленты через редактирование постоянной ссылки. Спасибо @theluckywp.
 
 = 1.2.5 (2019-09-19) =
 * Исправлена ошибка, когда не убиралось окно с просьбой оценки
@@ -247,3 +266,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 
 * WordPress 4.6+
 * PHP 5.6+
+
+== Upgrade Notice ==
+
+Будьте внимательны и осторожны!!! При переезде на новую версию плагина 1.2.6 возможны сбои в настройках ленты по умолчанию. Плюс адрес ленты тоже измениться. Не забудьте обновить его в настройках панели вебмастера.
