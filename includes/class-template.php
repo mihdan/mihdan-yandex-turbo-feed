@@ -2,6 +2,7 @@
 /**
  * @package mihdan-yandex-turbo-feed
  */
+
 namespace Mihdan\YandexTurboFeed;
 
 /**
@@ -16,6 +17,11 @@ class Template {
 	private $settings;
 
 	/**
+	 * @var Utils
+	 */
+	private $utils;
+
+	/**
 	 * @var int $feed_id Идентификатор фида.
 	 */
 	private $feed_id;
@@ -28,9 +34,11 @@ class Template {
 	/**
 	 * Template constructor.
 	 *
-	 * @param $settings
+	 * @param Utils    $utils
+	 * @param Settings $settings
 	 */
-	public function __construct( $settings ) {
+	public function __construct( Utils $utils, Settings $settings ) {
+		$this->utils    = $utils;
 		$this->settings = $settings;
 		$this->slug     = MIHDAN_YANDEX_TURBO_FEED_SLUG;
 
@@ -321,7 +329,7 @@ class Template {
 		$post = get_post();
 
 		$args = array(
-			'post_type'           => $this->settings->cpt_key,
+			'post_type'           => $this->utils->get_post_type(),
 			'posts_per_page'      => 10,
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
@@ -459,7 +467,7 @@ class Template {
 	 * Render Feed Template.
 	 */
 	public function render() {
-		if ( is_singular( $this->settings->cpt_key ) ) {
+		if ( is_singular( $this->utils->get_post_type() ) ) {
 			require MIHDAN_YANDEX_TURBO_FEED_PATH . '/templates/feed.php';
 			die;
 		}
@@ -481,7 +489,7 @@ class Template {
 
 		$this->feed_id = get_the_ID();
 
-		if ( ! is_singular( $this->settings->cpt_key ) ) {
+		if ( ! is_singular( $this->utils->get_post_type() ) ) {
 			return;
 		}
 
