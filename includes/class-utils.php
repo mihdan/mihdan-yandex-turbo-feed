@@ -54,4 +54,13 @@ class Utils {
 	public function get_post_type() {
 		return substr( $this->get_slug(), 0, 19 );
 	}
+
+	/**
+	 * Get plugin version.
+	 *
+	 * @return string
+	 */
+	public function get_version() {
+		return MIHDAN_YANDEX_TURBO_FEED_VERSION;
+	}
 }
