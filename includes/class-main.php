@@ -257,37 +257,6 @@ class Main {
 	}
 
 	/**
-	 * Генерим атрибуты для тега <item>
-	 *
-	 * @param int $post_id идентификатор поста
-	 */
-	public function item_attributes( $post_id ) {
-
-		$atts = array(
-			'turbo' => ! get_post_meta( $post_id, $this->utils->get_slug() . '_remove', true ),
-		);
-
-		$atts = apply_filters( 'mihdan_yandex_turbo_feed_item_attributes', $atts, $post_id );
-
-		$attributes = '';
-		foreach ( $atts as $attr => $value ) {
-			$value = ( 'href' === $attr ) ? esc_url( $value ) : ( is_bool( $value ) ? $value : esc_attr( $value ) );
-
-			if ( true === $value ) {
-				$value = 'true';
-			}
-
-			if ( false === $value ) {
-				$value = 'false';
-			}
-
-			$attributes .= ' ' . $attr . '="' . $value . '"';
-		}
-
-		echo $attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-
-	/**
 	 * Добавим заголовок `X-Robots-Tag`
 	 * для решения проблемы с сеошными плагинами.
 	 */

@@ -60,6 +60,25 @@ class Template {
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
 		add_action( 'wp', array( $this, 'authenticate' ) );
+
+		// The SEO Framework.
+		add_action( 'the_seo_framework_after_front_init', [ $this, 'disable_seo_framework_for_feed'] );
+
+	}
+
+	/**
+	 * Disable inserting source link
+	 * by The SEO Framework plugin from excerpt.
+	 */
+	public function disable_seo_framework_for_feed() {
+
+		if ( false === strpos( $_SERVER['REQUEST_URI'], '/turbo/' ) ) {
+			return;
+		}
+
+		$instance = the_seo_framework();
+		remove_filter( 'the_content_feed', [ $instance, 'the_content_feed' ] );
+		remove_filter( 'the_excerpt_rss', [ $instance, 'the_content_feed' ] );
 	}
 
 	/**
@@ -507,6 +526,37 @@ class Template {
 				$this->auth_headers();
 			}
 		}
+	}
+
+	/**
+	 * Генерим атрибуты для тега <item>
+	 *
+	 * @param int $post_id идентификатор поста
+	 */
+	public function item_attributes( $post_id ) {
+
+		$atts = array(
+			'turbo' => ! get_post_meta( $post_id, $this->utils->get_slug() . '_remove', true ),
+		);
+
+		$atts = apply_filters( 'mihdan_yandex_turbo_feed_item_attributes', $atts, $post_id );
+
+		$attributes = '';
+		foreach ( $atts as $attr => $value ) {
+			$value = ( 'href' === $attr ) ? esc_url( $value ) : ( is_bool( $value ) ? $value : esc_attr( $value ) );
+
+			if ( true === $value ) {
+				$value = 'true';
+			}
+
+			if ( false === $value ) {
+				$value = 'false';
+			}
+
+			$attributes .= ' ' . $attr . '="' . $value . '"';
+		}
+
+		echo $attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 
