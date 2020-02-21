@@ -29,6 +29,24 @@ class Utils {
 	}
 
 	/**
+	 * Get plugin URL.
+	 *
+	 * @return string
+	 */
+	public function get_url() {
+		return MIHDAN_YANDEX_TURBO_FEED_URL;
+	}
+
+	/**
+	 * Get plugin path.
+	 *
+	 * @return string
+	 */
+	public function get_path() {
+		return MIHDAN_YANDEX_TURBO_FEED_PATH;
+	}
+
+	/**
 	 * Get post type slug.
 	 *
 	 * @return string
