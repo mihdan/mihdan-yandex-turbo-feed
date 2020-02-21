@@ -257,14 +257,14 @@ class Settings {
 					'label'     => __( 'Feed', 'mihdan-yandex-turbo-feed' ),
 				)
 			)
-				->addText(
+				/*->addText(
 					$this->utils->get_slug() . '_slug',
 					array(
 						'label'         => __( 'Feed Slug', 'mihdan-yandex-turbo-feed' ),
 						'default_value' => 'mihdan-yandex-turbo-feed',
 						'instructions'  => get_bloginfo_rss( 'url' ) . '/turbo/%slug%/',
 					)
-				)
+				)*/
 				->addSelect(
 					$this->utils->get_slug() . '_charset',
 					array(
