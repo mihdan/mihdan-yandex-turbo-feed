@@ -14,9 +14,9 @@ namespace Mihdan\YandexTurboFeed;
  */
 class Main {
 	/**
-	 * @var string слюг плагина
+	 * @var Migrations $migrations
 	 */
-	private $slug = 'mihdan_yandex_turbo_feed';
+	private $migrations;
 
 	/**
 	 * @var string $feedname слюг фида
@@ -148,11 +148,10 @@ class Main {
 		$this->settings      = new Settings( $this->utils );
 		$this->notifications = new Notifications( $this->utils, $this->settings );
 		$this->template      = new Template( $this->utils, $this->settings );
+
 		//$this->site_health   = new SiteHealth( $this->settings );
 
 		$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
-
-		//$this->feedname  = $this->settings->get_option( 'slug' );
 
 		$this->hooks();
 
@@ -189,10 +188,6 @@ class Main {
 
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 
-
-
-
-
 		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 		add_filter( 'the_content_feed', array( $this, 'invisible_border' ) );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
@@ -206,27 +201,18 @@ class Main {
 	}
 
 	/**
-	 * Get plugin version.
-	 *
-	 * @return string
-	 */
-	public function get_version() {
-		return MIHDAN_YANDEX_TURBO_FEED_VERSION;
-	}
-
-	/**
 	 * Set plugin version.
 	 *
 	 * @param \WP_Upgrader $upgrader WP_Upgrader instance.
 	 * @param array        $options  Array of bulk item update data.
 	 */
 	public function upgrade( \WP_Upgrader $upgrader, $options ) {
-		$our_plugin = plugin_basename( MIHDAN_YANDEX_TURBO_FEED_FILE );
+		$our_plugin = plugin_basename( $this->utils->get_file() );
 
 		if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
 			foreach ( $options['plugins'] as $plugin ) {
 				if ( $plugin === $our_plugin ) {
-					update_option( $this->utils->get_slug() . '_version', $this->get_version(), false );
+					$this->migrations = new Migrations( $this->utils, $this->settings );
 				}
 			}
 		}
@@ -240,8 +226,8 @@ class Main {
 	 * Загружаем ресурсы для плагина.
 	 */
 	public function assets() {
-		wp_enqueue_script( MIHDAN_YANDEX_TURBO_FEED_SLUG, MIHDAN_YANDEX_TURBO_FEED_URL . 'admin/js/app.js', array( 'wp-util' ), filemtime( MIHDAN_YANDEX_TURBO_FEED_PATH . '/admin/js/app.js' ) );
-		wp_enqueue_style( MIHDAN_YANDEX_TURBO_FEED_SLUG, MIHDAN_YANDEX_TURBO_FEED_URL . 'admin/css/app.css', array(), filemtime( MIHDAN_YANDEX_TURBO_FEED_PATH . '/admin/css/app.css' ) );
+		wp_enqueue_script( $this->utils->get_slug(), $this->utils->get_url() . 'admin/js/app.js', array( 'wp-util' ), filemtime( $this->utils->get_path() . '/admin/js/app.js' ) );
+		wp_enqueue_style( $this->utils->get_slug(), $this->utils->get_url() . 'admin/css/app.css', array(), filemtime( $this->utils->get_path() . '/admin/css/app.css' ) );
 	}
 
 	/**
@@ -595,7 +581,7 @@ class Main {
 		update_option( $this->utils->get_slug() . '_flush_rewrite_rules', 1, true );
 
 		// Set plugin version.
-		update_option( $this->utils->get_slug() . '_version', $this->get_version(), false );
+		update_option( $this->utils->get_slug() . '_version', $this->utils->get_version(), false );
 	}
 
 	/**
