@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 5.0
 Requires PHP: 5.6.20
 Tested up to: 5.3
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -129,6 +129,11 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.3.1 (2020-02-22) =
+* Исправлена ошибка "В элементе item отсутствует атрибут turbo со значением true"
+* Исправлена ошибка совместимости с плагином The SEO Framework
+* Исправлена ошибка совместимости с плагином All In One SEO Pack
 
 = 1.3 (2020-02-21) =
 * В настройках поиска можно выбрать провайдера
