@@ -495,6 +495,25 @@ class Settings {
 					)
 				)
 			/**
+			 * Хлебные крошки.
+			 *
+			 * @link https://yandex.ru/dev/turbo/doc/rss/elements/header-docpage/
+			 */
+			->addTab(
+				'breadcrumbs',
+				array(
+					'placement' => 'left',
+					'label'     => __( 'Breadcrumbs', 'mihdan-yandex-turbo-feed' ),
+				)
+			)
+			->addTrueFalse(
+				$this->utils->get_slug() . '_breadcrumbs_enable',
+				array(
+					'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
+					'label'   => __( 'Breadcrumbs', 'mihdan-yandex-turbo-feed' ),
+				)
+			)
+			/**
 			 * Аналитика.
 			 *
 			 * @link https://yandex.ru/dev/turbo/doc/settings/analytics-docpage
