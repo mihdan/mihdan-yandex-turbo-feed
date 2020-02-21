@@ -3,6 +3,9 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+#acf-group_feed_settings .acf-input {
+	max-width: 500px;
+}
 #acf-group_feed_settings .acf-tab-button:before {
 	font-family: dashicons;
 	display: inline-block;
@@ -83,4 +86,8 @@ a[data-key$="analytics_tab"]:before {
 
 a[data-key$="related_posts_tab"]:before {
 	content: '\f124';
+}
+
+a[data-key$="breadcrumbs_tab"]:before {
+	content: '\f325';
 }
