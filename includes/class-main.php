@@ -191,7 +191,7 @@ class Main {
 		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
 		add_filter( 'the_content_feed', array( $this, 'invisible_border' ) );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
-		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
+
 		add_action( 'template_redirect', array( $this, 'set_feed_id' ), 1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 
@@ -254,16 +254,6 @@ class Main {
 		}
 
 		return $actions;
-	}
-
-	/**
-	 * Добавим заголовок `X-Robots-Tag`
-	 * для решения проблемы с сеошными плагинами.
-	 */
-	public function send_headers_for_aio_seo_pack() {
-		if ( is_feed( $this->feedname ) ) {
-			header( 'X-Robots-Tag: index, follow', true );
-		}
 	}
 
 	/**

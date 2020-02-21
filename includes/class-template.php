@@ -49,7 +49,7 @@ class Template {
 	 * Hooks Init
 	 */
 	public function hooks() {
-		add_action( 'template_redirect', array( $this, 'render' ) );
+		add_action( 'template_redirect', [ $this, 'render' ], 50 );
 		add_action( 'mihdan_yandex_turbo_feed_channel', array( $this, 'insert_analytics' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_search' ) );
@@ -64,6 +64,19 @@ class Template {
 		// The SEO Framework.
 		add_action( 'the_seo_framework_after_front_init', [ $this, 'disable_seo_framework_for_feed'] );
 
+		// All In One SEO Pack.
+		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
+
+	}
+
+	/**
+	 * Добавим заголовок `X-Robots-Tag`
+	 * для решения проблемы с сеошными плагинами.
+	 */
+	public function send_headers_for_aio_seo_pack() {
+		if ( is_singular( $this->utils->get_post_type() ) ) {
+			header( 'X-Robots-Tag: index, follow', true );
+		}
 	}
 
 	/**
