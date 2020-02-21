@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 5.0
 Requires PHP: 5.6.20
 Tested up to: 5.3
-Stable tag: 1.2.6
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -130,7 +130,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 
 == Changelog ==
 
-= 1.2.6 (2020-02-21) =
+= 1.3 (2020-02-21) =
 * В настройках поиска можно выбрать провайдера
 * Теперь настройки отдельные для каждого сайта в мультисате
 * Отключена зависимость от Rexux Framework, который вызывал много проблем
