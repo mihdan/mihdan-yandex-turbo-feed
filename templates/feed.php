@@ -7,7 +7,6 @@
  * @var Settings $this->settings
  */
 
-
 use Mihdan\YandexTurboFeed\Settings;
 use Mihdan\YandexTurboFeed\Template;
 
@@ -29,7 +28,7 @@ echo '<?xml version="1.0" encoding="' . esc_html( $this->settings->get_option( '
 		<?php if ( $items->have_posts() ) : ?>
 			<?php while ( $items->have_posts() ) : ?>
 				<?php $items->the_post(); ?>
-				<item<?php //$this->item_attributes( get_the_ID() ); ?>>
+				<item<?php $this->item_attributes( get_the_ID() ); ?>>
 					<link><?php the_permalink_rss(); ?></link>
 					<title><?php the_title_rss(); ?></title>
 					<author><?php the_author(); ?></author>
