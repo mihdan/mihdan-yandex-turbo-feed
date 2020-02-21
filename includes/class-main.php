@@ -239,10 +239,10 @@ class Main {
 	 * @return array
 	 */
 	public function add_settings_link( $actions, $plugin_file ) {
-		if ( 'mihdan-yandex-turbo-feed/mihdan-yandex-turbo-feed.php' === $plugin_file ) {
+		if ( plugin_basename( $this->utils->get_file() ) === $plugin_file ) {
 			$actions[] = sprintf(
 				'<a href="%s">%s</a>',
-				admin_url( 'edit.php?post_type=mytf' ),
+				admin_url( 'edit.php?post_type=' . $this->utils->get_post_type() ),
 				esc_html__( 'Settings', 'mihdan-yandex-turbo-feed' )
 			);
 
