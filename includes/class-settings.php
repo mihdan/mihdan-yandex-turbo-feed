@@ -128,6 +128,12 @@ class Settings {
 	public function hooks() {
 		add_action( 'init', array( $this, 'registration' ) );
 		add_action( 'acf/init', array( $this, 'add_local_field_groups' ) );
+		/**
+		 * FIXME: delete this hook.
+		 *
+		 * @link https://www.advancedcustomfields.com/resources/including-acf-within-a-plugin-or-theme/
+		 */
+		add_filter( 'acf/settings/show_admin', '__return_false' );
 	}
 
 	/**
