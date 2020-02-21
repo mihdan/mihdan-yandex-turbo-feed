@@ -47,6 +47,15 @@ class Utils {
 	}
 
 	/**
+	 * Get plugin main file.
+	 *
+	 * @return string
+	 */
+	public function get_file() {
+		return MIHDAN_YANDEX_TURBO_FEED_FILE;
+	}
+
+	/**
 	 * Get post type slug.
 	 *
 	 * @return string
