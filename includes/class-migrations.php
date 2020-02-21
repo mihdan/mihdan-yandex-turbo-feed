@@ -23,10 +23,10 @@ class Migrations {
 		$this->utils    = $utils;
 		$this->settings = $settings;
 
-		$this->up_1_2_6();
+		$this->up_1_3();
 	}
 
-	public function up_1_2_6() {
+	public function up_1_3() {
 
 		// Если нет версии в базе - запустим миграцию на новый формат базы.
 		if ( false !== get_option( $this->utils->get_slug() . '_version', false ) ) {
@@ -109,7 +109,7 @@ class Migrations {
 			}
 
 			// Set new plugin version.
-			update_option( $this->utils->get_slug() . '_version', '1.2.6', false );
+			update_option( $this->utils->get_slug() . '_version', '1.3', false );
 		}
 	}
 
