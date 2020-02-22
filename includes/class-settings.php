@@ -50,7 +50,6 @@ class Settings {
 	 */
 	public function __construct( Utils $utils ) {
 		$this->utils = $utils;
-		$this->setup();
 		$this->hooks();
 	}
 
@@ -125,9 +124,13 @@ class Settings {
 		);
 	}
 
+	/**
+	 * Init hooks.
+	 */
 	public function hooks() {
 		add_action( 'init', array( $this, 'registration' ) );
-		add_action( 'acf/init', array( $this, 'add_local_field_groups' ) );
+		add_action( 'init', array( $this, 'setup' ), 100 );
+		add_action( 'init', array( $this, 'add_local_field_groups' ), 101 );
 		/**
 		 * FIXME: delete this hook.
 		 *
@@ -203,12 +206,15 @@ class Settings {
 	 */
 	public function add_local_field_groups() {
 
+		if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+			return;
+		}
+
 		$post_settings = new FieldsBuilder(
 			'post_settings',
 			array(
 				'title'    => __( 'Yandex Turbo', 'mihdan-yandex-turbo-feed' ),
 				'position' => 'side',
-				//'style'    => 'seamless',
 			)
 		);
 
