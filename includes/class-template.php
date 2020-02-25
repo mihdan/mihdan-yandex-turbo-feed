@@ -27,11 +27,6 @@ class Template {
 	private $feed_id;
 
 	/**
-	 * @var string $slug Слаг плагина.
-	 */
-	private $slug;
-
-	/**
 	 * Template constructor.
 	 *
 	 * @param Utils    $utils
@@ -40,7 +35,6 @@ class Template {
 	public function __construct( Utils $utils, Settings $settings ) {
 		$this->utils    = $utils;
 		$this->settings = $settings;
-		$this->slug     = MIHDAN_YANDEX_TURBO_FEED_SLUG;
 
 		$this->hooks();
 	}
@@ -67,6 +61,25 @@ class Template {
 		// All In One SEO Pack.
 		add_action( 'template_redirect', array( $this, 'send_headers_for_aio_seo_pack' ), 20 );
 
+		// SEO by Yoast.
+		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
+
+	}
+
+	/**
+	 * Hide RSS footer created by WordPress SEO from our RSS feed.
+	 *
+	 * @param  boolean $include_footer Default inclusion value
+	 *
+	 * @return boolean                 Modified inclusion value
+	 */
+	public function hide_wpseo_rss_footer( $include_footer = true ) {
+
+		if ( is_singular( $this->utils->get_post_type() ) ) {
+			$include_footer = false;
+		}
+
+		return $include_footer;
 	}
 
 	/**
@@ -248,12 +261,12 @@ class Template {
 	public function insert_menu() {
 
 		// Если юзер сделал меню
-		if ( $this->settings->get_option( 'menu_enable' ) && has_nav_menu( $this->slug ) ) {
+		if ( $this->settings->get_option( 'menu_enable', $this->feed_id ) && has_nav_menu( $this->utils->get_slug() ) ) {
 
 			// Получить меню
 			$menu = wp_nav_menu(
 				array(
-					'theme_location' => $this->slug,
+					'theme_location' => $this->utils->get_slug(),
 					'container'      => false,
 					'echo'           => false,
 					'depth'          => 1,
