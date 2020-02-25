@@ -6,6 +6,9 @@
 namespace Mihdan\YandexTurboFeed;
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
+//use Carbon_Fields\Carbon_Fields;
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
 
 class Settings {
 	/**
@@ -60,6 +63,11 @@ class Settings {
 		);
 
 		$this->post_types = wp_list_pluck( get_post_types( $args, 'objects' ), 'label', 'name' );
+
+		// Удалить сами ленты из доступных CPT.
+		if ( isset( $this->post_types[ $this->utils->get_post_type() ] ) ) {
+			unset( $this->post_types[ $this->utils->get_post_type() ] );
+		}
 
 		// Список всех зареганных таксономий.
 		$args = array(
@@ -128,15 +136,69 @@ class Settings {
 	 * Init hooks.
 	 */
 	public function hooks() {
+		//add_action( 'after_setup_theme', array( $this, 'after_setup_theme' ) );
 		add_action( 'init', array( $this, 'registration' ) );
 		add_action( 'init', array( $this, 'setup' ), 100 );
 		add_action( 'init', array( $this, 'add_local_field_groups' ), 101 );
+		//add_action( 'carbon_fields_register_fields', array( $this, 'register_fields' ) );
+
 		/**
 		 * FIXME: delete this hook.
 		 *
 		 * @link https://www.advancedcustomfields.com/resources/including-acf-within-a-plugin-or-theme/
 		 */
-		add_filter( 'acf/settings/show_admin', '__return_false' );
+		//add_filter( 'acf/settings/show_admin', '__return_false' );
+	}
+
+	public function register_fields() {
+
+		Container::make( 'post_meta', 'test' )
+			->where( 'post_type', '=', $this->utils->get_post_type() )
+			->add_fields( array(
+				Field::make( 'complex', 'crb_slider', __( 'Slider' ) )
+					->set_layout('tabbed-vertical')
+			        ->add_fields( array(
+				     Field::make( 'text', 'title', __( 'Slide Title' ) ),
+				     Field::make( 'image', 'photo', __( 'Slide Photo' ) ),
+			     ) ),
+				Field::make( 'complex', 'crb_slider_', __( 'Slider' ) )
+				     ->set_layout('tabbed-vertical')
+				     ->add_fields( array(
+					     Field::make( 'text', 'title_', __( 'Slide Title' ) ),
+					     Field::make( 'image', 'photo_', __( 'Slide Photo' ) ),
+				     ) ),
+			));
+		Container::make( 'post_meta', 'Настройки' )
+		         ->where( 'post_type', '=', $this->utils->get_post_type() )
+			->add_tab( __( 'Профиль' ), array(
+				Field::make( 'text', 'crb_first_name', __( 'First Name' ) ),
+				Field::make( 'text', 'crb_last_name', __( 'Last Name' ) ),
+				Field::make( 'text', 'crb_position', __( 'Position' ) ),
+			) )
+			->add_tab( __( 'Лента' ), array(
+				Field::make( 'text', 'crb_email', __( 'Notification Email' ) ),
+				Field::make( 'text', 'crb_phone', __( 'Phone Number' ) ),
+			) )
+			->add_tab( __( 'Сапоги' ), array(
+				Field::make( 'text', 'crb_first_name2', __( 'First Name' ) ),
+				Field::make( 'text', 'crb_last_name2', __( 'Last Name' ) ),
+				Field::make( 'text', 'crb_position2', __( 'Position' ) ),
+			) )
+			->add_tab( __( 'Стекло' ), array(
+				Field::make( 'text', 'crb_first_name23', __( 'First Name' ) ),
+				Field::make( 'text', 'crb_last_name23', __( 'Last Name' ) ),
+				Field::make( 'text', 'crb_position23', __( 'Position' ) ),
+			) )
+			->add_tab( __( 'Утро' ), array(
+				Field::make( 'text', 'crb_email2', __( 'Notification Email' ) ),
+				Field::make( 'text', 'crb_phone2', __( 'Phone Number' ) ),
+			) );
+
+
+	}
+
+	public function after_setup_theme() {
+		\Carbon_Fields\Carbon_Fields::boot();
 	}
 
 	/**
@@ -268,15 +330,27 @@ class Settings {
 					'placement' => 'left',
 					'label'     => __( 'Feed', 'mihdan-yandex-turbo-feed' ),
 				)
-			)
-				/*->addText(
-					$this->utils->get_slug() . '_slug',
+			);
+
+		// Polylang.
+		/*if ( defined( 'POLYLANG_VERSION' ) ) {
+			$feed_settings
+				->addSelect(
+					$this->utils->get_slug() . '_language',
 					array(
-						'label'         => __( 'Feed Slug', 'mihdan-yandex-turbo-feed' ),
-						'default_value' => 'mihdan-yandex-turbo-feed',
-						'instructions'  => get_bloginfo_rss( 'url' ) . '/turbo/%slug%/',
+						'label'         => __( 'Charset', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => pll_default_language(),
+						'choices'       => wp_list_pluck( get_terms( 'language', array( 'hide_empty' => 0 ) ), 'name', 'slug' ),
 					)
-				)*/
+				);
+		}*/
+
+		// WPML.
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+
+		}
+
+			$feed_settings
 				->addSelect(
 					$this->utils->get_slug() . '_charset',
 					array(
