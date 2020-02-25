@@ -2,11 +2,11 @@
 Author: mihdan
 Contributors: mihdan
 Donate link: https://www.kobzarev.com/donate/
-Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed
+Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed, seo, seo-friendly, yoast, google, webmaster, schema, sitemap
 Requires at least: 5.0
 Requires PHP: 5.6.20
 Tested up to: 5.3
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,12 @@ Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site material
 * Вставка таблиц и их настройка
 * Активация приватной ленты (запрос логина и пароля)
 * Экспорт/Импорт настроек
+* Ленты совместимы с плагином Yoast SEO
+* Ленты совместимы с плагином The SEO Framework
+* Ленты совместимы с плагином Rank Math
+* Ленты совместимы с плагином WPML
+* Ленты совместимы с плагином Polylang
+* Ленты совместимы с плагином Transpoch
 
 = Recommended Settings =
 The default settings that are used on a fresh install of the plugin are what we recommend.
@@ -129,6 +135,14 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.3.2 (2020-02-22) =
+* Исправлена ошибка совместимости с плагином Yoast SEO
+* Исправлена ошибка с отображением меню на некоторых темах
+* Исправлена ошибка с отображением выбора произвольных типов записей
+* Добавлена поддержка WPML
+* Добавлена поддержка Polylang
+* Добавлена поддержка Transposh
 
 = 1.3.1 (2020-02-22) =
 * Исправлена ошибка "В элементе item отсутствует атрибут turbo со значением true"
