@@ -1,0 +1,8 @@
+<wpml-config>
+    <custom-fields>
+        <custom-field action="copy">quantity</custom-field>
+    </custom-fields>
+    <custom-types>
+        <custom-type translate="1">mihdan_yandex_turbo</custom-type>
+    </custom-types>
+</wpml-config>
