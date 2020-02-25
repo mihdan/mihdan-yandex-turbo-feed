@@ -277,7 +277,7 @@ class Main {
 	 * Регистрируем переводы.
 	 */
 	public function load_translations() {
-		load_plugin_textdomain( 'mihdan-yandex-turbo-feed', false, MIHDAN_YANDEX_TURBO_FEED_PATH . '/languages' );
+		load_plugin_textdomain( 'mihdan-yandex-turbo-feed', false, $this->utils->get_path() . '/languages' );
 	}
 
 	/**
@@ -309,7 +309,7 @@ class Main {
 	 */
 	public function image_attributes( $attr, $attachment, $size ) {
 
-		if ( is_feed( $this->feedname ) ) {
+		if ( is_singular( $this->utils->get_post_type() ) ) {
 			unset( $attr['srcset'] );
 			unset( $attr['sizes'] );
 		}
@@ -397,7 +397,7 @@ class Main {
 	 */
 	public function content_feed( $content ) {
 
-		if ( is_feed( $this->feedname ) ) {
+		if ( is_singular( $this->utils->get_post_type() ) ) {
 			$content = $this->strip_tags( $content, $this->allowable_tags );
 
 			/**
@@ -481,12 +481,16 @@ class Main {
 		$str = strtr(
 			$str,
 			array(
-				'&'      => '&amp;',
-				'>'      => '&gt;',
-				'<'      => '&lt;',
-				'"'      => '&quot;',
-				'\''     => '&apos;',
-				'&nbsp;' => ' ',
+				'&'               => '&amp;',
+				'>'               => '&gt;',
+				'<'               => '&lt;',
+				'"'               => '&quot;',
+				'\''              => '&apos;',
+				'&nbsp;'          => ' ',
+				'<!--noindex-->'  => '',
+				'<!--/noindex-->' => '',
+				'<noindex>'       => '',
+				'</noindex>'      => '',
 			)
 		);
 
@@ -551,10 +555,6 @@ class Main {
 		// Сбросить правила реврайтов
 		flush_rewrite_rules();
 	}
-
-
-
-
 }
 
 // eol.
