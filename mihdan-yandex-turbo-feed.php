@@ -51,5 +51,4 @@ if ( ! isset( $plugin ) ) {
 	$plugin = new Main();
 }
 
-
 // eof;
