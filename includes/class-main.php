@@ -156,7 +156,7 @@ class Main {
 		$this->hooks();
 
 		// Hook fired when plugin init.
-		add_action( 'mihdan_yandex_turbo_feed_init', $this );
+		do_action( 'mihdan_yandex_turbo_feed_init', $this );
 	}
 
 	/**
