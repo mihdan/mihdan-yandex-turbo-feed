@@ -254,7 +254,7 @@ class Main {
 	 */
 	public function assets() {
 		wp_enqueue_script( $this->utils->get_slug(), $this->utils->get_url() . 'admin/js/app.js', array( 'wp-util' ), filemtime( $this->utils->get_path() . '/admin/js/app.js' ) );
-		wp_enqueue_style( $this->utils->get_slug(), $this->utils->get_url() . 'admin/css/app.css', array(), filemtime( $this->utils->get_path() . '/admin/css/app.css' ) );
+		wp_enqueue_style( $this->utils->get_slug(), $this->utils->get_url() . 'admin/css/app.css', array( 'acf-input' ), filemtime( $this->utils->get_path() . '/admin/css/app.css' ) );
 	}
 
 	/**
