@@ -146,7 +146,7 @@ class Main {
 		$this->includes();
 		$this->utils         = new Utils();
 		$this->settings      = new Settings( $this->utils );
-		$this->notifications = new Notifications( $this->utils, $this->settings );
+		//$this->notifications = new Notifications( $this->utils, $this->settings );
 		$this->template      = new Template( $this->utils, $this->settings );
 
 		//$this->site_health   = new SiteHealth( $this->settings );
@@ -194,10 +194,37 @@ class Main {
 
 		add_action( 'template_redirect', array( $this, 'set_feed_id' ), 1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
+		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ) );
 
 		add_action( 'upgrader_process_complete', array( $this, 'upgrade' ), 10, 2 );
+
 		register_activation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_activate' ) );
 		register_deactivation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_deactivate' ) );
+	}
+
+	/**
+	 * Add admin footer text.
+	 *
+	 * @param string $text Default text.
+	 *
+	 * @return string
+	 */
+	public function admin_footer_text( $text ) {
+
+		$current_screen = get_current_screen();
+
+		$white_list = array(
+			'edit-mihdan_yandex_turbo',
+			'mihdan_yandex_turbo',
+		);
+
+		if ( isset( $current_screen ) && in_array( $current_screen->id, $white_list ) ) {
+			$text = '<span class="mytf-admin-footer-text">';
+			$text .= sprintf( __( 'Enjoyed <strong>Yandex Turbo Feed</strong>? Please leave us a <a href="%s" target="_blank" title="Rate & review it">★★★★★</a> rating. We really appreciate your support', 'mihdan-yandex-turbo-feed' ), 'self::URL' );
+			$text .= '</span>';
+		}
+
+		return  $text;
 	}
 
 	/**
