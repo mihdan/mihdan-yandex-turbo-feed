@@ -45,11 +45,11 @@ class Template {
 	public function hooks() {
 		add_action( 'template_redirect', [ $this, 'render' ], 50 );
 		add_action( 'mihdan_yandex_turbo_feed_channel', array( $this, 'insert_analytics' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_share' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_search' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_comments' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_callback' ) );
-		add_action( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'insert_rating' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_share' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_search' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_comments' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_callback' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_rating' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
