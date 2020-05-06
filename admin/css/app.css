@@ -141,3 +141,7 @@ a[data-key$="breadcrumbs_tab"]:before {
 	border-left: 1px solid #e2e4e7;
 	margin-top: 0 !important;
 }
+
+.mytf-admin-footer-text a {
+	color: #ca4a1f;
+}
