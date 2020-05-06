@@ -145,3 +145,15 @@ a[data-key$="breadcrumbs_tab"]:before {
 .mytf-admin-footer-text a {
 	color: #ca4a1f;
 }
+
+@media (max-width: 782px) {
+	.post-type-mihdan_yandex_turbo .acf-fields.-sidebar {
+		padding-left: 40% !important;
+	}
+	.post-type-mihdan_yandex_turbo .acf-fields.-sidebar:before {
+		width: 40% !important;
+	}
+	.post-type-mihdan_yandex_turbo .acf-tab-wrap.-left .acf-tab-group {
+		width: 40% !important;
+	}
+}
