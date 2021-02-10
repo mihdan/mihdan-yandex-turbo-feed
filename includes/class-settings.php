@@ -136,21 +136,33 @@ class Settings {
 		add_action( 'init', array( $this, 'registration' ) );
 		add_action( 'init', array( $this, 'setup' ), 100 );
 		add_action( 'init', array( $this, 'add_local_field_groups' ), 101 );
+		add_filter( 'acf/settings/show_admin', array( $this, 'hide_acf_admin_menu' ) );
+	}
 
-		/**
-		 * FIXME: delete this hook.
-		 *
-		 * @link https://www.advancedcustomfields.com/resources/including-acf-within-a-plugin-or-theme/
-		 */
-		add_filter( 'acf/settings/show_admin', function () {
-			global $wp_filter; //print_r($wp_filter);die;
+	/**
+	 * Скрыть меню ACF от нашего плагина.
+	 *
+	 * Если активирован оригинальный плагин ACF или ACF PRO,
+	 * то меню скрыто не будет.
+	 *
+	 * @param bool $show_hide Флаг скрытости.
+	 *
+	 * @return bool
+	 */
+	public function hide_acf_admin_menu( $show_hide ) {
+		$backtraces = debug_backtrace();
 
-			//var_dump( debug_backtrace() );die;
+		if ( ! is_array( $backtraces ) ) {
+			return $show_hide;
+		}
 
-			//do_action('qm/debug', $wp_filter);
+		foreach ( $backtraces as $backtrace ) {
+			if ( strpos( $backtrace['file'], 'mihdan-yandex-turbo-feed/git/vendor/advanced-custom-fields' ) ) {
+				return false;
+			}
+		}
 
-			return true;
-		} );
+		return $show_hide;
 	}
 
 	/**
