@@ -63,8 +63,41 @@ class Template {
 
 		// SEO by Yoast.
 		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
-
+		add_filter( 'wpseo_sitemap_exclude_post_type', array( $this, 'hide_wpseo_cpt' ), 10, 2 );
+		add_filter( 'wpseo_accessible_post_types', array( $this, 'hide_wpseo_metabox' ) );
 	}
+
+	/**
+     * Exclude One Content Type From Yoast SEO Sitemap.
+     *
+	 * @param bool   $boolean   Hide or no.
+	 * @param string $post_type Post type.
+	 *
+	 * @return bool
+	 */
+	public function hide_wpseo_cpt( $boolean, $post_type ) {
+	    if ( $post_type === $this->utils->get_post_type() ) {
+	        $boolean = true;
+        }
+
+	    return $boolean;
+    }
+
+	/**
+	 * Hide WPSEO metabox from our CPT.
+     *
+     * @param array $post_types Post types for filter.
+     *
+     * @return array
+	 */
+	public function hide_wpseo_metabox( $post_types ) {
+
+        if ( is_array( $post_types ) && isset( $post_types[ $this->utils->get_post_type() ] ) ) {
+	        unset( $post_types[ $this->utils->get_post_type() ] );
+        }
+
+        return $post_types;
+    }
 
 	/**
 	 * Hide RSS footer created by WordPress SEO from our RSS feed.
