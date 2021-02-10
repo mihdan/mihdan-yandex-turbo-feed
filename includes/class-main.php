@@ -24,7 +24,9 @@ class Main {
 	public $feedname;
 
 	/**
-	 * @var array $allowable_tags массив разрешенных тегов для контента
+	 * Массив разрешенных тегов для контента.
+	 *
+	 * @var array $allowable_tags
 	 */
 	private $allowable_tags = array(
 		'<h1>',
@@ -160,6 +162,15 @@ class Main {
 	}
 
 	/**
+	 * Получить список разрешённых тегов.
+	 *
+	 * @return array
+	 */
+	public function get_allowable_tags() {
+		return apply_filters( 'mihdan_yandex_turbo_feed_allowable_tags', $this->allowable_tags );
+	}
+
+	/**
 	 * Регистрируем новую область меню
 	 * для создания меню в админке
 	 */
@@ -220,7 +231,7 @@ class Main {
 
 		if ( isset( $current_screen ) && in_array( $current_screen->id, $white_list ) ) {
 			$text = '<span class="mytf-admin-footer-text">';
-			$text .= sprintf( __( 'Enjoyed <strong>Yandex Turbo Feed</strong>? Please leave us a <a href="%s" target="_blank" title="Rate & review it">★★★★★</a> rating. We really appreciate your support', 'mihdan-yandex-turbo-feed' ), 'self::URL' );
+			$text .= sprintf( __( 'Enjoyed <strong>Yandex Turbo Feed</strong>? Please leave us a <a href="%s" target="_blank" title="Rate & review it">★★★★★</a> rating. We really appreciate your support', 'mihdan-yandex-turbo-feed' ), 'https://wordpress.org/support/plugin/mihdan-yandex-turbo-feed/reviews/#new-post' );
 			$text .= '</span>';
 		}
 
@@ -425,7 +436,7 @@ class Main {
 	public function content_feed( $content ) {
 
 		if ( is_singular( $this->utils->get_post_type() ) ) {
-			$content = $this->strip_tags( $content, $this->allowable_tags );
+			$content = $this->strip_tags( $content, $this->get_allowable_tags() );
 
 			/**
 			 * Получить тумбочку поста
