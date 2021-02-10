@@ -5,8 +5,8 @@ Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed, seo, seo-friendly, yoast, google, webmaster, schema, sitemap
 Requires at least: 5.0
 Requires PHP: 5.6.20
-Tested up to: 5.3
-Stable tag: 1.3.2
+Tested up to: 5.6
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,12 +107,15 @@ add_filter( 'mihdan_yandex_turbo_feed_feedname', function( $slug ) {
 По спеке внутри тега `<turbo:content>` не должно быть никаких лишних тегов, типа `<iframe>`, поэтому плагин вырезает лишнее, оставляя только необходимый для разметки минимум. Для переопределения есть фильтр:
 
 `
-add_filter( 'mihdan_yandex_turbo_feed_allowable_tags', function( $allowable_tags ) {
-  // Добавить тег <kbd>
-  $allowable_tags[] = 'kbd';
+add_filter(
+    'mihdan_yandex_turbo_feed_allowable_tags',
+    function( $allowable_tags ) {
+        // Добавить тег <kbd>.
+        $allowable_tags[] = '<kbd>';
 
-  return $allowable_tags;
-} );
+        return $allowable_tags;
+    }
+);
 `
 
 =Аргументы поиска похожих постов=
@@ -135,6 +138,16 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.3.3 (2020-05-06) =
+* Хук `mihdan_yandex_turbo_feed_item_content` переименован в `mihdan_yandex_turbo_feed_item_turbo_content`
+* Добавлен новый фильтр `mihdan_yandex_turbo_feed_item_content`
+* Добавлен новый фильтр `mihdan_yandex_turbo_feed_item_excerpt`
+* Добавлен новый фильтр `mihdan_yandex_turbo_feed_allowable_tags`
+* Добавлен текст с призывом оценить плагин в футере
+* Скрыты все ленты из поисковой выдачи, карты сайта
+* Скрыт метабокс от Yoast со страницы редактирования ленты
+* Исправлены все предупреждения РНР
 
 = 1.3.2 (2020-02-22) =
 * Исправлена ошибка совместимости с плагином Yoast SEO
