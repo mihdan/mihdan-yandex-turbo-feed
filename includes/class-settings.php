@@ -157,7 +157,7 @@ class Settings {
 		}
 
 		foreach ( $backtraces as $backtrace ) {
-			if ( strpos( $backtrace['file'], 'mihdan-yandex-turbo-feed/git/vendor/advanced-custom-fields' ) ) {
+			if ( strpos( $backtrace['file'], 'mihdan-yandex-turbo-feed/vendor/advanced-custom-fields' ) ) {
 				return false;
 			}
 		}
