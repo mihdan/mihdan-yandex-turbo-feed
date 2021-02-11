@@ -30,8 +30,8 @@ echo '<?xml version="1.0" encoding="' . esc_html( $this->settings->get_option( '
 				<?php $items->the_post(); ?>
 				<item<?php $this->item_attributes( get_the_ID() ); ?>>
 					<link><?php the_permalink_rss(); ?></link>
-					<title><?php the_title_rss(); ?></title>
-					<author><?php the_author(); ?></author>
+					<title><![CDATA[<?php the_title_rss(); ?>]]></title>
+					<author><![CDATA[<?php the_author(); ?>]]></author>
 					<pubDate><?php echo esc_html( get_post_time( 'r', true ) ); ?></pubDate>
 					<turbo:content>
 						<![CDATA[
