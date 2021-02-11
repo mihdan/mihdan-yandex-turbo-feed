@@ -45,9 +45,9 @@ echo '<?xml version="1.0" encoding="' . esc_html( $this->settings->get_option( '
 							<?php do_action( 'mihdan_yandex_turbo_feed_item_header', get_the_ID() ); ?>
 						</header>
 						<?php if ( get_option( 'rss_use_excerpt' ) ) : ?>
-							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_excerpt', get_the_excerpt() ); ?>
+							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_excerpt', get_the_excerpt(), get_the_ID() ); ?>
 						<?php else : ?>
-							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_content', get_the_content_feed() ); ?>
+							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_content', get_the_content_feed(), get_the_ID() ); ?>
 						<?php endif; ?>
 						<?php do_action( 'mihdan_yandex_turbo_feed_item_turbo_content', get_the_ID() ); ?>
 						]]>

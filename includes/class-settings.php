@@ -170,7 +170,7 @@ class Settings {
 	 */
 	public function registration() {
 		$labels = array(
-			'name'                  => _x( 'Ленты', 'Post Type General Name', 'mihdan-yandex-turbo-feed' ),
+			'name'                  => _x( 'Yandex Turbo', 'Post Type General Name', 'mihdan-yandex-turbo-feed' ),
 			'singular_name'         => _x( 'Лента', 'Post Type Singular Name', 'mihdan-yandex-turbo-feed' ),
 			'menu_name'             => __( 'Yandex Turbo', 'mihdan-yandex-turbo-feed' ),
 			'name_admin_bar'        => __( 'Yandex Turbo Feed', 'mihdan-yandex-turbo-feed' ),
@@ -245,20 +245,28 @@ class Settings {
 		);
 
 		$post_settings
-			->addTrueFalse(
-				$this->utils->get_slug() . '_exclude',
-				array(
-					'message' => __( 'Исключить из ленты', 'mihdan-yandex-turbo-feed' ),
-					'label'   => '',
-				)
-			)
-			->addTrueFalse(
-				$this->utils->get_slug() . '_remove',
-				array(
-					'message' => __( 'Удалить из Яндекс', 'mihdan-yandex-turbo-feed' ),
-					'label'   => '',
-				)
-			)
+			->addTrueFalse( $this->utils->get_slug() . '_exclude' )
+				->setLabel('Исключить из RSS ленты' )
+				->setConfig( 'message', __( 'Исключить', 'mihdan-yandex-turbo-feed' ) )
+				->setInstructions( __( 'При активации данной настройки запись НЕ будет попадать в RSS ленту.', 'mihdan-yandex-turbo-feed' ) )
+			->addTrueFalse( $this->utils->get_slug() . '_remove' )
+				->setLabel('Отключить Турбо‑страницу' )
+				->setConfig( 'message', __( 'Отключить', 'mihdan-yandex-turbo-feed' ) )
+				->setInstructions( __( 'Для отключения Турбо‑страницы включите галочку. Отключить Турбо-страницу можно только, если запись не исключена из RSS-ленты.', 'mihdan-yandex-turbo-feed' ) )
+				->conditional( $this->utils->get_slug() . '_exclude', '==', '0' )
+			->addTrueFalse( $this->utils->get_slug() . '_turbo_extended_html' )
+				->setLabel('Включить поддержку HTML и CSS' )
+				->setConfig( 'message', __( 'Включить', 'mihdan-yandex-turbo-feed' ) )
+				->setInstructions( __( 'Активация обработки пользовательского HTML и CSS. Обязательный параметр для использования полного набора тегов. Если не передавать этот параметр, то некоторые теги будут игнорироваться.', 'mihdan-yandex-turbo-feed' ) )
+				->conditional( $this->utils->get_slug() . '_exclude', '==', '0' )
+			->addUrl( $this->utils->get_slug() . '_turbo_source' )
+				->setLabel( __( 'Turbo Source', 'mihdan-yandex-turbo-feed' ) )
+				->setInstructions( __( 'URL страницы-источника, который можно передать в Яндекс.Метрику.', 'mihdan-yandex-turbo-feed' ) )
+				->conditional( $this->utils->get_slug() . '_exclude', '==', '0' )
+			->addText( $this->utils->get_slug() . '_turbo_topic' )
+				->setLabel( __( 'Turbo Topic', 'mihdan-yandex-turbo-feed' ) )
+				->setInstructions( __( 'Заголовок страницы, который можно передать в Яндекс.Метрику.', 'mihdan-yandex-turbo-feed' ) )
+				->conditional( $this->utils->get_slug() . '_exclude', '==', '0' )
 			->setLocation( 'post_type', '==', '789' );
 			//->or( 'post_type', '==', 'post' );
 

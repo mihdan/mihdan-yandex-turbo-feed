@@ -50,6 +50,10 @@ class Template {
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_comments' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_callback' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_rating' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_extended_html' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_turbo_source' ) );
+		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_turbo_topic' ) );
+
 		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_related' ) );
@@ -65,6 +69,51 @@ class Template {
 		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 		add_filter( 'wpseo_sitemap_exclude_post_type', array( $this, 'hide_wpseo_cpt' ), 10, 2 );
 		add_filter( 'wpseo_accessible_post_types', array( $this, 'hide_wpseo_metabox' ) );
+	}
+
+	/**
+     * Добавляет тег turbo:source в ленту,
+     * если данная настройка включена для записи.
+     *
+	 * @param int $post_id Идентификатор записи.
+	 */
+	public function insert_turbo_source( $post_id ) {
+		if ( empty( $this->settings->get_option( 'turbo_source', $post_id ) ) ) {
+			return;
+		}
+        ?>
+        <turbo:source><?php echo esc_url( $this->settings->get_option( 'turbo_source', $post_id ) ); ?></turbo:source>
+        <?php
+    }
+
+	/**
+	 * Добавляет тег turbo:topic в ленту,
+	 * если данная настройка включена для записи.
+	 *
+	 * @param int $post_id Идентификатор записи.
+	 */
+	public function insert_turbo_topic( $post_id ) {
+		if ( empty( $this->settings->get_option( 'turbo_topic', $post_id ) ) ) {
+			return;
+		}
+		?>
+        <turbo:topic><?php echo esc_html( $this->settings->get_option( 'turbo_topic', $post_id ) ); ?></turbo:topic>
+		<?php
+	}
+
+	/**
+	 * Добавляет тег turbo:extendedHtml в ленту,
+	 * если данная настройка включена для записи.
+	 *
+	 * @param int $post_id Идентификатор записи.
+	 */
+	public function insert_extended_html( $post_id ) {
+		if ( ! $this->settings->get_option( 'turbo_extended_html', $post_id ) ) {
+			return;
+		}
+		?>
+        <turbo:extendedHtml>true</turbo:extendedHtml>
+		<?php
 	}
 
 	/**
@@ -595,7 +644,7 @@ class Template {
 	public function item_attributes( $post_id ) {
 
 		$atts = array(
-			'turbo' => ! get_post_meta( $post_id, $this->utils->get_slug() . '_remove', true ),
+			'turbo' => ! (bool) get_post_meta( $post_id, $this->utils->get_slug() . '_remove', true ),
 		);
 
 		$atts = apply_filters( 'mihdan_yandex_turbo_feed_item_attributes', $atts, $post_id );

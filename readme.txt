@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 5.0
 Requires PHP: 5.6.20
 Tested up to: 5.6
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,8 +16,9 @@ Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site material
 Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site materials into Yandex.Turbo format.
 
 = Возможности плагина =
-* Создание не ограниченного количества лент
+* Создание неограниченного количества лент
 * Индивидуальные настройки каждой ленты
+* Поддержка произвольного CSS и HTML
 * Указание копирайта для фото
 * Вставка кнопок шеринга и изменение их набора
 * Вставка комментариев
@@ -138,6 +139,12 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.3.5 (2021-02-11) =
+* Добавлена поддержка произвольного CSS и HTML (тег `turbo:extendedHtml`)
+* Добавлена возможность указать URL страницы-источника, который можно передать в Яндекс.Метрику (тег `turbo:source`)
+* Добавлена возможность указать Заголовок страницы, который можно передать в Яндекс.Метрику (тег `turbo:topic`)
+
 = 1.3.4 (2021-02-11) =
 * Добавлена CDATA для заголовка и автора записи
 

@@ -162,12 +162,37 @@ class Main {
 	}
 
 	/**
-	 * Получить список разрешённых тегов.
+	 * Добавить расширенный набор тегов, если включен extendedHtml.
+	 *
+	 * @param array $tags    Массив разрешенных тегов.
+	 * @param int   $post_id Идентификатор записи.
 	 *
 	 * @return array
+	 *
+	 * @link https://yandex.ru/dev/turbo/doc/rss/elements/custom.html
 	 */
-	public function get_allowable_tags() {
-		return apply_filters( 'mihdan_yandex_turbo_feed_allowable_tags', $this->allowable_tags );
+	public function set_extended_tags( $tags, $post_id ) {
+		if ( ! $this->settings->get_option( 'turbo_extended_html', $post_id ) ) {
+			return $tags;
+		}
+
+		$tags[] = '<span>';
+		$tags[] = '<aside>';
+		$tags[] = '<main>';
+		$tags[] = '<footer>';
+		$tags[] = '<section>';
+
+		return $tags;
+	}
+
+	/**
+	 * Получить список разрешённых тегов для записи.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return array
+	 */
+	public function get_allowable_tags( $post_id ) {
+		return array_unique( apply_filters( 'mihdan_yandex_turbo_feed_allowable_tags', $this->allowable_tags, $post_id ) );
 	}
 
 	/**
@@ -193,13 +218,16 @@ class Main {
 	private function hooks() {
 		add_action( 'init', array( $this, 'flush_rewrite_rules' ), 99 );
 		add_filter( 'mihdan_yandex_turbo_feed_args', array( $this, 'alter_query' ), 9 );
+		add_filter( 'mihdan_yandex_turbo_feed_allowable_tags', array( $this, 'set_extended_tags' ), 10, 2 );
 		add_action( 'after_setup_theme', array( $this, 'register_nav_menu' ) );
 		add_action( 'plugins_loaded', array( $this, 'load_translations' ) );
 		add_filter( 'plugin_action_links', [ $this, 'add_settings_link' ], 10, 2 );
 
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_enclosure' ) );
 
-		add_filter( 'the_content_feed', array( $this, 'content_feed' ) );
+		add_filter( 'mihdan_yandex_turbo_feed_item_excerpt', array( $this, 'content_feed' ), 10, 2 );
+		add_filter( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'content_feed' ), 10, 2 );
+
 		add_filter( 'the_content_feed', array( $this, 'invisible_border' ) );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 
@@ -436,13 +464,16 @@ class Main {
 	public function content_feed( $content ) {
 
 		if ( is_singular( $this->utils->get_post_type() ) ) {
-			$content = $this->strip_tags( $content, $this->get_allowable_tags() );
+
+			$post_id = get_the_ID();
+
+			$content = $this->strip_tags( $content, $this->get_allowable_tags( $post_id ) );
 
 			/**
 			 * Получить тумбочку поста
 			 */
 			if ( current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail() ) {
-				$this->get_futured_image( get_the_ID() );
+				$this->get_futured_image( $post_id );
 			}
 		}
 
