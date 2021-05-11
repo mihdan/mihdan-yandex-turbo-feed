@@ -5,8 +5,8 @@ Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed, seo, seo-friendly, yoast, google, webmaster, schema, sitemap
 Requires at least: 5.0
 Requires PHP: 5.6.20
-Tested up to: 5.6
-Stable tag: 1.3.5
+Tested up to: 5.7
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,39 @@ Mihdan: Yandex Turbo Feed **does not** make any changes to your database, it jus
 4. [Optional] Configure Mihdan: Yandex Turbo Feed settings.
 
 == Frequently Asked Questions ==
+
+=Как вставить кнопку с произвольным действием=
+
+Для этого добавьте шорткод `[mytf_button]`. Список доступных атрибутов шорткода:
+
+`formaction` (обязательный)
+Возможные значения:
+- номер телефона в формате RFC-3966, например, tel:+7 012 345-67-89;
+- URL, ведущий на страницу сайта или чат в мессенджере.
+
+`data-background-color` Цвет кнопки.
+Возможные значения:
+- текстовое, например, `white`;
+- HEX, например, `#FFFFFF`.
+Если атрибут не указан, используется серый цвет.
+
+`data-color` Цвет текста.
+- текстовое, например, `white`;
+- HEX, например, `#FFFFFF`.
+Если атрибут не указан, используется серый цвет.
+
+`data-turbo` Атрибут, который определяет какая версия страницы откроется при переходе по ссылке.
+Возможные значения:
+- `true` — по ссылке откроется Турбо-версия страницы, если она сформирована. Используется по умолчанию.
+- `false` — по ссылке откроется обычная страница или ее мобильная версия.
+Если атрибут `data-turbo` не указан, по ссылке откроется Турбо‑страница, если она сформирована.
+
+`data-primary` Выделение текста жирным.
+Возможные значения:
+- `true`;
+- `false`.
+
+`disabled` Позволяет отобразить кнопку неактивной.
 
 =Как включить поддержку товаров WooCommerce=
 
@@ -139,6 +172,10 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.3.6 (2021-05-11) =
+* Добавлена поддержка вставки кнопок `<button>` с произвольным действием
+* Добавлен шорткод `[mytf_button]` для вставки кнопок
 
 = 1.3.5 (2021-02-11) =
 * Добавлена поддержка произвольного CSS и HTML (тег `turbo:extendedHtml`)

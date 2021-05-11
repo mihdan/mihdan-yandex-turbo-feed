@@ -72,6 +72,7 @@ class Main {
 		'<dl>',
 		'<dt>',
 		'<dd>',
+		'<button>',
 	);
 
 	/**
@@ -154,6 +155,9 @@ class Main {
 		//$this->site_health   = new SiteHealth( $this->settings );
 
 		$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
+
+		// Инициализация шорткодов.
+		( new Shortcodes() )->setup_hooks();
 
 		$this->hooks();
 
@@ -533,7 +537,7 @@ class Main {
 	 */
 	public function strip_tags( $string, $allowable_tags = null ) {
 		$string = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
-		$string = strip_tags( $string, implode( ',', $allowable_tags ) );
+		$string = strip_tags( $string, implode( '', $allowable_tags ) );
 
 		return $string;
 	}
