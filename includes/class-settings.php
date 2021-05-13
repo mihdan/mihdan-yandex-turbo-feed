@@ -844,6 +844,31 @@ class Settings {
 					)
 				)
 			/**
+			 * Исключение блоков.
+			 */
+			->addTab(
+				'exclude',
+				array(
+					'placement' => 'left',
+					'label'     => __( 'Exclude', 'mihdan-yandex-turbo-feed' ),
+				)
+			)
+				->addTrueFalse(
+					$this->utils->get_slug() . '_exclude_enable',
+					array(
+						'message' => __( 'On', 'mihdan-yandex-turbo-feed' ),
+						'label'   => __( 'Exclude', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+				->addTextArea(
+					$this->utils->get_slug() . '_exclude_rules',
+					array(
+						'label' => __( 'Rules', 'mihdan-yandex-turbo-feed' ),
+						'instructions' => __( 'Example: <code>&lt;div>?.*&lt;/div></code>', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+					->conditional( $this->utils->get_slug() . '_exclude_enable', '==', '1' )
+			/**
 			 * Настройки для таблиц.
 			 */
 			->addTab(

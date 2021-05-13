@@ -53,6 +53,7 @@ class Template {
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_extended_html' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_turbo_source' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_turbo_topic' ) );
+		add_filter( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'exclude_blocks' ), 1000, 2 );
 
 		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
@@ -100,6 +101,35 @@ class Template {
         <turbo:topic><?php echo esc_html( $this->settings->get_option( 'turbo_topic', $post_id ) ); ?></turbo:topic>
 		<?php
 	}
+
+	/**
+     * Исключает блоки из ленты по регулярному выражению.
+     *
+     * TODO: прикрутить xpath/DiDOM.
+     *
+	 * @param string $content Содержимое записи.
+	 * @param int    $post_id Идентификатор записи.
+	 *
+	 * @return array|mixed|string|string[]|null
+	 */
+	public function exclude_blocks( $content, $post_id ) {
+
+		if ( ! $this->settings->get_option( 'exclude_enable', $this->feed_id ) ) {
+			return $content;
+		}
+
+		$rules = trim( $this->settings->get_option( 'exclude_rules', $this->feed_id ) );
+
+		if ( empty( $rules ) ) {
+			return $content;
+		}
+
+		foreach ( explode( PHP_EOL, $rules ) as $rule ) {
+		    $content = preg_replace( sprintf( '#%s#si', $rule ), '', $content );
+		}
+
+	    return $content;
+    }
 
 	/**
 	 * Добавляет тег turbo:extendedHtml в ленту,

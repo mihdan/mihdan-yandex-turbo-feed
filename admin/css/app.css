@@ -91,6 +91,10 @@ a[data-key$="related_posts_tab"]:before {
 a[data-key$="breadcrumbs_tab"]:before {
 	content: '\f325';
 }
+
+a[data-key$="exclude_tab"]:before {
+	content: '\f14f';
+}
 .cf-container {
 	display: flex;
 	align-items: flex-start;
