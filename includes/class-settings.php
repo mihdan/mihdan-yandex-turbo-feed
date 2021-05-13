@@ -24,6 +24,11 @@ class Settings {
 	private $taxonomies;
 
 	/**
+	 * @var array $metas
+	 */
+	private $metas;
+
+	/**
 	 * @var array $share_networks
 	 */
 	private $share_networks;
@@ -53,11 +58,23 @@ class Settings {
 		$this->hooks();
 	}
 
+	/**
+	 * Получить свойство metas.
+	 *
+	 * @return array
+	 */
+	private function get_metas() {
+		return $this->metas;
+	}
+
 	public function setup() {
 		// Список всех публичных CPT.
 		$args = array(
 			'public' => true,
 		);
+
+		// Получить все уникальные метаполя.
+		$this->metas = Utils::get_unique_public_meta();
 
 		$this->post_types = wp_list_pluck( get_post_types( $args, 'objects' ), 'label', 'name' );
 
@@ -729,6 +746,18 @@ class Settings {
 						'min'           => 2,
 						'max'           => 100,
 						'step'          => 1,
+						'required'      => true,
+					)
+				)
+					->conditional( $this->utils->get_slug() . '_rating_enable', '==', '1' )
+				->addSelect(
+					$this->utils->get_slug() . '_rating_value',
+					array(
+						'label'         => __( 'Value', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => 'random',
+						'multiple'      => false,
+						'ui'            => true,
+						'choices'       => $this->get_metas(),
 						'required'      => true,
 					)
 				)

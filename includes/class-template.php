@@ -312,14 +312,20 @@ class Template {
 	/**
 	 * Вставляет рейтинг звёздами.
 	 */
-	public function insert_rating() {
+	public function insert_rating( $post_id ) {
 		// Если модуль выключен.
 		if ( ! $this->settings->get_option( 'rating_enable', $this->feed_id ) ) {
 			return;
 		}
+		if ( 'random' === $this->settings->get_option( 'rating_value', $this->feed_id ) ) {
+		    $value = wp_rand( $this->settings->get_option( 'rating_min', $this->feed_id ), $this->settings->get_option( 'rating_max', $this->feed_id ) );
+        } else {
+		    $value = get_post_meta( $post_id, $this->settings->get_option( 'rating_value', $this->feed_id ), true );
+        }
 		?>
 		<div itemscope itemtype="http://schema.org/Rating">
-			<meta itemprop="ratingValue" content="<?php echo esc_attr( wp_rand( $this->settings->get_option( 'rating_min', $this->feed_id ), $this->settings->get_option( 'rating_max', $this->feed_id ) ) ); ?>">
+			<meta itemprop="ratingValue" content="<?php echo esc_attr( $value ); ?>">
+			<meta itemprop="worstRating" content="<?php echo esc_attr( $this->settings->get_option( 'rating_min', $this->feed_id ) ); ?>">
 			<meta itemprop="bestRating" content="<?php echo esc_attr( $this->settings->get_option( 'rating_max', $this->feed_id ) ); ?>">
 		</div>
 		<?php
