@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 5.0
 Requires PHP: 5.6.20
 Tested up to: 5.7
-Stable tag: 1.3.7
+Stable tag: 1.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -172,6 +172,10 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.3.8 (2021-05-14) =
+* Добавлена возможность исключать из ленты шорткоды в настройках плагина
+* Исправлена ошибка указания минимального и максимального рейтинга
 
 = 1.3.7 (2021-05-14) =
 * Добавлена возможность указывать рейтинг из других плагинов

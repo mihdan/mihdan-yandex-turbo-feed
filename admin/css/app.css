@@ -95,6 +95,16 @@ a[data-key$="breadcrumbs_tab"]:before {
 a[data-key$="exclude_tab"]:before {
 	content: '\f14f';
 }
+
+.mihdan_yandex_turbo_feed_exclude_shortcode {
+	overflow: auto;
+	max-height: 500px;
+	max-width: 512px;
+}
+
+
+
+
 .cf-container {
 	display: flex;
 	align-items: flex-start;

@@ -53,7 +53,9 @@ class Template {
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_extended_html' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_turbo_source' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_turbo_topic' ) );
-		add_filter( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'exclude_blocks' ), 1000, 2 );
+
+		add_filter( 'mihdan_yandex_turbo_feed_item_pre_get_the_content', array( $this, 'exclude_shortcodes' ), 10, 2 );
+		add_filter( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'exclude_regex' ), 1000, 2 );
 
 		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item', array( $this, 'insert_category' ) );
@@ -103,6 +105,36 @@ class Template {
 	}
 
 	/**
+	 * Исключает блоки из ленты по регулярному выражению.
+	 *
+	 * @param string $content Содержимое записи.
+	 * @param int    $post_id Идентификатор записи.
+	 *
+	 * @return string
+	 */
+	public function exclude_shortcodes( $content, $post_id ) {
+
+		if ( ! $this->settings->get_option( 'exclude_enable', $this->feed_id ) ) {
+			return $content;
+		}
+
+        $shortcodes = $this->settings->get_option( 'excluded_shortcodes', $this->feed_id );
+
+		if ( empty( $shortcodes ) ) {
+			return $content;
+		}
+
+		// Удаляем из текста только указанные шорткоды.
+		foreach ( $shortcodes as $shortcode ) {
+			$regex   = get_shortcode_regex( [ $shortcode ] );
+			$regex   = sprintf( '/%s/', $regex );
+			$content = preg_replace( $regex, '', $content );
+		}
+
+		return $content;
+	}
+
+	/**
      * Исключает блоки из ленты по регулярному выражению.
      *
      * TODO: прикрутить xpath/DiDOM.
@@ -112,13 +144,13 @@ class Template {
 	 *
 	 * @return array|mixed|string|string[]|null
 	 */
-	public function exclude_blocks( $content, $post_id ) {
+	public function exclude_regex( $content, $post_id ) {
 
 		if ( ! $this->settings->get_option( 'exclude_enable', $this->feed_id ) ) {
 			return $content;
 		}
 
-		$rules = trim( $this->settings->get_option( 'exclude_rules', $this->feed_id ) );
+		$rules = trim( $this->settings->get_option( 'excluded_regex', $this->feed_id ) );
 
 		if ( empty( $rules ) ) {
 			return $content;
@@ -347,10 +379,22 @@ class Template {
 		if ( ! $this->settings->get_option( 'rating_enable', $this->feed_id ) ) {
 			return;
 		}
+
+		$min = $this->settings->get_option( 'rating_min', $this->feed_id );
+		$max = $this->settings->get_option( 'rating_max', $this->feed_id );
+
 		if ( 'random' === $this->settings->get_option( 'rating_value', $this->feed_id ) ) {
-		    $value = wp_rand( $this->settings->get_option( 'rating_min', $this->feed_id ), $this->settings->get_option( 'rating_max', $this->feed_id ) );
+		    $value = wp_rand( $min, $max );
         } else {
 		    $value = get_post_meta( $post_id, $this->settings->get_option( 'rating_value', $this->feed_id ), true );
+
+		    if ( $value < $min ) {
+		        $value = $min;
+		    }
+
+			if ( $value > $max ) {
+				$value = $max;
+			}
         }
 		?>
 		<div itemscope itemtype="http://schema.org/Rating">

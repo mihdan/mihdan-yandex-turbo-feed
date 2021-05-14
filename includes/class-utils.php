@@ -159,4 +159,35 @@ class Utils {
 
 		return $data;
 	}
+
+	/**
+	 * Получает все зарегистрированные шорткоды.
+	 *
+	 * @return array
+	 */
+	public static function get_unique_public_shortcodes() {
+		global $shortcode_tags;
+
+		if ( is_array( $shortcode_tags ) ) {
+			return array_keys( $shortcode_tags );
+		}
+
+		return [];
+	}
+
+	/**
+	 * Фильтрует контент записи при получении его из базы данных.
+	 *
+	 * @param int $post_id Идентификатор записи.
+	 *
+	 * @return string
+	 */
+	public static function get_the_content_feed( $post_id ) {
+		$content = get_the_content( null, false, $post_id );
+		$content = apply_filters( 'mihdan_yandex_turbo_feed_item_pre_get_the_content', $content, $post_id );
+		$content = apply_filters( 'the_content', $content );
+		$content = str_replace( ']]>', ']]&gt;', $content );
+
+		return apply_filters( 'mihdan_yandex_turbo_feed_item_get_the_content', $content, $post_id );
+	}
 }

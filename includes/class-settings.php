@@ -860,10 +860,31 @@ class Settings {
 						'label'   => __( 'Exclude', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
-				->addTextArea(
-					$this->utils->get_slug() . '_exclude_rules',
+				->addMessage(
+					__( 'Shortcodes', 'mihdan-yandex-turbo-feed' ),
+					__( 'Из содержимого записей будут удалены все указанные ниже шорткоды.', 'mihdan-yandex-turbo-feed' )
+				)
+					->conditional( $this->utils->get_slug() . '_exclude_enable', '==', '1' )
+				->addCheckbox(
+					$this->utils->get_slug() . '_excluded_shortcodes',
 					array(
-						'label' => __( 'Rules', 'mihdan-yandex-turbo-feed' ),
+						'label' => '',
+						'choices' => Utils::get_unique_public_shortcodes(),
+						'wrapper' => [
+							'class' => $this->utils->get_slug() . '_exclude_shortcode',
+						]
+					)
+				)
+					->conditional( $this->utils->get_slug() . '_exclude_enable', '==', '1' )
+				->addMessage(
+					__( 'Regular Expressions', 'mihdan-yandex-turbo-feed' ),
+					__( 'Из содержимого записей будут удалены все блоки, попадающие под указанные ниже регулярные выражения (RegEx).', 'mihdan-yandex-turbo-feed' )
+				)
+					->conditional( $this->utils->get_slug() . '_exclude_enable', '==', '1' )
+				->addTextArea(
+					$this->utils->get_slug() . '_excluded_regex',
+					array(
+						'label' => '',
 						'instructions' => __( 'Example: <code>&lt;div>?.*&lt;/div></code>', 'mihdan-yandex-turbo-feed' ),
 					)
 				)
