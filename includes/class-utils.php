@@ -109,7 +109,7 @@ class Utils {
 	public static function get_unique_public_meta() {
 		global $wpdb;
 
-		$cache_key = MIHDAN_YANDEX_TURBO_FEED_SLUG . '_unique_public_meta' . time();
+		$cache_key = MIHDAN_YANDEX_TURBO_FEED_SLUG . '_unique_public_meta';
 
 		// Get data from transient cache.
 		$cached = get_transient( $cache_key );

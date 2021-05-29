@@ -31,7 +31,8 @@
         "composer/installers": "*",
         "wptrt/admin-notices": "*",
         "wpackagist-plugin/advanced-custom-fields": "^5.8",
-        "stoutlogic/acf-builder": "^1.9"
+        "stoutlogic/acf-builder": "^1.9",
+      "ext-json": "*"
     },
     "extra": {
         "installer-paths": {

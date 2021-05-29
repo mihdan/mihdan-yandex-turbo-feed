@@ -159,6 +159,9 @@ class Main {
 		// Инициализация шорткодов.
 		( new Shortcodes() )->setup_hooks();
 
+		// Комментарии.
+		( new Comments() )->setup_hooks();
+
 		$this->hooks();
 
 		// Hook fired when plugin init.
