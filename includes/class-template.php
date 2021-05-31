@@ -5,6 +5,8 @@
 
 namespace Mihdan\YandexTurboFeed;
 
+use WP_Query;
+
 /**
  * Class Template
  *
@@ -546,7 +548,7 @@ class Template {
 	/**
 	 * Получить массив похожих постов
 	 *
-	 * @return \WP_Query
+	 * @return WP_Query
 	 */
 	public function get_related() {
 
@@ -595,12 +597,23 @@ class Template {
 			}
 		}
 
+		$args['meta_query'] = array(
+			'relation' => 'OR',
+			array(
+				'key'     => $this->utils->get_slug() . '_exclude',
+				'compare' => '=',
+				'value'   => '0',
+			),
+			array(
+				'key'     => $this->utils->get_slug() . '_exclude',
+				'compare' => 'NOT EXISTS',
+			),
+		);
+
 		// Фильтруем аргументы запроса похожих постов.
 		$args = apply_filters( 'mihdan_yandex_turbo_feed_related_args', $args );
 
-		$query = new \WP_Query( $args );
-
-		return $query;
+		return new WP_Query( $args );
 	}
 
 	public function get_categories( $args = [] ) {
