@@ -178,12 +178,13 @@ class Utils {
 	/**
 	 * Фильтрует контент записи при получении его из базы данных.
 	 *
-	 * @param int $post_id Идентификатор записи.
+	 * @param string $more_link_text Текст для ссылки "Читать далее".
+	 * @param int    $post_id        Идентификатор записи.
 	 *
 	 * @return string
 	 */
-	public static function get_the_content_feed( $post_id ) {
-		$content = get_the_content( null, false, $post_id );
+	public static function get_the_content_feed( $more_link_text, $post_id ) {
+		$content = get_the_content( $more_link_text, false, $post_id );
 		$content = apply_filters( 'mihdan_yandex_turbo_feed_item_pre_get_the_content', $content, $post_id );
 		$content = apply_filters( 'the_content', $content );
 		$content = str_replace( ']]>', ']]&gt;', $content );

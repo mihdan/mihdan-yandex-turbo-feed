@@ -11,8 +11,11 @@ use Mihdan\YandexTurboFeed\Settings;
 use Mihdan\YandexTurboFeed\Template;
 use Mihdan\YandexTurboFeed\Utils;
 
-header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . $this->settings->get_option( 'charset' ), true );
-echo '<?xml version="1.0" encoding="' . esc_html( $this->settings->get_option( 'charset' ) ) . '"?' . '>';
+$more_link_text = $this->settings->get_option( 'more_link_text' );
+$charset = $this->settings->get_option( 'charset' );
+
+header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . $charset, true );
+echo '<?xml version="1.0" encoding="' . esc_html( $charset ) . '"?' . '>';
 ?>
 <rss version="2.0" xmlns:yandex="http://news.yandex.ru" xmlns:media="http://search.yahoo.com/mrss/" xmlns:turbo="http://turbo.yandex.ru">
 	<channel>
@@ -48,7 +51,7 @@ echo '<?xml version="1.0" encoding="' . esc_html( $this->settings->get_option( '
 						<?php if ( get_option( 'rss_use_excerpt' ) ) : ?>
 							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_excerpt', get_the_excerpt(), get_the_ID() ); ?>
 						<?php else : ?>
-							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_content', Utils::get_the_content_feed( get_the_ID() ), get_the_ID() ); ?>
+							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_content', Utils::get_the_content_feed( $more_link_text,  get_the_ID() ), get_the_ID() ); ?>
 						<?php endif; ?>
 						<?php do_action( 'mihdan_yandex_turbo_feed_item_turbo_content', get_the_ID() ); ?>
 						]]>

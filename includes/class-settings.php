@@ -427,6 +427,14 @@ class Settings {
 						'required'      => true,
 					)
 				)
+				->addText(
+					$this->utils->get_slug() . '_more_link_text',
+					array(
+						'label'         => __( 'More Link Text', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => __( '(more&hellip;)', 'mihdan-yandex-turbo-feed' ),
+						'required'      => true,
+					)
+				)
 			/**
 			 * Канал
 			 */
