@@ -55,6 +55,7 @@ class Template {
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_turbo_topic' ) );
 
 		add_filter( 'mihdan_yandex_turbo_feed_item_pre_get_the_content', array( $this, 'exclude_shortcodes' ), 10, 2 );
+		add_filter( 'mihdan_yandex_turbo_feed_item_pre_get_the_content', array( $this, 'exclude_bad_symbols' ), 10, 2 );
 		add_filter( 'mihdan_yandex_turbo_feed_item_content', array( $this, 'exclude_regex' ), 1000, 2 );
 
 		add_action( 'mihdan_yandex_turbo_feed_item_header', array( $this, 'insert_menu' ) );
@@ -132,6 +133,22 @@ class Template {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Исключает плохие символы из айтемов ленты,
+     * например, злосчастный #more-1234.
+	 *
+	 * @param string $content Содержимое записи.
+	 * @param int    $post_id Идентификатор записи.
+	 *
+	 * @return string
+	 */
+	public function exclude_bad_symbols( $content, $post_id ) {
+
+	    $content = preg_replace( '/#more\-[0-9]+/is', '', $content );
+
+	    return $content;
 	}
 
 	/**
