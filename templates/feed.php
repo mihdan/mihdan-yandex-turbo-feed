@@ -11,8 +11,9 @@ use Mihdan\YandexTurboFeed\Settings;
 use Mihdan\YandexTurboFeed\Template;
 use Mihdan\YandexTurboFeed\Utils;
 
+$use_excerpt    = $this->settings->get_option( 'use_excerpt' );
 $more_link_text = $this->settings->get_option( 'more_link_text' );
-$charset = $this->settings->get_option( 'charset' );
+$charset        = $this->settings->get_option( 'charset' );
 
 header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . $charset, true );
 echo '<?xml version="1.0" encoding="' . esc_html( $charset ) . '"?' . '>';
@@ -31,7 +32,10 @@ echo '<?xml version="1.0" encoding="' . esc_html( $charset ) . '"?' . '>';
 		?>
 		<?php if ( $items->have_posts() ) : ?>
 			<?php while ( $items->have_posts() ) : ?>
-				<?php $items->the_post(); ?>
+				<?php
+                $items->the_post();
+                $item = get_post();
+                ?>
 				<item<?php $this->item_attributes( get_the_ID() ); ?>>
 					<link><?php the_permalink_rss(); ?></link>
 					<title><![CDATA[<?php the_title_rss(); ?>]]></title>
@@ -48,10 +52,10 @@ echo '<?xml version="1.0" encoding="' . esc_html( $charset ) . '"?' . '>';
 							<h1><?php the_title_rss(); ?></h1>
 							<?php do_action( 'mihdan_yandex_turbo_feed_item_header', get_the_ID() ); ?>
 						</header>
-						<?php if ( get_option( 'rss_use_excerpt' ) ) : ?>
-							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_excerpt', get_the_excerpt(), get_the_ID() ); ?>
+						<?php if ( 'yes' === $use_excerpt ) : ?>
+							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_excerpt', $this->get_excerpt( $item->post_content, get_the_ID(), $more_link_text ), get_the_ID() ); ?>
 						<?php else : ?>
-							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_content', Utils::get_the_content_feed( $more_link_text,  get_the_ID() ), get_the_ID() ); ?>
+							<?php echo apply_filters( 'mihdan_yandex_turbo_feed_item_content', $this->get_content( $item->post_content, get_the_ID() ), get_the_ID() ); ?>
 						<?php endif; ?>
 						<?php do_action( 'mihdan_yandex_turbo_feed_item_turbo_content', get_the_ID() ); ?>
 						]]>

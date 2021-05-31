@@ -763,6 +763,31 @@ class Template {
 
 		echo $attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
+
+	public function get_excerpt( $content, $post_id, $more_link_text ) {
+		$content  = apply_filters( 'mihdan_yandex_turbo_feed_item_pre_get_the_excerpt', $content, $post_id );
+		$content = get_extended( $content );
+        $content  = apply_filters( 'the_content', $content['main'] );
+
+		$content = sprintf(
+            '%s<p><a href="%s" target="_blank">%s</a></p>',
+            $content,
+            esc_url( add_query_arg( 'utm_source', 'turbo', get_permalink( $post_id ) ) ),
+            $more_link_text
+        );
+
+	    return apply_filters( 'mihdan_yandex_turbo_feed_item_get_the_excerpt', $content, $post_id );
+    }
+	public function get_content( $content, $post_id ) {
+		$content  = apply_filters( 'mihdan_yandex_turbo_feed_item_pre_get_the_content', $content, $post_id );
+		$extended = get_extended( $content );
+
+		return apply_filters(
+            'mihdan_yandex_turbo_feed_item_get_the_content',
+            apply_filters( 'the_content', $extended['main'] . $extended['extended'] ),
+            $post_id
+        );
+    }
 }
 
 // eol.

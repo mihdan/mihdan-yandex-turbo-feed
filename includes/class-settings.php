@@ -427,6 +427,17 @@ class Settings {
 						'required'      => true,
 					)
 				)
+				->addRadio(
+					$this->utils->get_slug() . '_use_excerpt',
+					array(
+						'label'         => __( 'For each post in a feed, include', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => 'no',
+						'choices'       => [
+							'no' => __( 'Full text', 'mihdan-yandex-turbo-feed' ),
+							'yes' => __( 'Summary', 'mihdan-yandex-turbo-feed' ),
+						],
+					)
+				)
 				->addText(
 					$this->utils->get_slug() . '_more_link_text',
 					array(
@@ -435,6 +446,7 @@ class Settings {
 						'required'      => true,
 					)
 				)
+				->conditional( $this->utils->get_slug() . '_use_excerpt', '==', 'yes' )
 			/**
 			 * Канал
 			 */

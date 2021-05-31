@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 5.0
 Requires PHP: 5.6.20
 Tested up to: 5.7
-Stable tag: 1.4.1
+Stable tag: 1.4.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,7 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 
 = 1.4.1 (2021-05-31) =
 * Добавлена возможность изменить текст для ссылки "Читать далее"
+* Добавлена возможность включить/выключить полнотекст
 * Исправлена ошибка "Якорь, на который указывает ссылка, отсутствует или указан у неподдерживаемого элемента"
 
 = 1.4.0 (2021-05-30) =
