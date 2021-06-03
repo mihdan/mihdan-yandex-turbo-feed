@@ -156,6 +156,9 @@ class Main {
 
 		$this->categories = apply_filters( 'mihdan_yandex_turbo_feed_categories', array() );
 
+		// Логирование.
+		//( new Logs() )->setup_hooks();
+
 		// Инициализация шорткодов.
 		( new Shortcodes() )->setup_hooks();
 
@@ -239,6 +242,7 @@ class Main {
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'image_attributes' ), 10, 3 );
 
 		add_action( 'template_redirect', array( $this, 'set_feed_id' ), 1 );
+		add_action( 'template_redirect', array( $this, 'fix_pagination' ), 2 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ) );
 
@@ -246,6 +250,20 @@ class Main {
 
 		register_activation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_activate' ) );
 		register_deactivation_hook( MIHDAN_YANDEX_TURBO_FEED_FILE, array( $this, 'on_deactivate' ) );
+	}
+
+	/**
+	 * Исправляет пагинацию на странице ленты,
+	 * отключает редирект на каноникал.
+	 */
+	public function fix_pagination() {
+		if ( is_singular( $this->utils->get_post_type() ) ) {
+			global $wp_query;
+			$page = ( int ) $wp_query->get( 'paged' );
+			if ( $page > 1 ) {
+				remove_action( 'template_redirect', 'redirect_canonical' );
+			}
+		}
 	}
 
 	/**
@@ -495,6 +513,12 @@ class Main {
 	 * @return array
 	 */
 	public function alter_query( $args ) {
+		global $wp_query;
+
+		// Пагинация.
+		$page = $wp_query->get( 'paged', 1 );
+
+		$args['paged'] = $page;
 
 		// Ограничить посты 50-ю
 		$args['posts_per_page'] = $this->settings->get_option( 'total_posts' );

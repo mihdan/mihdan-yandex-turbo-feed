@@ -47,6 +47,9 @@ class Template {
 	public function hooks() {
 		add_action( 'template_redirect', [ $this, 'render' ], 50 );
 		add_action( 'mihdan_yandex_turbo_feed_channel', array( $this, 'insert_analytics' ) );
+
+		add_filter( 'render_block', [ $this, 'insert_gallery' ], 10, 2 );
+
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_share' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_search' ) );
 		add_action( 'mihdan_yandex_turbo_feed_item_turbo_content', array( $this, 'insert_comments' ) );
@@ -75,6 +78,40 @@ class Template {
 		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wpseo_rss_footer' ) );
 		add_filter( 'wpseo_sitemap_exclude_post_type', array( $this, 'hide_wpseo_cpt' ), 10, 2 );
 		add_filter( 'wpseo_accessible_post_types', array( $this, 'hide_wpseo_metabox' ) );
+	}
+
+	/**
+     * Конвертирует залерею Gutenberg в галерею Turbo.
+     *
+	 * @param string $block_content HTML блока.
+	 * @param array  $block         Массив с данными блока.
+	 *
+	 * @return string
+	 */
+	public function insert_gallery ( $block_content, $block ) {
+
+	    if ( ! is_singular( $this->utils->get_post_type() ) ) {
+	        return $block_content;
+        }
+
+		if ( 'core/gallery' === $block['blockName'] ) {
+		    $size = ( isset( $block['attrs']['sizeSlug'] ) ) ? $block['attrs']['sizeSlug'] : 'thumbnail';
+
+		    if ( isset( $block['attrs']['ids'] ) && is_array( $block['attrs']['ids'] ) ) {
+		        $block_content = '<div data-block="gallery">';
+
+		        foreach ( $block['attrs']['ids'] as $attachment_id ) {
+			        $block_content .= sprintf(
+                        '<img src="%s"/>',
+                        wp_get_attachment_image_url( $attachment_id, $size )
+                    );
+                }
+
+		        $block_content .= '</div>';
+		    }
+		}
+
+		return $block_content;
 	}
 
 	/**
