@@ -11,9 +11,12 @@ use Mihdan\YandexTurboFeed\Settings;
 use Mihdan\YandexTurboFeed\Template;
 use Mihdan\YandexTurboFeed\Utils;
 
-$use_excerpt    = $this->settings->get_option( 'use_excerpt' );
-$more_link_text = $this->settings->get_option( 'more_link_text' );
-$charset        = $this->settings->get_option( 'charset' );
+$use_post_author    = $this->settings->get_option( 'use_post_author' );
+$use_post_date      = $this->settings->get_option( 'use_post_date' );
+$use_post_thumbnail = $this->settings->get_option( 'use_post_thumbnail' );
+$use_excerpt        = $this->settings->get_option( 'use_excerpt' );
+$more_link_text     = $this->settings->get_option( 'more_link_text' );
+$charset            = $this->settings->get_option( 'charset' );
 
 header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . $charset, true );
 echo '<?xml version="1.0" encoding="' . esc_html( $charset ) . '"?' . '>';
@@ -39,12 +42,16 @@ echo '<?xml version="1.0" encoding="' . esc_html( $charset ) . '"?' . '>';
 				<item<?php $this->item_attributes( get_the_ID() ); ?>>
 					<link><?php the_permalink_rss(); ?></link>
 					<title><![CDATA[<?php the_title_rss(); ?>]]></title>
-					<author><![CDATA[<?php the_author(); ?>]]></author>
-					<pubDate><?php echo esc_html( get_post_time( 'r', true ) ); ?></pubDate>
+                    <?php if ( $use_post_author ) : ?>
+					    <author><![CDATA[<?php the_author(); ?>]]></author>
+                    <?php endif; ?>
+					<?php if ( $use_post_date ) : ?>
+					    <pubDate><?php echo esc_html( get_post_time( 'r', true ) ); ?></pubDate>
+					<?php endif; ?>
 					<turbo:content>
 						<![CDATA[
 						<header>
-							<?php if ( has_post_thumbnail() ) : ?>
+							<?php if ( $use_post_thumbnail && has_post_thumbnail() ) : ?>
 								<figure>
 									<?php the_post_thumbnail( 'large' ); ?>
 								</figure>

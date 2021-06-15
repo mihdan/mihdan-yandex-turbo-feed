@@ -5,8 +5,8 @@ Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed, seo, seo-friendly, yoast, google, webmaster, schema, sitemap
 Requires at least: 5.0
 Requires PHP: 5.6.20
-Tested up to: 5.7
-Stable tag: 1.4.2
+Tested up to: 5.8
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,7 @@ Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site material
 * Вставка и настройка формы поиска
 * Вставка и настройка рейтинга
 * Вставка таблиц и их настройка
+* Отключение неиспользуемых полей ленты (автор, метки ...)
 * Активация приватной ленты (запрос логина и пароля)
 * Экспорт/Импорт настроек
 * Ленты совместимы с плагином Yoast SEO
@@ -172,6 +173,9 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.5.0 (2021-06-15) =
+* Добавлена возможность отключать неиспользуемые поля ленты (автор, дата, обложка, расширенный HTML)
 
 = 1.4.2 (2021-06-03) =
 * Добавлена постраничная навигация для лент

@@ -447,6 +447,47 @@ class Settings {
 					)
 				)
 				->conditional( $this->utils->get_slug() . '_use_excerpt', '==', 'yes' )
+
+				->addMessage(
+					$this->utils->get_slug() . '_allowed_fields',
+					'Messagee',
+					[
+						'label'   => __( 'Allowed fields', 'mihdan-yandex-turbo-feed' ),
+						'message' => __( 'Select the fields that will be displayed in your feed', 'mihdan-yandex-turbo-feed' ),
+					]
+				)
+				->addTrueFalse(
+					$this->utils->get_slug() . '_use_post_author',
+					array(
+						'label'         => __( 'Post author', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => true,
+						'ui'            => true,
+					)
+				)
+				->addTrueFalse(
+					$this->utils->get_slug() . '_use_post_date',
+					array(
+						'label'         => __( 'Post date', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => true,
+						'ui'            => true,
+					)
+				)
+				->addTrueFalse(
+					$this->utils->get_slug() . '_use_post_thumbnail',
+					array(
+						'label'         => __( 'Post thumbnail', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => true,
+						'ui'            => true,
+					)
+				)
+				->addTrueFalse(
+					$this->utils->get_slug() . '_use_post_extended_html',
+					array(
+						'label'         => __( 'Extended HTML', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => true,
+						'ui'            => true,
+					)
+				)
 			/**
 			 * Канал
 			 */
