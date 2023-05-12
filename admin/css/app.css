@@ -160,6 +160,22 @@ a[data-key$="exclude_tab"]:before {
 	color: #ca4a1f;
 }
 
+.column-mihdan_yandex_turbo_feed {
+	width: 22px;
+}
+.mytf-post-status {
+	color: #ced0d1;
+	cursor: help;
+}
+.mytf-post-status--success {
+	color: #098f0b;
+}
+.mytf-post-status--danger {
+	color: #ff0000;
+}
+.mytf-post-status--warning {
+	color: yellowgreen;
+}
 @media (max-width: 782px) {
 	.post-type-mihdan_yandex_turbo .acf-fields.-sidebar {
 		padding-left: 40% !important;

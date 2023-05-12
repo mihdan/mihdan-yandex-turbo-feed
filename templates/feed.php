@@ -4,12 +4,9 @@
  * @link https://yandex.ru/support/webmaster/turbo/rss-elements.html
  *
  * @var Template $this
- * @var Settings $this->settings
  */
 
-use Mihdan\YandexTurboFeed\Settings;
 use Mihdan\YandexTurboFeed\Template;
-use Mihdan\YandexTurboFeed\Utils;
 
 $use_post_author    = $this->settings->get_option( 'use_post_author' );
 $use_post_date      = $this->settings->get_option( 'use_post_date' );

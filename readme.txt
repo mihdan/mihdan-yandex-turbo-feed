@@ -4,9 +4,9 @@ Contributors: mihdan
 Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed, seo, seo-friendly, yoast, google, webmaster, schema, sitemap
 Requires at least: 5.0
-Requires PHP: 5.6.20
-Tested up to: 5.8
-Stable tag: 1.5.0
+Requires PHP: 7.4
+Tested up to: 6.2
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,9 @@ Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site material
 * Создание неограниченного количества лент
 * Индивидуальные настройки каждой ленты
 * Поддержка произвольного CSS и HTML
+* Массовое редактирование (Bulk Edit) настроек турбо-страниц
+* Быстрое редактирование (Quick Edit) настроек турбо-страницы
+* Возможность удаления всех турбо-страниц для определённой ленты
 * Указание копирайта для фото
 * Вставка кнопок шеринга и изменение их набора
 * Вставка комментариев
@@ -40,9 +43,6 @@ Mihdan: Yandex Turbo Feed by mihdan – allows you to convert your site material
 * Ленты совместимы с плагином WPML
 * Ленты совместимы с плагином Polylang
 * Ленты совместимы с плагином Transpoch
-
-= Recommended Settings =
-The default settings that are used on a fresh install of the plugin are what we recommend.
 
 = Support =
 Need help with anything? Please create a [support topic](https://wordpress.org/support/plugin/mihdan-yandex-turbo-feed).
@@ -173,6 +173,12 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.6.0 (2023-05-13) =
+* Добавлена возможность удалить все турбо-страницы для определённой ленты
+* Добавлена возможность массового редактирования настроек турбо-страниц
+* Добавлена возможность быстрого редактирования настроек турбо-страницы
+* Подняты минимальные подерживаемые версии PHP 7.4 и WordPress
 
 = 1.5.0 (2021-06-15) =
 * Добавлена возможность отключать неиспользуемые поля ленты (автор, дата, обложка, расширенный HTML)

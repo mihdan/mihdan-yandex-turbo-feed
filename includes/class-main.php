@@ -134,6 +134,13 @@ class Main {
 	 */
 	private $feed_id;
 
+    /**
+     * Экземпляр класса BulkEdit.
+     *
+     * @var BulkEdit
+     */
+    private $bulk_edit;
+
 	/**
 	 * Инициализируем нужные методы
 	 *
@@ -144,8 +151,9 @@ class Main {
 	 * @param Template      $template     Шаблон.
 	 * @param Notifications $notices      Уведомления в админке.
 	 * @param SiteHealth    $site_health  Состояние здоровья сайта.
+	 * @param BulkEdit      $bulk_edit    Множественное редактирование.
 	 */
-	public function __construct( Utils $utils = null, Settings $settings = null, Template $template = null, Notifications $notices = null, SiteHealth $site_health = null ) {
+	public function __construct( Utils $utils = null, Settings $settings = null, Template $template = null, Notifications $notices = null, SiteHealth $site_health = null, BulkEdit $bulk_edit = null ) {
 		$this->includes();
 		$this->utils         = new Utils();
 		$this->settings      = new Settings( $this->utils );
@@ -158,6 +166,8 @@ class Main {
 
 		// Логирование.
 		//( new Logs() )->setup_hooks();
+
+        ( new BulkEdit( $this->utils, $this->settings ) )->setup_hooks();
 
 		// Инициализация шорткодов.
 		( new Shortcodes() )->setup_hooks();

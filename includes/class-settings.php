@@ -488,6 +488,15 @@ class Settings {
 						'ui'            => true,
 					)
 				)
+				->addTrueFalse(
+					$this->utils->get_slug() . '_remove_all_turbo_posts',
+					array(
+						'label'         => __( 'Remove all turbo pages', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => false,
+						'ui'            => true,
+						'instructions'            => __( 'Эта опция добавит в RSS ленту атрибут <code>turbo="false"</code> к тегу <code>&lt;item&gt;</code> для всех записей. Это единственный способ сказать Яндексу, чтобы он отключил все турбо-страницы для вашего сайта из текущей ленты. Не удаляйте плагин, это не удалит турбо-страницы из Яндекса.', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
 			/**
 			 * Канал
 			 */
@@ -1008,18 +1017,19 @@ class Settings {
 	}
 
 	/**
-	 * @param         $key
-	 * @param integer $post_id
+	 * @param string       $key     Название поля.
+	 * @param integer|null $post_id Идентификатор поста.
+	 * @param mixed|null   $default Значение по умолчанию.
 	 *
 	 * @return mixed
 	 */
-	public function get_option( $key, $post_id = null ) {
+	public function get_option( string $key, int $post_id = null, $default = '' ) {
 
 		if ( empty( $post_id ) ) {
 			$post_id = get_the_ID();
 		}
 
-		return get_field( $this->utils->get_slug() . '_' . $key, $post_id );
+		return get_field( $this->utils->get_slug() . '_' . $key, $post_id ) ?? $default;
 	}
 
 	/**

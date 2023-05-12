@@ -787,12 +787,21 @@ class Template {
 	 * Генерим атрибуты для тега <item>
 	 *
 	 * @param int $post_id идентификатор поста
+	 *
+	 * @return void
 	 */
-	public function item_attributes( $post_id ) {
+	public function item_attributes( int $post_id ): void {
 
 		$atts = array(
 			'turbo' => ! (bool) get_post_meta( $post_id, $this->utils->get_slug() . '_remove', true ),
 		);
+
+		// Если активна опция отключения всех тербо-страниц.
+		$disable_all_turbo_pages = (bool) $this->settings->get_option( 'remove_all_turbo_posts', $this->get_feed_id(), false );
+
+		if ( $disable_all_turbo_pages ) {
+			$atts['turbo'] = false;
+		}
 
 		$atts = apply_filters( 'mihdan_yandex_turbo_feed_item_attributes', $atts, $post_id );
 
@@ -838,6 +847,15 @@ class Template {
             $post_id
         );
     }
+
+	/**
+	 * Возвращает идентификатор ленты.
+	 *
+	 * @return int
+	 */
+	public function get_feed_id(): int {
+		return $this->feed_id;
+	}
 }
 
 // eol.
