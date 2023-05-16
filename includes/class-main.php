@@ -7,6 +7,8 @@
 
 namespace Mihdan\YandexTurboFeed;
 
+use Mihdan\YandexTurboFeed\Models\Feed;
+
 /**
  * Class Main
  *
@@ -156,7 +158,11 @@ class Main {
 	public function __construct( Utils $utils = null, Settings $settings = null, Template $template = null, Notifications $notices = null, SiteHealth $site_health = null, BulkEdit $bulk_edit = null ) {
 		$this->includes();
 		$this->utils         = new Utils();
+
 		$this->settings      = new Settings( $this->utils );
+
+		( new Feed( $this->settings ) )->setup_hooks();
+
 		//$this->notifications = new Notifications( $this->utils, $this->settings );
 		$this->template      = new Template( $this->utils, $this->settings );
 

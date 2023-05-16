@@ -150,7 +150,6 @@ class Settings {
 	 * Init hooks.
 	 */
 	public function hooks() {
-		add_action( 'init', array( $this, 'registration' ) );
 		add_action( 'init', array( $this, 'setup' ), 100 );
 		add_action( 'init', array( $this, 'add_local_field_groups' ), 101 );
 		add_filter( 'acf/settings/show_admin', array( $this, 'hide_acf_admin_menu' ) );
@@ -180,66 +179,6 @@ class Settings {
 		}
 
 		return $show_hide;
-	}
-
-	/**
-	 * Регистрция произвольных типов записей и таксономий.
-	 */
-	public function registration() {
-		$labels = array(
-			'name'                  => _x( 'Yandex Turbo', 'Post Type General Name', 'mihdan-yandex-turbo-feed' ),
-			'singular_name'         => _x( 'Лента', 'Post Type Singular Name', 'mihdan-yandex-turbo-feed' ),
-			'menu_name'             => __( 'Yandex Turbo', 'mihdan-yandex-turbo-feed' ),
-			'name_admin_bar'        => __( 'Yandex Turbo Feed', 'mihdan-yandex-turbo-feed' ),
-			'archives'              => __( 'Архивы', 'mihdan-yandex-turbo-feed' ),
-			'attributes'            => __( 'Item Attributes', 'mihdan-yandex-turbo-feed' ),
-			'parent_item_colon'     => __( 'Parent Item:', 'mihdan-yandex-turbo-feed' ),
-			'all_items'             => __( 'All Feeds', 'mihdan-yandex-turbo-feed' ),
-			'add_new_item'          => __( 'Add New Feed', 'mihdan-yandex-turbo-feed' ),
-			'add_new'               => __( 'Add Feed', 'mihdan-yandex-turbo-feed' ),
-			'new_item'              => __( 'New Item', 'mihdan-yandex-turbo-feed' ),
-			'edit_item'             => __( 'Edit Feed', 'mihdan-yandex-turbo-feed' ),
-			'update_item'           => __( 'Update Item', 'mihdan-yandex-turbo-feed' ),
-			'view_item'             => __( 'View Feed', 'mihdan-yandex-turbo-feed' ),
-			'view_items'            => __( 'View Items', 'mihdan-yandex-turbo-feed' ),
-			'search_items'          => __( 'Search Feed', 'mihdan-yandex-turbo-feed' ),
-			'not_found'             => __( 'Not found', 'mihdan-yandex-turbo-feed' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'mihdan-yandex-turbo-feed' ),
-			'items_list'            => __( 'Items list', 'mihdan-yandex-turbo-feed' ),
-			'items_list_navigation' => __( 'Items list navigation', 'mihdan-yandex-turbo-feed' ),
-			'filter_items_list'     => __( 'Filter items list', 'mihdan-yandex-turbo-feed' ),
-		);
-
-		$rewrite = array(
-			'slug'       => 'turbo',
-			'with_front' => true,
-			'pages'      => true,
-			'feeds'      => false,
-		);
-
-		$args = array(
-			'label'               => __( 'Лента', 'mihdan-yandex-turbo-feed' ),
-			'description'         => __( 'Post Type Description', 'mihdan-yandex-turbo-feed' ),
-			'labels'              => $labels,
-			'supports'            => array( 'title' ),
-			'hierarchical'        => false,
-			'public'              => true,
-			'show_ui'             => true,
-			'show_in_menu'        => true,
-			'menu_position'       => 80,
-			'menu_icon'           => 'dashicons-rss',
-			'show_in_admin_bar'   => true,
-			'show_in_nav_menus'   => true,
-			'can_export'          => true,
-			'has_archive'         => false,
-			'exclude_from_search' => true,
-			'publicly_queryable'  => true,
-			'rewrite'             => $rewrite,
-			'capability_type'     => 'page',
-			'show_in_rest'        => false,
-		);
-
-		register_post_type( $this->utils->get_post_type(), $args );
 	}
 
 	/**

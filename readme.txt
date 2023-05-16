@@ -6,7 +6,7 @@ Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 6.2
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,6 +173,11 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.6.1 (2023-05-16) =
+* Добавлена колонка со статусом ленты в списке RSS-лент
+* Добавлена колонка со статусом турбо-страниц в списке записей
+* Исправлена ошибка в режиме Quick Edit
 
 = 1.6.0 (2023-05-13) =
 * Добавлена возможность удалить все турбо-страницы для определённой ленты
