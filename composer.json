@@ -34,9 +34,10 @@
         "php": ">=7.4",
         "composer/installers": "*",
         "wptrt/admin-notices": "*",
-        "wpackagist-plugin/advanced-custom-fields": "^5.8",
+        "wpackagist-plugin/advanced-custom-fields": "6.1.7",
         "stoutlogic/acf-builder": "^1.9",
-      "ext-json": "*"
+      "ext-json": "*",
+        "wpackagist-plugin/acf-multiple-taxonomy": "^1.0"
     },
     "extra": {
         "installer-paths": {

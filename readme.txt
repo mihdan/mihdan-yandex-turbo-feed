@@ -4,9 +4,9 @@ Contributors: mihdan
 Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed, seo, seo-friendly, yoast, google, webmaster, schema, sitemap
 Requires at least: 5.0
-Requires PHP: 7.4
+Requires PHP: 7.0
 Tested up to: 6.2
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,6 +173,11 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 `
 
 == Changelog ==
+
+= 1.6.2 (2023-07-29) =
+* Добавлена возможность исключать записи, прикреплённые к выбранным термам
+* Обновлены зависимости плагина
+* Исправлена ошибка показа похожих записей
 
 = 1.6.1 (2023-05-16) =
 * Добавлена колонка со статусом ленты в списке RSS-лент

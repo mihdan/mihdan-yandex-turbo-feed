@@ -5,6 +5,7 @@
 
 namespace Mihdan\YandexTurboFeed;
 
+use StoutLogic\AcfBuilder\FieldNameCollisionException;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class Settings {
@@ -364,6 +365,15 @@ class Settings {
 						'ui'            => true,
 						'choices'       => $this->taxonomies,
 						'required'      => true,
+					)
+				)
+				->addField(
+					$this->utils->get_slug() . '_exclude_terms',
+					'multiple_taxonomy',
+					array(
+						'label'         => __( 'Exclude terms', 'mihdan-yandex-turbo-feed' ),
+						'multiple'      => true,
+						'return_format' => 'object',
 					)
 				)
 				->addRadio(

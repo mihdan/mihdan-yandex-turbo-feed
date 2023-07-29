@@ -562,7 +562,20 @@ class Main {
 			),
 		);
 
-		// TODO: потеряли категории и теги.
+		// Исключить записи, прикреплённые к указанным термам.
+		$excluded_terms = $this->settings->get_option( 'exclude_terms' );
+
+		if ( $excluded_terms ) {
+			$args['tax_query']= [];
+
+			foreach ( $excluded_terms as $term ) {
+				$args['tax_query'][] = [
+					'taxonomy' => $term->taxonomy,
+					'terms' => [ $term->term_id ],
+					'operator' => 'NOT IN',
+				];
+			}
+		}
 
 		return $args;
 	}

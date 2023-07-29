@@ -557,7 +557,7 @@ class Template {
 	 */
 	public function insert_related() {
 
-		if ( ! $this->settings->get_option( 'related_posts_enable', $this->feed_id ) ) {
+		if ( ! $this->settings->get_option( 'related_posts_enable', $this->get_feed_id() ) ) {
 			return;
 		}
 
@@ -565,7 +565,7 @@ class Template {
 
 		if ( $related->have_posts() ) {
 			// Если включена бесконечная лента.
-			if ( $this->settings->get_option( 'related_posts_infinity', $this->feed_id ) ) {
+			if ( $this->settings->get_option( 'related_posts_infinity', $this->get_feed_id() ) ) {
 				echo '<yandex:related type="infinity">';
 			} else {
 				echo '<yandex:related>';
@@ -592,7 +592,7 @@ class Template {
 		$post = get_post();
 
 		$args = array(
-			'post_type'           => $this->utils->get_post_type(),
+			'post_type'           => $this->settings->get_option( 'post_type', $this->get_feed_id() ),
 			'posts_per_page'      => 10,
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
