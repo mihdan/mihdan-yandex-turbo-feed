@@ -8,6 +8,7 @@
 namespace Mihdan\YandexTurboFeed;
 
 use Mihdan\YandexTurboFeed\Models\Feed;
+use Mihdan\YandexTurboFeed\Models\WooCommerce;
 
 /**
  * Class Main
@@ -155,11 +156,24 @@ class Main {
 	 * @param SiteHealth    $site_health  Состояние здоровья сайта.
 	 * @param BulkEdit      $bulk_edit    Множественное редактирование.
 	 */
-	public function __construct( Utils $utils = null, Settings $settings = null, Template $template = null, Notifications $notices = null, SiteHealth $site_health = null, BulkEdit $bulk_edit = null ) {
+	public function __construct(
+		Utils $utils = null,
+		Settings $settings = null,
+		Template $template = null,
+		Notifications $notices = null,
+		SiteHealth $site_health = null,
+		BulkEdit $bulk_edit = null
+	) {
 		$this->includes();
 		$this->utils         = new Utils();
-
 		$this->settings      = new Settings( $this->utils );
+
+		/**
+		 * Хаки для WooCommerce.
+		 */
+		if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+			( new WooCommerce( $this->utils, $this->settings ) )->setup_hooks();
+		}
 
 		( new Feed( $this->settings ) )->setup_hooks();
 
@@ -236,6 +250,9 @@ class Main {
 
 		// Для работы с переводами.
 		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+
+		// Для работы с плагинами.
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
 
 	/**

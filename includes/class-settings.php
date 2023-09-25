@@ -109,9 +109,9 @@ class Settings {
 		// Доступные соцсети для шеров.
 		$this->share_networks = array(
 			'facebook'      => __( 'Facebook', 'mihdan-yandex-turbo-feed' ),
-			'google'        => __( 'Google', 'mihdan-yandex-turbo-feed' ),
 			'odnoklassniki' => __( 'Odnoklassniki', 'mihdan-yandex-turbo-feed' ),
 			'telegram'      => __( 'Telegram', 'mihdan-yandex-turbo-feed' ),
+			'twitter'       => __( 'Twitter (X)', 'mihdan-yandex-turbo-feed' ),
 			'vkontakte'     => __( 'Vkontakte', 'mihdan-yandex-turbo-feed' ),
 		);
 
@@ -421,6 +421,16 @@ class Settings {
 						'ui'            => true,
 					)
 				)
+				->addTrueFalse(
+					$this->utils->get_slug() . '_use_post_modified',
+					array(
+						'label'         => __( 'Post modified date', 'mihdan-yandex-turbo-feed' ),
+						'default_value' => false,
+						'ui'            => true,
+						'instructions'  => __( 'Use the post update date instead of the post creation date', 'mihdan-yandex-turbo-feed' ),
+					)
+				)
+				->conditional( $this->utils->get_slug() . '_use_post_date', '==', '1' )
 				->addTrueFalse(
 					$this->utils->get_slug() . '_use_post_thumbnail',
 					array(
@@ -959,8 +969,12 @@ class Settings {
 					__( 'Attention Donate', 'mihdan-yandex-turbo-feed' ),
 					/* translators: donate link */
 					sprintf( __( 'Проект отнимает огромное количество сил, времени и энергии. Чтобы у разработчика была мотивация продолжать разрабатывать плагин и дальше, вы всегда можете <a target="_blank" href="%s">помочь символической суммой</a>.', 'mihdan-yandex-turbo-feed' ), 'https://www.kobzarev.com/donate/' )
-				)
-			->setLocation( 'post_type', '==', $this->utils->get_post_type() );
+				);
+
+			$feed_settings = apply_filters( 'mihdan_yandex_turbo_feed_feed_settings', $feed_settings );
+
+			$feed_settings
+				->setLocation( 'post_type', '==', $this->utils->get_post_type() );
 
 		acf_add_local_field_group( $feed_settings->build() );
 	}

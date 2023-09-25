@@ -14,10 +14,10 @@
 namespace Mihdan\YandexTurboFeed;
 
 /**
- * Plugin Name: Mihdan: Yandex Turbo Feed
+ * Plugin Name: Yandex Turbo Feed
  * Plugin URI: https://www.kobzarev.com/projects/yandex-turbo-feed/
  * Description: Плагин создаёт настраиваемые ленты для сервиса Яндекс Турбо
- * Version: 1.6.2
+ * Version: 1.6.3
  * Author: Mikhail Kobzarev
  * Author URI: https://www.kobzarev.com/
  * License: GNU General Public License v2
@@ -25,8 +25,8 @@ namespace Mihdan\YandexTurboFeed;
  * Text Domain: mihdan-yandex-turbo-feed
  * GitHub Plugin URI: https://github.com/mihdan/mihdan-yandex-turbo-feed/
  * GitHub Branch:     master
- * Requires WP: 5.1
- * Requires PHP: 7.0
+ * Requires WP: 5.6
+ * Requires PHP: 7.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Слаг плагина
 define( 'MIHDAN_YANDEX_TURBO_FEED_SLUG', 'mihdan_yandex_turbo_feed' );
-define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.6.2' );
+define( 'MIHDAN_YANDEX_TURBO_FEED_VERSION', '1.6.3' );
 define( 'MIHDAN_YANDEX_TURBO_FEED_PATH', __DIR__ );
 define( 'MIHDAN_YANDEX_TURBO_FEED_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'MIHDAN_YANDEX_TURBO_FEED_FILE', __FILE__ );
