@@ -80,7 +80,7 @@ class Feed {
 
 		$rewrite = array(
 			'slug'       => 'turbo',
-			'with_front' => true,
+			'with_front' => false,
 			'pages'      => true,
 			'feeds'      => false,
 		);

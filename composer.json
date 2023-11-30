@@ -47,5 +47,8 @@
         "classmap": [
             "includes"
         ]
+    },
+    "require-dev": {
+        "szepeviktor/phpstan-wordpress": "dev-master"
     }
 }

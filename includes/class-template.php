@@ -540,16 +540,23 @@ class Template {
 	/**
 	 * Генерит валидный тег <link />
 	 *
-	 * @param string $url ссылка на пост
-	 * @param string $src ссылка на кртинку
-	 * @param string $title текст ссылки
+	 * @param string $url   Ссылка на запись.
+	 * @param string $title Текст ссылки.
+	 * @param ?string $src   Ссылка на изображение.
 	 *
 	 * @return string
 	 */
-	public function create_related( $url, $src, $title ) {
-		if ( ! empty( $title ) && ! empty( $src ) ) {
-			return sprintf( '<link url="%s" img="%s"><![CDATA[%s]]></link>', esc_url( $url ), esc_url( $src ), esc_html( $title ) );
+	public function create_related( string $url, string $title, ?string $src = '' ): string {
+		if ( ! empty( $url ) && ! empty( $title ) ) {
+			// Если есть изображение.
+			if ( ! empty( $src ) ) {
+				return sprintf( '<link url="%s" img="%s"><![CDATA[%s]]></link>', esc_url( $url ), esc_url( $src ), esc_html( $title ) );
+			} else {
+				return sprintf( '<link url="%s"><![CDATA[%s]]></link>', esc_url( $url ), esc_html( $title ) );
+			}
 		}
+
+		return '';
 	}
 
 	/**
@@ -574,8 +581,8 @@ class Template {
 				$related->the_post();
 				echo $this->create_related(
 					get_permalink(),
+					get_the_title(),
 					get_the_post_thumbnail_url(),
-					get_the_title()
 				);
 			}
 			echo '</yandex:related>';
