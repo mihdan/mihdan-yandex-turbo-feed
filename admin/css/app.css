@@ -96,6 +96,10 @@ a[data-key$="exclude_tab"]:before {
 	content: '\f14f';
 }
 
+a[data-key$="woocommerce_tab"]:before {
+	content: '\f174';
+}
+
 .mihdan_yandex_turbo_feed_exclude_shortcode {
 	overflow: auto;
 	max-height: 500px;

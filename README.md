@@ -1,9 +1,7 @@
-[![RIPS CodeRisk](https://coderisk.com/wp/plugin/mihdan-yandex-turbo-feed/badge "RIPS CodeRisk")](https://coderisk.com/wp/plugin/mihdan-yandex-turbo-feed)
-
 # Mihdan: Yandex Turbo Feed
 WordPress-плагин, генерирующий фид для [Турбо-страниц](https://yandex.ru/adv/turbo) от компании Яндекс
 
-![Mihdan: Yandex Turbo Feed](./screenshot-1.png)
+![Mihdan: Yandex Turbo Feed](.wordpress-org/screenshot-1.png)
 
 ## Автора ##
 "Писатель" - [Кобзарёв Михаил](https://www.kobzarev.com/)
@@ -92,6 +90,4 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 
 ## Помочь проекту
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BENCPARA8S224)
-
-[](http://coderisk.com/wp/plugin/mihdan-yandex-turbo-feed/RIPS-xig8tE5A4u)
+[Donate](https://www.kobzarev.com/donate/)

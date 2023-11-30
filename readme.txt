@@ -3,10 +3,10 @@ Author: mihdan
 Contributors: mihdan
 Donate link: https://www.kobzarev.com/donate/
 Tags: wordpress, feed, yandex, turbo, rss, yandex-turbo, yandex-turbo-pages, rss-feed, seo, seo-friendly, yoast, google, webmaster, schema, sitemap
-Requires at least: 5.0
+Requires at least: 5.6
 Requires PHP: 7.4
 Tested up to: 6.4
-Stable tag: 1.6.2
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,6 +178,19 @@ add_filter( 'mihdan_yandex_turbo_feed_taxonomy', function( $taxonomy ) {
 * Добавлена возможность выводить похожие записи без изображений
 * Отключено автоматическое добавление общего префикса из структуры постоянных ссылок
 * Исправлена ошибка совместимости с популярной темой MyListing.
+
+= 1.6.3 (2023-09-23) =
+* Удалён Google из списка провайдеров для шеров
+* Добавлена возможность выводить краткое описание товара над основным описанием товара в WooCommerce
+* Добавлен новый хук `mihdan_yandex_turbo_feed_feed_settings` для изменения настрок плагина другими разработчиками
+* В хуки `mihdan_yandex_turbo_feed_item_header`, `mihdan_yandex_turbo_feed_item_excerpt`, `mihdan_yandex_turbo_feed_item_content`, `mihdan_yandex_turbo_feed_item_turbo_content`, `mihdan_yandex_turbo_feed_item` добавлен аргумент `feed_id`
+* Обновлена минимальная поддерживаемая версия PHP - 7.4
+* Обновлена минимальная поддерживаемая версия WordPress - 5.6
+
+= 1.6.2 (2023-07-29) =
+* Добавлена возможность исключать записи, прикреплённые к выбранным термам
+* Обновлены зависимости плагина
+* Исправлена ошибка показа похожих записей
 
 = 1.6.1 (2023-05-16) =
 * Добавлена колонка со статусом ленты в списке RSS-лент
