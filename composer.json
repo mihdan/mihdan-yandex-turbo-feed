@@ -40,7 +40,8 @@
         "wpackagist-plugin/acf-multiple-taxonomy": "^1.0"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest"
+        "roave/security-advisories": "dev-latest",
+        "szepeviktor/phpstan-wordpress": "dev-master"
     },
     "extra": {
         "installer-paths": {
@@ -51,8 +52,5 @@
         "classmap": [
             "includes"
         ]
-    },
-    "require-dev": {
-        "szepeviktor/phpstan-wordpress": "dev-master"
     }
 }

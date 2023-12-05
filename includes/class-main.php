@@ -8,6 +8,7 @@
 namespace Mihdan\YandexTurboFeed;
 
 use Mihdan\YandexTurboFeed\Models\Feed;
+use Mihdan\YandexTurboFeed\Models\LiteVideoEmbed;
 use Mihdan\YandexTurboFeed\Models\WooCommerce;
 
 /**
@@ -58,6 +59,7 @@ class Main {
 		'<u>',
 		'<a>',
 		'<figure>',
+		'<lite-youtube>',
 		'<img>',
 		'<figcaption>',
 		'<video>',
@@ -173,6 +175,13 @@ class Main {
 		 */
 		if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 			( new WooCommerce( $this->utils, $this->settings ) )->setup_hooks();
+		}
+
+		/**
+		 * Хаки для Lite Video Embed.
+		 */
+		if ( is_plugin_active( 'mihdan-lite-youtube-embed/mihdan-lite-youtube-embed.php' ) ) {
+			( new LiteVideoEmbed() )->setup_hooks();
 		}
 
 		( new Feed( $this->settings ) )->setup_hooks();
